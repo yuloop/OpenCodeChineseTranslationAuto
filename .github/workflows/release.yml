@@ -1,6 +1,13 @@
 name: OpenCode Chinese Release
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "cli-go/**"
+      - "scripts/**"
+      - ".github/workflows/release.yml"
   schedule:
     - cron: "17 * * * *"
   workflow_dispatch:
