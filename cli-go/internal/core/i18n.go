@@ -220,6 +220,7 @@ func (i *I18n) ApplyConfig(config TranslationConfig, dryRun bool) ApplyResult {
 	result := ApplyResult{
 		File: config.File,
 	}
+	result.Replacements.Total = len(config.Replacements)
 
 	if config.File == "" || len(config.Replacements) == 0 {
 		result.Skipped = true
@@ -232,6 +233,7 @@ func (i *I18n) ApplyConfig(config TranslationConfig, dryRun bool) ApplyResult {
 	if !Exists(targetPath) {
 		result.Skipped = true
 		result.SkipReason = "目标文件不存在"
+		result.Replacements.Failed = result.Replacements.Total
 		return result
 	}
 
@@ -239,14 +241,13 @@ func (i *I18n) ApplyConfig(config TranslationConfig, dryRun bool) ApplyResult {
 	if err != nil {
 		result.Skipped = true
 		result.SkipReason = fmt.Sprintf("读取文件失败: %v", err)
+		result.Replacements.Failed = result.Replacements.Total
 		return result
 	}
 	content := string(contentBytes)
 	// 规范化换行符
 	content = strings.ReplaceAll(content, "\r\n", "\n")
 	originalContent := content
-
-	result.Replacements.Total = len(config.Replacements)
 
 	for find, replace := range config.Replacements {
 		// 规范化查找字符串

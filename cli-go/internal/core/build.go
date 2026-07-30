@@ -254,11 +254,6 @@ func (b *Builder) Build(platform string, silent bool) error {
 		env = append(env, "OPENCODE_CHANNEL=latest")
 	}
 
-	// 尝试绕过 SSL 验证错误
-	// 这是一个临时修复，因为 models.dev 的证书在某些环境中可能验证失败
-	env = append(env, "BUN_TLS_REJECT_UNAUTHORIZED=0")
-	env = append(env, "NODE_TLS_REJECT_UNAUTHORIZED=0")
-
 	if err := ExecLiveEnv(b.bunPath, args, env); err != nil {
 		return fmt.Errorf("bun 构建脚本执行失败: %w", err)
 	}

@@ -142,7 +142,7 @@ func runUninstall(force, all, keepConfig bool) {
 		fmt.Println()
 		fmt.Println("感谢使用 OpenCode 汉化工具！")
 		fmt.Println("如需重新安装，访问:")
-		fmt.Println("  https://github.com/1186258278/OpenCodeChineseTranslation")
+		fmt.Printf("  %s\n", core.ReleaseRepositoryURL())
 	} else {
 		fmt.Printf("卸载完成，成功 %d 项，失败 %d 项\n", successCount, failCount)
 		fmt.Println()

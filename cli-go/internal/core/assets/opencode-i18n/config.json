@@ -2,20 +2,23 @@
     "name": "opencode-zh-CN",
     "version": "6.2",
     "description": "OpenCode 中文汉化配置文件（模块化结构）",
-    "lastUpdate": "2026-07-16",
+    "lastUpdate": "2026-07-30",
     "testPassRate": "100%",
     "upstream": {
         "repo": "anomalyco/opencode",
         "url": "https://github.com/anomalyco/opencode",
         "branch": "dev",
-        "version": "1.18.2"
+        "version": "1.18.9"
     },
-    "supportedCommit": "1.18.2",
+    "supportedCommit": "1.18.9",
     "maintainer": {
-        "name": "CodeCreator",
-        "wechat": "CodeCreator",
-        "github": "https://github.com/1186258278/OpenCodeChineseTranslation"
+        "name": "yuloop",
+        "github": "https://github.com/yuloop/OpenCodeChineseTranslationAuto"
     },
+    "credits": [
+        "https://github.com/1186258278/OpenCodeChineseTranslation",
+        "https://github.com/Jarrel2024/OpenCodeChineseTranslation"
+    ],
     "modules":  {
                     "dialogs":  [
                                     "dialogs/dialog-agent.json",

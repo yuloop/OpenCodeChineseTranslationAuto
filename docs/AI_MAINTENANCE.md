@@ -13,7 +13,7 @@
 |------|------|
 | **项目名称** | OpenCode 中文汉化版 |
 | **原项目** | https://github.com/opencode-ai/opencode |
-| **汉化仓库** | https://github.com/1186258278/OpenCodeChineseTranslation |
+| **汉化仓库** | https://github.com/yuloop/OpenCodeChineseTranslationAuto |
 | **管理工具** | `opencode-cli` (Go 二进制) |
 | **当前版本** | v8.6+ |
 
@@ -52,12 +52,12 @@ OpenCodeChineseTranslation/
 
 ```powershell
 # Windows
-powershell -c "irm https://cdn.jsdelivr.net/gh/1186258278/OpenCodeChineseTranslation@main/install.ps1 | iex"
+powershell -c "irm https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAuto/main/install.ps1 | iex"
 ```
 
 ```bash
 # Linux/macOS
-curl -fsSL https://cdn.jsdelivr.net/gh/1186258278/OpenCodeChineseTranslation@main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAuto/main/install.sh | bash
 ```
 
 ### 2. 使用方法
@@ -140,7 +140,7 @@ opencode-cli deploy               # 部署全局命令
   "supportedCommit": "99a1e73fa1bd5c92c02abd8a20b0e274d5b0d214",
   "maintainer": {
     "name": "CodeCreator",
-    "github": "https://github.com/1186258278/OpenCodeChineseTranslation"
+    "github": "https://github.com/yuloop/OpenCodeChineseTranslationAuto"
   },
   "modules": {
     "dialogs": ["dialogs/dialog-agent.json", ...],
@@ -378,10 +378,9 @@ git push && git push --tags
 | 链接 | 说明 |
 |------|------|
 | [OpenCode 官方](https://github.com/opencode-ai/opencode) | 原项目仓库 |
-| [汉化项目 GitHub](https://github.com/1186258278/OpenCodeChineseTranslation) | 本项目 |
-| [汉化项目 Gitee](https://gitee.com/QtCodeCreators/OpenCodeChineseTranslation) | 国内镜像 |
+| [汉化项目 GitHub](https://github.com/yuloop/OpenCodeChineseTranslationAuto) | 本项目 |
 | [Antigravity 集成](./ANTIGRAVITY_INTEGRATION.md) | 本地 AI 网关配置 |
-| [问题反馈](https://github.com/1186258278/OpenCodeChineseTranslation/issues) | 提交 Issue |
+| [问题反馈](https://github.com/yuloop/OpenCodeChineseTranslationAuto/issues) | 提交 Issue |
 
 ---
 

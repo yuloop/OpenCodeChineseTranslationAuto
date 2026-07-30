@@ -1,7 +1,7 @@
 # Oh My OpenCode (Sisyphus) 终极实战指南
 
 [![oh-my-opencode](https://img.shields.io/badge/oh--my--opencode-v3.0-blue.svg)](https://github.com/code-yeongyu/oh-my-opencode)
-[![OpenCode](https://img.shields.io/badge/OpenCode-中文版-green.svg)](https://github.com/1186258278/OpenCodeChineseTranslation)
+[![OpenCode](https://img.shields.io/badge/OpenCode-中文版-green.svg)](https://github.com/yuloop/OpenCodeChineseTranslationAuto)
 
 > **"Sisyphus 是像你的团队一样编码的智能体。"**
 > 

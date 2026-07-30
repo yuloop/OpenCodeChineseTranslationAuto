@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Test management CLI and scripts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: cli-go/go.mod
+          cache: true
+          cache-dependency-path: cli-go/go.sum
+      - name: Go formatting, tests, and static analysis
+        run: |
+          set -euo pipefail
+          unformatted="$(gofmt -l cli-go)"
+          [[ -z "$unformatted" ]] || {
+            echo "Run gofmt on:" >&2
+            echo "$unformatted" >&2
+            exit 1
+          }
+          (
+            cd cli-go
+            go test ./...
+            go vet ./...
+          )
+      - name: Validate translation resources and helper scripts
+        run: |
+          set -euo pipefail
+          bash -n install.sh
+          python3 -m py_compile scripts/patch-build-ts.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          root = Path("cli-go/internal/core/assets/opencode-i18n")
+          for path in root.rglob("*.json"):
+              with path.open(encoding="utf-8") as handle:
+                  json.load(handle)
+          print("Translation JSON files are valid")
+          PY
+      - name: Parse PowerShell installer
+        shell: pwsh
+        run: |
+          [scriptblock]::Create((Get-Content -Raw -LiteralPath ./install.ps1)) | Out-Null
+          Write-Host "PowerShell installer syntax is valid"
+
+  browser-workflow:
+    name: Type-check browser verification workflow
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: automation
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: automation/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck
+      - run: npm audit --audit-level=high

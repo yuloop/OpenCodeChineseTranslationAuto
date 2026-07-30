@@ -3,6 +3,8 @@ package cmd
 import (
 	"archive/zip"
 	"bufio"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -17,11 +19,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	GitHubAPIURL = "https://api.github.com/repos/1186258278/OpenCodeChineseTranslation/releases/latest"
-	GitHubRepo   = "1186258278/OpenCodeChineseTranslation"
-)
-
 // GitHubRelease GitHub Release API 响应结构
 type GitHubRelease struct {
 	TagName string `json:"tag_name"`
@@ -31,6 +28,7 @@ type GitHubRelease struct {
 		Name               string `json:"name"`
 		BrowserDownloadURL string `json:"browser_download_url"`
 		Size               int64  `json:"size"`
+		Digest             string `json:"digest"`
 	} `json:"assets"`
 }
 
@@ -70,7 +68,7 @@ func runDownload() {
 		fmt.Println("    2. 仓库暂无 Release 发布")
 		fmt.Println("")
 		fmt.Println("  备选方案:")
-		fmt.Printf("    手动下载: https://github.com/%s/releases\n", GitHubRepo)
+		fmt.Printf("    手动下载: %s/releases\n", core.ReleaseRepositoryURL())
 		return
 	}
 
@@ -79,7 +77,7 @@ func runDownload() {
 
 	// 2. 匹配当前平台的资源
 	platform := core.DetectPlatform()
-	
+
 	// 文件名格式可能是：
 	//   opencode-zh-CN-windows-x64.zip (无版本号)
 	//   opencode-zh-CN-v8.1.0-windows-x64.zip (有版本号)
@@ -88,16 +86,18 @@ func runDownload() {
 	var downloadURL string
 	var fileSize int64
 	var assetName string
+	var assetDigest string
 
 	for _, asset := range release.Assets {
 		name := asset.Name
 		// 匹配包含平台标识的 zip 文件
-		if strings.HasPrefix(name, "opencode-zh-CN") && 
-		   strings.HasSuffix(name, ".zip") &&
-		   strings.Contains(name, platform) {
+		if strings.HasPrefix(name, "opencode-zh-CN") &&
+			strings.HasSuffix(name, ".zip") &&
+			strings.Contains(name, platform) {
 			downloadURL = asset.BrowserDownloadURL
 			fileSize = asset.Size
 			assetName = name
+			assetDigest = asset.Digest
 			break
 		}
 	}
@@ -112,7 +112,7 @@ func runDownload() {
 			}
 		}
 		fmt.Println("")
-		fmt.Printf("  手动下载: https://github.com/%s/releases/tag/%s\n", GitHubRepo, release.TagName)
+		fmt.Printf("  手动下载: %s/releases/tag/%s\n", core.ReleaseRepositoryURL(), release.TagName)
 		return
 	}
 
@@ -158,7 +158,20 @@ func runDownload() {
 
 	fmt.Println("✓ 下载完成")
 
-	// 6. 解压文件
+	// 6. 校验 GitHub 提供的 SHA-256 摘要
+	if assetDigest != "" {
+		fmt.Println("")
+		fmt.Println("▶ 正在校验文件完整性...")
+		if err := verifyAssetDigest(zipPath, assetDigest); err != nil {
+			fmt.Printf("✗ 文件完整性校验失败: %v\n", err)
+			return
+		}
+		fmt.Println("✓ SHA-256 校验通过")
+	} else {
+		fmt.Println("⚠ Release 未提供文件摘要，跳过完整性校验")
+	}
+
+	// 7. 解压文件
 	fmt.Println("")
 	fmt.Println("▶ 正在解压...")
 
@@ -170,7 +183,7 @@ func runDownload() {
 
 	fmt.Println("✓ 解压完成")
 
-	// 7. 查找可执行文件
+	// 8. 查找可执行文件
 	exeName := "opencode"
 	if runtime.GOOS == "windows" {
 		exeName = "opencode.exe"
@@ -190,7 +203,7 @@ func runDownload() {
 		return
 	}
 
-	// 8. 部署到目标目录
+	// 9. 部署到目标目录
 	fmt.Println("")
 	fmt.Println("▶ 正在部署...")
 
@@ -220,7 +233,7 @@ func runDownload() {
 
 	fmt.Printf("✓ 已部署到: %s\n", targetPath)
 
-	// 9. 配置 PATH（复用 deploy 逻辑）
+	// 10. 配置 PATH（复用 deploy 逻辑）
 	fmt.Println("")
 	fmt.Println("▶ 正在配置系统 PATH...")
 
@@ -232,7 +245,7 @@ func runDownload() {
 		fmt.Println("✓ PATH 配置完成")
 	}
 
-	// 10. 完成
+	// 11. 完成
 	fmt.Println("")
 	fmt.Println("══════════════════════════════════════════════════")
 	fmt.Println("  ✓ OpenCode 汉化版安装完成!")
@@ -250,7 +263,7 @@ func runDownload() {
 // getLatestRelease 获取最新 Release 信息
 func getLatestRelease() (*GitHubRelease, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", GitHubAPIURL, nil)
+	req, err := http.NewRequest("GET", core.LatestReleaseAPIURL(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -273,6 +286,34 @@ func getLatestRelease() (*GitHubRelease, error) {
 	}
 
 	return &release, nil
+}
+
+func verifyAssetDigest(path, digest string) error {
+	const prefix = "sha256:"
+	if !strings.HasPrefix(strings.ToLower(digest), prefix) {
+		return fmt.Errorf("不支持的摘要格式: %s", digest)
+	}
+
+	expected := strings.TrimSpace(digest[len(prefix):])
+	if len(expected) != sha256.Size*2 {
+		return fmt.Errorf("无效的 SHA-256 摘要长度")
+	}
+
+	file, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	hash := sha256.New()
+	if _, err := io.Copy(hash, file); err != nil {
+		return err
+	}
+	actual := hex.EncodeToString(hash.Sum(nil))
+	if !strings.EqualFold(actual, expected) {
+		return fmt.Errorf("SHA-256 不匹配: 期望 %s，实际 %s", expected, actual)
+	}
+	return nil
 }
 
 // downloadFile 下载文件（带进度显示）

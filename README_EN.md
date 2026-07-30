@@ -1,155 +1,40 @@
-# OpenCode Chinese Translation Distribution
+# Automated Simplified Chinese Builds for OpenCode CLI / TUI
 
-[![Release](https://img.shields.io/github/v/release/1186258278/OpenCodeChineseTranslation?label=Latest&style=flat-square&color=blue)](https://github.com/1186258278/OpenCodeChineseTranslation/releases/latest)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg?style=flat-square)](#)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/1186258278/OpenCodeChineseTranslation/release.yml?label=Daily%20Build&style=flat-square)](https://github.com/1186258278/OpenCodeChineseTranslation/actions)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+This community project tracks official [OpenCode releases](https://github.com/anomalyco/opencode/releases), applies reviewed Simplified Chinese translations to the terminal CLI/TUI, validates every known replacement, and publishes portable Windows x64 and Linux x64 builds.
 
-[中文文档](README.md)
+It is unofficial and is not affiliated with the OpenCode team.
 
-> 🚀 **OpenCode Chinese Distribution | ⚡️ Daily Sync with Official | Automated Cross-Platform Builds (Win/Mac/Linux)**
+## Install
 
----
+Windows x64:
 
-## Overview
-
-**OpenCode Chinese Translation** is a fully automated localization project for [OpenCode](https://github.com/anomalyco/opencode). We've built a complete CI/CD pipeline using GitHub Actions that **daily** pulls the latest source code, applies Chinese translation patches, and builds installation packages for Windows, macOS, and Linux.
-
-**Key Features:**
-*   ⚡️ **Daily Auto-Updates**: Stay up-to-date with the latest official features.
-*   📦 **Cross-Platform Support**: Provides Windows, macOS (Apple Silicon), and Linux binaries.
-*   🚀 **Zero-Dependency Installation**: New Go-based CLI tool, no Node.js or Bun required.
-*   🔧 **Complete Localization**: Covers TUI, dialogs, and core workflows.
-
----
-
-## Quick Start
-
-### 1. One-Line Installation (Recommended)
-
-The new installation scripts download the **Go-based CLI tool** directly, requiring no runtime dependencies.
-
-**Windows (PowerShell)**
 ```powershell
-powershell -c "irm https://cdn.jsdelivr.net/gh/1186258278/OpenCodeChineseTranslation@main/install.ps1 | iex"
-```
-
-**Linux / macOS**
-```bash
-curl -fsSL https://cdn.jsdelivr.net/gh/1186258278/OpenCodeChineseTranslation@main/install.sh | bash
-```
-
-### 2. Usage
-
-After installation, run in your terminal:
-
-```bash
-opencode-cli
-```
-
-This launches the interactive menu.
-
-### 3. Download Prebuilt Version (New in v8.1+)
-
-If you already have `opencode-cli` installed, use the built-in download feature:
-
-```bash
+irm https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAuto/main/install.ps1 | iex
 opencode-cli download
 ```
 
-This automatically downloads the latest prebuilt Chinese version from GitHub Releases, no local compilation needed.
+Linux x64 or WSL x64:
 
-### 4. Manual Download
-
-You can also visit the [Releases page](https://github.com/1186258278/OpenCodeChineseTranslation/releases/latest) to download binaries directly.
-
-| Platform | CLI Tool |
-|----------|----------|
-| Windows x64 | `opencode-cli-windows-amd64.exe` |
-| Windows ARM64 | `opencode-cli-windows-arm64.exe` |
-| macOS Apple Silicon | `opencode-cli-darwin-arm64` |
-| macOS Intel | `opencode-cli-darwin-amd64` |
-| Linux x64 | `opencode-cli-linux-amd64` |
-| Linux ARM64 | `opencode-cli-linux-arm64` |
-
-> Chinese OpenCode binaries are available as ZIP packages on the [Releases page](https://github.com/1186258278/OpenCodeChineseTranslation/releases/latest).
-
----
-
-## CLI Commands
-
-The CLI tool (v8.6.0) provides comprehensive management capabilities:
-
-| Command | Description |
-|---------|-------------|
-| `opencode-cli` | Launch interactive menu (default) |
-| `opencode-cli download` | Download prebuilt Chinese version (no build env required) |
-| `opencode-cli env-install` | **One-click install** build environment (Git/Node.js/Bun) |
-| `opencode-cli update` | Update OpenCode source code |
-| `opencode-cli apply` | Apply translation patches |
-| `opencode-cli verify` | Verify translation configuration |
-| `opencode-cli build` | Build OpenCode binary |
-| `opencode-cli deploy` | Deploy to system PATH |
-| `opencode-cli diagnose` | **Diagnose** and fix conflicts/issues |
-| `opencode-cli uninstall` | Uninstall and clean up all files |
-| `opencode-cli antigravity` | Configure Antigravity local AI proxy |
-
----
-
-## Developer Guide
-
-If you want to contribute, please refer to the [Contributing Guide](CONTRIBUTING.md).
-
-*   [📅 Changelog](CHANGELOG.md)
-*   [🚀 Antigravity Integration Guide](docs/ANTIGRAVITY_INTEGRATION.md)
-
----
-
-## FAQ
-
-**Having issues? Run diagnose first!**
 ```bash
-opencode-cli diagnose --fix
-```
-Auto-detects and fixes version conflicts, missing dependencies, and PATH issues.
-
-**Q: Still shows English after install?**
-Run `opencode-cli diagnose` to detect and clean up conflicting versions.
-
-**Q: Build failed?**
-```bash
-opencode-cli env-install    # Install Git/Node/Bun
-opencode-cli download       # Or download prebuilt (no build env needed)
+curl -fsSL https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAuto/main/install.sh | bash
+opencode-cli download
 ```
 
-**Q: How to completely uninstall?**
-```bash
-opencode-cli uninstall --all
-```
+The installers verify the management CLI against the release `SHA256SUMS` file. You may also inspect the scripts first or download assets directly from [Releases](https://github.com/yuloop/OpenCodeChineseTranslationAuto/releases).
 
-**Q: macOS "cannot verify developer"?**
-Run `opencode-cli diagnose --fix` or manually: `xattr -cr /path/to/opencode`
+## Release policy
 
-**Q: Where are files installed?**
-Unified directory structure: `~/.opencode-i18n/`
-- `bin/` - CLI tool and Chinese OpenCode
-- `opencode/` - OpenCode source code
-- `build/` - Build output
+The scheduled workflow checks for a new official release every hour. A release is published only when all maintained translation rules match the exact upstream tag. Upstream text changes therefore stop the build until a maintainer reviews and updates the translations; the workflow does not publish a silently incomplete localization.
 
-Windows actual path: `%USERPROFILE%\.opencode-i18n\`
+Current targets:
 
-**Q: Local development setup?**
-Developers can customize paths via environment variables:
-```bash
-export OPENCODE_SOURCE_DIR=/path/to/opencode   # Source directory
-export OPENCODE_BUILD_DIR=/path/to/bin         # Build output
-export OPENCODE_PROJECT_DIR=/path/to/project   # Translation project
-```
-Or create `opencode/` and `bin/` folders in the project directory - CLI auto-detects them.
+- Windows x64
+- Linux x64, including WSL x64
 
----
+Translation resources live in `cli-go/internal/core/assets/opencode-i18n`. The release workflow is `.github/workflows/release.yml`.
 
-## License
+## Credits and license
 
-This project is open-sourced under the [MIT License](LICENSE).
-The original OpenCode project is copyright [Anomaly Company](https://anomaly.company/).
+This repository continues community work from [1186258278/OpenCodeChineseTranslation](https://github.com/1186258278/OpenCodeChineseTranslation) and [Jarrel2024/OpenCodeChineseTranslation](https://github.com/Jarrel2024/OpenCodeChineseTranslation).
+
+Repository tooling and translation resources are available under the [MIT License](LICENSE). OpenCode itself remains subject to its upstream license.

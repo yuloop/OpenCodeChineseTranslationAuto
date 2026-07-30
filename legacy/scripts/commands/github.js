@@ -8,8 +8,8 @@ const { exec } = require('../core/utils.js');
 const { getPlatform } = require('../core/utils.js');
 
 // 项目仓库地址
-const GITHUB_URL = 'https://github.com/1186258278/OpenCodeChineseTranslation';
-const GITEE_URL = 'https://gitee.com/QtCodeCreators/OpenCodeChineseTranslation';
+const GITHUB_URL = 'https://github.com/yuloop/OpenCodeChineseTranslationAuto';
+const GITEE_URL = GITHUB_URL;
 
 /**
  * 打开 URL

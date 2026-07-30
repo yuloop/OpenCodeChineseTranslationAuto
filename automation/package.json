@@ -1,0 +1,19 @@
+{
+  "name": "opencode-chinese-automation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "libretto": "0.6.33",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.2"
+  },
+  "overrides": {
+    "esbuild": "0.27.2",
+    "undici": "^6.27.0"
+  }
+}

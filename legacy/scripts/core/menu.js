@@ -263,7 +263,7 @@ async function showMainMenu() {
         '• {bold}Tab键{/}: 切换下方教程板块',
         '• {bold}故障恢复{/}: {yellow}[~] 恢复源码{/} 清除所有修改',
         '• {bold}回滚{/}: {yellow}[<] 回滚备份{/} 还原到汉化前状态',
-        '{dim}项目地址: github.com/1186258278/OpenCodeChineseTranslation{/}'
+        '{dim}项目地址: github.com/yuloop/OpenCodeChineseTranslationAuto{/}'
       ]
     }
   ];

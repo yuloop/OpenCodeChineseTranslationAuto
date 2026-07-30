@@ -1,5 +1,7 @@
 package tui
 
+import "opencode-cli/internal/core"
+
 // MenuItem 菜单项
 type MenuItem struct {
 	Key   string // 快捷键显示，如 [*]
@@ -81,7 +83,7 @@ var Tutorials = []Tutorial{
 			"• Tab键：切换下方教程板块",
 			"• 故障恢复：[~] 恢复源码 使用 Git 还原纯净状态",
 			"• 版本回滚：直接使用 git checkout 或 git stash",
-			"项目地址: github.com/1186258278/OpenCodeChineseTranslation",
+			"项目地址: " + core.ReleaseRepositoryURL(),
 		},
 	},
 }
