@@ -58,8 +58,9 @@ func runApply(dryRun, silent, strict bool, minMatchRate float64) error {
 		}
 	}{}
 
-	for _, config := range configs {
-		result := i18n.ApplyConfig(config, dryRun)
+	results := i18n.ApplyConfigs(configs, dryRun)
+	for index, config := range configs {
+		result := results[index]
 
 		stats.Files.Total++
 		if result.Skipped {

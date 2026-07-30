@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -194,6 +195,13 @@ type ApplyResult struct {
 	SkipReason string
 }
 
+type pendingReplacement struct {
+	find        string
+	replace     string
+	simpleWord  bool
+	configIndex int
+}
+
 // GetTargetFilePath 获取汉化配置对应的目标文件完整路径
 // 统一 verify 和 apply 的路径处理逻辑
 // opencode 1.18.2+ 将 TUI 代码从 packages/opencode/src/cli/cmd/tui/ 移到 packages/tui/src/
@@ -217,82 +225,154 @@ func (i *I18n) GetTargetFilePath(config TranslationConfig) string {
 
 // ApplyConfig 应用单个配置文件的替换规则
 func (i *I18n) ApplyConfig(config TranslationConfig, dryRun bool) ApplyResult {
-	result := ApplyResult{
-		File: config.File,
-	}
-	result.Replacements.Total = len(config.Replacements)
+	return i.ApplyConfigs([]TranslationConfig{config}, dryRun)[0]
+}
 
-	if config.File == "" || len(config.Replacements) == 0 {
-		result.Skipped = true
-		result.SkipReason = "缺少 file 或 replacements 字段"
-		return result
-	}
+// ApplyConfigs 原子地应用一组配置。
+// 指向同一源码文件的配置会基于同一份原文匹配，避免相互覆盖导致误报漏匹配。
+func (i *I18n) ApplyConfigs(configs []TranslationConfig, dryRun bool) []ApplyResult {
+	results := make([]ApplyResult, len(configs))
+	configsByTarget := make(map[string][]int)
 
-	targetPath := i.GetTargetFilePath(config)
+	for index, config := range configs {
+		results[index].File = config.File
+		results[index].Replacements.Total = len(config.Replacements)
 
-	if !Exists(targetPath) {
-		result.Skipped = true
-		result.SkipReason = "目标文件不存在"
-		result.Replacements.Failed = result.Replacements.Total
-		return result
-	}
-
-	contentBytes, err := os.ReadFile(targetPath)
-	if err != nil {
-		result.Skipped = true
-		result.SkipReason = fmt.Sprintf("读取文件失败: %v", err)
-		result.Replacements.Failed = result.Replacements.Total
-		return result
-	}
-	content := string(contentBytes)
-	// 规范化换行符
-	content = strings.ReplaceAll(content, "\r\n", "\n")
-	originalContent := content
-
-	for find, replace := range config.Replacements {
-		// 规范化查找字符串
-		normalizedFind := strings.ReplaceAll(find, "\r\n", "\n")
-
-		// 判断是否为简单单词（只包含字母和数字）
-		isSimpleWord, _ := regexp.MatchString("^[a-zA-Z0-9]+$", normalizedFind)
-
-		matched := false
-		if isSimpleWord {
-			// 简单单词使用单词边界
-			wordBoundaryPattern := regexp.MustCompile(`\b` + regexp.QuoteMeta(normalizedFind) + `\b`)
-			if wordBoundaryPattern.MatchString(content) {
-				if !dryRun {
-					content = wordBoundaryPattern.ReplaceAllString(content, replace)
-				}
-				matched = true
-			}
-		} else {
-			// 复杂模式使用普通替换
-			if strings.Contains(content, normalizedFind) {
-				if !dryRun {
-					content = strings.ReplaceAll(content, normalizedFind, replace)
-				}
-				matched = true
-			}
+		if config.File == "" || len(config.Replacements) == 0 {
+			results[index].Skipped = true
+			results[index].SkipReason = "缺少 file 或 replacements 字段"
+			continue
 		}
 
-		if matched {
-			result.Replacements.Success++
-		} else {
-			result.Replacements.Failed++
+		targetPath := i.GetTargetFilePath(config)
+		if !Exists(targetPath) {
+			results[index].Skipped = true
+			results[index].SkipReason = "目标文件不存在"
+			results[index].Replacements.Failed = results[index].Replacements.Total
+			continue
 		}
+
+		configsByTarget[targetPath] = append(configsByTarget[targetPath], index)
 	}
 
-	if !dryRun && content != originalContent {
+	targetPaths := make([]string, 0, len(configsByTarget))
+	for targetPath := range configsByTarget {
+		targetPaths = append(targetPaths, targetPath)
+	}
+	sort.Strings(targetPaths)
+
+	for _, targetPath := range targetPaths {
+		configIndexes := configsByTarget[targetPath]
+		contentBytes, err := os.ReadFile(targetPath)
+		if err != nil {
+			for _, configIndex := range configIndexes {
+				results[configIndex].Skipped = true
+				results[configIndex].SkipReason = fmt.Sprintf("读取文件失败: %v", err)
+				results[configIndex].Replacements.Failed = results[configIndex].Replacements.Total
+			}
+			continue
+		}
+
+		originalContent := strings.ReplaceAll(string(contentBytes), "\r\n", "\n")
+		var replacements []pendingReplacement
+
+		for _, configIndex := range configIndexes {
+			config := configs[configIndex]
+			for find, replace := range config.Replacements {
+				normalizedFind := strings.ReplaceAll(find, "\r\n", "\n")
+				isSimpleWord, _ := regexp.MatchString("^[a-zA-Z0-9]+$", normalizedFind)
+				replacement := pendingReplacement{
+					find:        normalizedFind,
+					replace:     replace,
+					simpleWord:  isSimpleWord,
+					configIndex: configIndex,
+				}
+
+				if replacementMatches(originalContent, replacement) {
+					results[configIndex].Replacements.Success++
+					replacements = append(replacements, replacement)
+				} else {
+					results[configIndex].Replacements.Failed++
+				}
+			}
+			results[configIndex].Success = results[configIndex].Replacements.Success > 0
+		}
+
+		if dryRun {
+			continue
+		}
+
+		content := applyReplacements(originalContent, replacements)
+		if content == originalContent {
+			continue
+		}
+
 		if err := os.WriteFile(targetPath, []byte(content), 0644); err != nil {
-			result.Success = false
 			fmt.Printf("错误: 写入文件失败 %s: %v\n", targetPath, err)
-		} else {
-			result.Success = result.Replacements.Success > 0
+			for _, configIndex := range configIndexes {
+				results[configIndex].Success = false
+			}
 		}
-	} else {
-		result.Success = result.Replacements.Success > 0
 	}
 
-	return result
+	return results
+}
+
+func replacementMatches(content string, replacement pendingReplacement) bool {
+	if replacement.find == "" {
+		return false
+	}
+	if replacement.simpleWord {
+		pattern := regexp.MustCompile(`\b` + regexp.QuoteMeta(replacement.find) + `\b`)
+		return pattern.MatchString(content)
+	}
+	return strings.Contains(content, replacement.find)
+}
+
+func applyReplacements(content string, replacements []pendingReplacement) string {
+	sort.SliceStable(replacements, func(left, right int) bool {
+		if len(replacements[left].find) != len(replacements[right].find) {
+			return len(replacements[left].find) > len(replacements[right].find)
+		}
+		if replacements[left].find != replacements[right].find {
+			return replacements[left].find < replacements[right].find
+		}
+		if replacements[left].configIndex != replacements[right].configIndex {
+			return replacements[left].configIndex < replacements[right].configIndex
+		}
+		return replacements[left].replace < replacements[right].replace
+	})
+
+	type stagedReplacement struct {
+		placeholder string
+		replace     string
+	}
+
+	var staged []stagedReplacement
+	for index, replacement := range replacements {
+		placeholder := fmt.Sprintf("\x00opencode-i18n-%d\x00", index)
+		updated := content
+		if replacement.simpleWord {
+			pattern := regexp.MustCompile(`\b` + regexp.QuoteMeta(replacement.find) + `\b`)
+			updated = pattern.ReplaceAllStringFunc(content, func(string) string {
+				return placeholder
+			})
+		} else {
+			updated = strings.ReplaceAll(content, replacement.find, placeholder)
+		}
+
+		if updated == content {
+			continue
+		}
+		content = updated
+		staged = append(staged, stagedReplacement{
+			placeholder: placeholder,
+			replace:     replacement.replace,
+		})
+	}
+
+	for _, replacement := range staged {
+		content = strings.ReplaceAll(content, replacement.placeholder, replacement.replace)
+	}
+	return content
 }

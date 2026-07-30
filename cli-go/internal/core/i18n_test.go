@@ -266,6 +266,81 @@ func TestApplyConfig_ActualReplace(t *testing.T) {
 	}
 }
 
+func TestApplyConfig_OverlappingRulesUseLongestMatch(t *testing.T) {
+	tmpDir := t.TempDir()
+	targetPath := filepath.Join(tmpDir, "packages", "opencode", "src", "app.tsx")
+	if err := os.MkdirAll(filepath.Dir(targetPath), 0755); err != nil {
+		t.Fatalf("创建目录失败: %v", err)
+	}
+	if err := os.WriteFile(targetPath, []byte("Delete Delete all"), 0644); err != nil {
+		t.Fatalf("创建目标文件失败: %v", err)
+	}
+
+	i18n := &I18n{opencodeDir: tmpDir}
+	config := TranslationConfig{
+		File: "packages/opencode/src/app.tsx",
+		Replacements: map[string]string{
+			"Delete":     "删除",
+			"Delete all": "全部删除",
+		},
+	}
+
+	result := i18n.ApplyConfig(config, false)
+	if result.Replacements.Success != 2 || result.Replacements.Failed != 0 {
+		t.Fatalf("重叠规则应全部匹配: %+v", result.Replacements)
+	}
+
+	content, err := os.ReadFile(targetPath)
+	if err != nil {
+		t.Fatalf("读取替换后的文件失败: %v", err)
+	}
+	if string(content) != "删除 全部删除" {
+		t.Errorf("应优先应用最长匹配, got %q", string(content))
+	}
+}
+
+func TestApplyConfigs_SharedTargetUsesOriginalSnapshot(t *testing.T) {
+	tmpDir := t.TempDir()
+	targetPath := filepath.Join(tmpDir, "packages", "tui", "src", "app.tsx")
+	if err := os.MkdirAll(filepath.Dir(targetPath), 0755); err != nil {
+		t.Fatalf("创建目录失败: %v", err)
+	}
+	if err := os.WriteFile(targetPath, []byte("Loading skill..."), 0644); err != nil {
+		t.Fatalf("创建目标文件失败: %v", err)
+	}
+
+	i18n := &I18n{opencodeDir: tmpDir}
+	configs := []TranslationConfig{
+		{
+			File: "packages/tui/src/app.tsx",
+			Replacements: map[string]string{
+				"Loading": "加载中",
+			},
+		},
+		{
+			File: "packages/tui/src/app.tsx",
+			Replacements: map[string]string{
+				"Loading skill...": "正在加载技能...",
+			},
+		},
+	}
+
+	results := i18n.ApplyConfigs(configs, false)
+	for index, result := range results {
+		if result.Replacements.Success != 1 || result.Replacements.Failed != 0 {
+			t.Fatalf("配置 %d 应基于同一份原文匹配: %+v", index, result.Replacements)
+		}
+	}
+
+	content, err := os.ReadFile(targetPath)
+	if err != nil {
+		t.Fatalf("读取替换后的文件失败: %v", err)
+	}
+	if string(content) != "正在加载技能..." {
+		t.Errorf("跨配置重叠规则应优先应用最长匹配, got %q", string(content))
+	}
+}
+
 func TestApplyConfig_FileNotExist(t *testing.T) {
 	i18n := &I18n{
 		opencodeDir: "/nonexistent/path",
