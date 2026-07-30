@@ -153,7 +153,7 @@ func (p *Packager) PackagePlatform(platform string, versionDir string) (*Package
 
 	baseName := fmt.Sprintf("opencode-zh-CN-v%s-%s", p.version, platform)
 	tempDir := filepath.Join(versionDir, "temp", baseName)
-	
+
 	// 清理并创建临时目录
 	os.RemoveAll(tempDir)
 	if err := EnsureDir(tempDir); err != nil {

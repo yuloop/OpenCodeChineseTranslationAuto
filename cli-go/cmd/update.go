@@ -27,14 +27,14 @@ var updateCmd = &cobra.Command{
 
 		if core.Exists(opencodeDir) {
 			fmt.Println("检测到现有源码，正在更新...")
-			
+
 			// 检查远程 URL（安全验证）
 			currentRemote, err := core.GetGitRemoteURL(opencodeDir)
 			if err != nil {
 				fmt.Printf("警告: 无法获取远程 URL: %v\n", err)
 			} else {
 				fmt.Printf("当前远程: %s\n", currentRemote)
-				
+
 				// 安全检查：确保不是汉化项目仓库
 				if strings.Contains(currentRemote, "OpenCodeChineseTranslation") {
 					fmt.Println("❌ 错误: 目标目录似乎是汉化项目仓库，而非 OpenCode 源码目录！")
@@ -72,18 +72,18 @@ var updateCmd = &cobra.Command{
 					core.GitPull(opencodeDir)
 				}
 			}
-			
+
 		} else {
 			fmt.Println("正在克隆 OpenCode 源码...")
 			fmt.Printf("目标目录: %s\n", opencodeDir)
-			
+
 			// 确保父目录存在
 			parentDir := filepath.Dir(opencodeDir)
 			if err := os.MkdirAll(parentDir, 0755); err != nil {
 				fmt.Printf("错误: 创建目录失败: %v\n", err)
 				return
 			}
-			
+
 			if err := core.GitClone(repoURL, opencodeDir); err != nil {
 				fmt.Printf("错误: 克隆失败: %v\n", err)
 				// 克隆失败，清理目录

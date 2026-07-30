@@ -68,7 +68,7 @@ var (
 
 	// 警告状态
 	WarnStyle = lipgloss.NewStyle().
-		Foreground(Yellow)
+			Foreground(Yellow)
 
 	// 错误状态
 	ErrorStyle = lipgloss.NewStyle().

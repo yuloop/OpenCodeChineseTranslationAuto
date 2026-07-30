@@ -147,7 +147,7 @@ func runVerify(detailed, dryRun bool) {
 
 	sourceDir := filepath.Join(opencodeDir, "packages", "opencode", "src")
 	if core.Exists(sourceDir) {
-		var uiFiles []string  // 包含 UI 字符串的文件
+		var uiFiles []string       // 包含 UI 字符串的文件
 		var codeOnlyFiles []string // 纯代码文件
 
 		filepath.Walk(sourceDir, func(path string, info os.FileInfo, err error) error {
@@ -186,7 +186,7 @@ func runVerify(detailed, dryRun bool) {
 		fmt.Printf("  源码文件: %d 个 (UI: %d, 纯代码: %d)\n", len(uiFiles)+len(codeOnlyFiles), len(uiFiles), len(codeOnlyFiles))
 		fmt.Printf("  已配置: %d 个\n", len(configuredFiles))
 		fmt.Printf("  覆盖率: %.1f%% (基于包含 UI 字符串的文件)\n", coverage)
-		
+
 		if detailed && len(codeOnlyFiles) > 0 {
 			fmt.Printf("\n  📁 纯代码文件 (%d 个，无需翻译):\n", len(codeOnlyFiles))
 			for i, f := range codeOnlyFiles {
@@ -284,11 +284,11 @@ func hasUIStrings(filePath string) bool {
 	// 简单检查：包含引号后跟大写字母的 title 属性
 	if strings.Contains(contentStr, `title="`) && !strings.Contains(contentStr, `title={`) {
 		// 可能有硬编码的 title，检查常见的英文开头
-		if strings.Contains(contentStr, `title="S`) || 
-		   strings.Contains(contentStr, `title="C`) ||
-		   strings.Contains(contentStr, `title="E`) ||
-		   strings.Contains(contentStr, `title="A`) ||
-		   strings.Contains(contentStr, `title="M`) {
+		if strings.Contains(contentStr, `title="S`) ||
+			strings.Contains(contentStr, `title="C`) ||
+			strings.Contains(contentStr, `title="E`) ||
+			strings.Contains(contentStr, `title="A`) ||
+			strings.Contains(contentStr, `title="M`) {
 			return true
 		}
 	}
@@ -310,7 +310,7 @@ func hasUIStrings(filePath string) bool {
 
 	for _, component := range needsTranslation {
 		if strings.Contains(contentStr, "export function "+component) ||
-		   strings.Contains(contentStr, "export const "+component) {
+			strings.Contains(contentStr, "export const "+component) {
 			return true
 		}
 	}
