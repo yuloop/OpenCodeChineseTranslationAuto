@@ -257,7 +257,7 @@ jobs:
   release:
     name: Publish verified release
     needs: [resolve, validate, translation-gate, build-cli, build-opencode]
-    if: needs.resolve.outputs.should_build == 'true'
+    if: false  # 自动部署(发布GitHub Release)已关闭 2026-08-09；保留自动同步+构建(自动跟踪上游并产出汉化版 artifacts)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
