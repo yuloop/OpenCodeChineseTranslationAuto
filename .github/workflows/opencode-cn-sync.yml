@@ -5,7 +5,6 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
-  workflows: write
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -29,5 +28,12 @@ jobs:
           # 非 fork、无共享历史：必须 --allow-unrelated-histories
           # -X ours：README.md/CHANGELOG.md/.gitignore 等两边都有的根文档冲突时保留汉化仓库版本
           # 上游独有文件（packages/、src/ 等源码）作为新增文件正常合入
-          git merge --no-edit --allow-unrelated-histories -X ours FETCH_HEAD
+          # --no-commit：先暂存 merge 不提交，让下面的 restore 生效时 HEAD 仍是 merge 前的本仓库版本
+          # （若用自动提交的 merge，恢复 workflow 目录的命令将无效）
+          git merge --no-commit --allow-unrelated-histories -X ours FETCH_HEAD
+          # 上游带入的 workflow 文件不保留（恢复本仓库自己的 .github/workflows），避免 push 需要 workflows 权限
+          # 用 git restore 而非 checkout HEAD：目录路径的 checkout 不会删除上游新增的 workflow 文件
+          git restore --source=HEAD --staged --worktree .github/workflows
+          # 生成 merge commit（workflow 目录与 merge 前一致，push 仅需 contents: write）
+          git commit --no-edit
           git push origin main
