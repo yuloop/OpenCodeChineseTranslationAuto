@@ -1,0 +1,32 @@
+name: OpenCode Sync Upstream
+on:
+  schedule:
+    - cron: "5 * * * *"   # 每小时 :05，错开其他流水线
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Merge upstream into main
+        run: |
+          set -euo pipefail
+          git config user.name "yuloop"
+          git config user.email "yuloop@users.noreply.github.com"
+          git remote add upstream "https://github.com/anomalyco/opencode.git"
+          git fetch upstream dev
+          # 无新提交 → 静默退出（不产生任何 commit）
+          if git merge-base --is-ancestor upstream/dev HEAD; then
+            echo "上游无新提交，跳过"
+            exit 0
+          fi
+          # 非 fork、无共享历史：必须 --allow-unrelated-histories
+          # -X ours：README.md/CHANGELOG.md/.gitignore 等两边都有的根文档冲突时保留汉化仓库版本
+          # 上游独有文件（packages/、src/ 等源码）作为新增文件正常合入
+          git merge --no-edit --allow-unrelated-histories -X ours FETCH_HEAD
+          git push origin main
