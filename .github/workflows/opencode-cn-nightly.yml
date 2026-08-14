@@ -1,0 +1,261 @@
+name: OpenCode Chinese Nightly
+
+# opencode 汉化版【实时预览版】自动构建发布流水线（nightly）
+# 每小时检查上游 dev 分支最新提交：有变化则校验翻译词表 100% 匹配 → 应用汉化 → 构建 → 发布 v<上游版本>-cn-nightly 预览版（覆盖同名 tag）
+# 正式版见 release.yml（跟随上游正式 Release tag）
+# 构建模式：不 merge 上游——独立 checkout 上游源码到 build/upstream，打补丁+应用翻译后构建
+
+on:
+  schedule:
+    - cron: "37 * * * *"
+  workflow_dispatch:
+    inputs:
+      upstream_ref:
+        description: "上游分支或 commit（留空为 dev 最新提交）"
+        required: false
+        type: string
+      release_tag:
+        description: "本仓库发布 tag（留空为 v<上游版本>-cn-nightly）"
+        required: false
+        type: string
+
+concurrency:
+  group: opencode-chinese-nightly
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  UPSTREAM_REPO: anomalyco/opencode
+  UPSTREAM_BRANCH: dev
+
+jobs:
+  resolve:
+    name: Resolve upstream commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      should_build: ${{ steps.resolve.outputs.should_build }}
+      upstream_ref: ${{ steps.resolve.outputs.upstream_ref }}
+      upstream_sha: ${{ steps.resolve.outputs.upstream_sha }}
+      upstream_version: ${{ steps.resolve.outputs.upstream_version }}
+      release_tag: ${{ steps.resolve.outputs.release_tag }}
+    steps:
+      - id: resolve
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_UPSTREAM: ${{ github.event.inputs.upstream_ref }}
+          REQUESTED_RELEASE: ${{ github.event.inputs.release_tag }}
+        run: |
+          set -euo pipefail
+
+          # 跟随上游 dev 分支最新提交；dispatch 可指定任意分支/commit
+          upstream="${REQUESTED_UPSTREAM:-${UPSTREAM_BRANCH}}"
+          if [[ "$upstream" =~ ^[0-9a-f]{40}$ ]]; then
+            sha="$upstream"
+          else
+            sha="$(gh api "repos/${UPSTREAM_REPO}/commits/${upstream}" --jq '.sha')"
+          fi
+
+          # 上游版本号（packages/opencode/package.json）
+          version="$(gh api "repos/${UPSTREAM_REPO}/contents/packages/opencode/package.json?ref=${sha}" \
+            --jq '.content' | base64 -d | jq -r '.version')"
+
+          [[ -n "$version" && "$version" != "null" ]] || {
+            echo "无法从上游解析版本号" >&2
+            exit 1
+          }
+
+          release="${REQUESTED_RELEASE:-v${version}-cn-nightly}"
+          [[ "$release" =~ ^[0-9A-Za-z._-]+$ ]] || {
+            echo "Invalid release tag: $release" >&2
+            exit 1
+          }
+
+          should_build=true
+          prev_sha=""
+          if [[ "${{ github.event_name }}" == "schedule" ]] &&
+             gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${release}" >/dev/null 2>&1; then
+            # tag 已存在：读取上次构建记录的上游 SHA（release body 中反引号包裹的 12 位 hex）
+            # 与当前上游 SHA 比较：相同→跳过；不同→重建覆盖同名 release；提取失败→保守重建
+            body="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${release}" --jq '.body' 2>/dev/null || true)"
+            prev_sha="$(printf '%s' "$body" | grep -oE '`[0-9a-f]{12}`' | head -1 | tr -d '`' || true)"
+            if [[ -n "$prev_sha" && "$prev_sha" == "${sha:0:12}" ]]; then
+              should_build=false
+            fi
+          fi
+
+          echo "should_build=$should_build" >>"$GITHUB_OUTPUT"
+          echo "upstream_ref=$upstream" >>"$GITHUB_OUTPUT"
+          echo "upstream_sha=$sha" >>"$GITHUB_OUTPUT"
+          echo "upstream_version=$version" >>"$GITHUB_OUTPUT"
+          echo "release_tag=$release" >>"$GITHUB_OUTPUT"
+          echo "上游: ${UPSTREAM_REPO}@${sha:0:12} (v${version})；发布 tag: ${release}；需要构建: $should_build；上次构建 SHA: ${prev_sha:-无}；当前 SHA: ${sha:0:12}"
+
+  translation-gate:
+    name: Require complete translation match
+    needs: resolve
+    if: needs.resolve.outputs.should_build == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ env.UPSTREAM_REPO }}
+          ref: ${{ needs.resolve.outputs.upstream_sha }}
+          path: build/upstream
+          fetch-depth: 1
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: cli-go/go.mod
+          cache: true
+          cache-dependency-path: cli-go/go.sum
+      - name: Build translation tool
+        working-directory: cli-go
+        run: go build -trimpath -o ../dist/opencode-cli .
+      - name: Verify every known translation still matches
+        env:
+          OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
+        run: |
+          ./dist/opencode-cli apply --dry-run --strict --min-match-rate 1
+          ./dist/opencode-cli verify --dry-run
+      - name: Verify target-filter patch against upstream
+        run: |
+          python3 scripts/patch-build-ts.py build/upstream/packages/opencode/script/build.ts
+          grep -F "OPENCODE_BUILD_TARGET support" build/upstream/packages/opencode/script/build.ts
+
+  build-opencode:
+    name: OpenCode TUI (${{ matrix.platform }})
+    needs: [resolve, translation-gate]
+    if: needs.resolve.outputs.should_build == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - windows-x64
+          - linux-x64
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ env.UPSTREAM_REPO }}
+          ref: ${{ needs.resolve.outputs.upstream_sha }}
+          path: build/upstream
+          fetch-depth: 1
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: cli-go/go.mod
+          cache: true
+          cache-dependency-path: cli-go/go.sum
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: build/upstream/package.json
+      - name: Cache Bun downloads
+        uses: actions/cache@v5
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('build/upstream/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - name: Build translation tool
+        working-directory: cli-go
+        run: go build -trimpath -o ../dist/opencode-cli .
+      - name: Patch and apply translations
+        env:
+          OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
+        run: |
+          python3 scripts/patch-build-ts.py build/upstream/packages/opencode/script/build.ts
+          ./dist/opencode-cli apply --strict --min-match-rate 1
+      - name: Build one portable TUI target
+        env:
+          OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
+          OPENCODE_VERSION: ${{ needs.resolve.outputs.upstream_version }}
+          OPENCODE_CHANNEL: latest
+          OPENCODE_BUILD_TARGET: ${{ matrix.platform }}
+        run: ./dist/opencode-cli build --platform "${{ matrix.platform }}" --deploy=false
+      - name: Package portable binary
+        env:
+          PLATFORM: ${{ matrix.platform }}
+          RELEASE_TAG: ${{ needs.resolve.outputs.release_tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          extension=""
+          [[ "$PLATFORM" == windows-* ]] && extension=".exe"
+          binary="build/upstream/packages/opencode/dist/opencode-${PLATFORM}/bin/opencode${extension}"
+          [[ -f "$binary" ]] || {
+            echo "Binary not found: $binary" >&2
+            exit 1
+          }
+          zip -j "dist/opencode-zh-CN-${RELEASE_TAG}-${PLATFORM}.zip" "$binary"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: opencode-${{ matrix.platform }}
+          path: dist/opencode-zh-CN-*.zip
+          if-no-files-found: error
+
+  release:
+    name: Publish nightly preview release
+    needs: [resolve, translation-gate, build-opencode]
+    if: needs.resolve.outputs.should_build == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: "opencode-*"
+          path: dist
+          merge-multiple: true
+      - name: Package translation source and checksums
+        env:
+          RELEASE_TAG: ${{ needs.resolve.outputs.release_tag }}
+        run: |
+          zip -r "dist/opencode-i18n-tool-${RELEASE_TAG}.zip" \
+            cli-go install.ps1 install.sh README.md CHANGELOG.md scripts \
+            -x "cli-go/.git/*" "*.exe"
+          (
+            cd dist
+            find . -maxdepth 1 -type f ! -name SHA256SUMS -printf '%f\n' |
+              sort |
+              xargs sha256sum >SHA256SUMS
+          )
+      - name: Create release notes
+        env:
+          RELEASE_TAG: ${{ needs.resolve.outputs.release_tag }}
+          UPSTREAM_VERSION: ${{ needs.resolve.outputs.upstream_version }}
+          UPSTREAM_SHA: ${{ needs.resolve.outputs.upstream_sha }}
+        run: |
+          cat >release_notes.md <<EOF
+          ## OpenCode CLI/TUI 简体中文汉化版（实时预览版）
+
+          - 上游最新提交：\`${UPSTREAM_SHA:0:12}\`（dev 分支，对应版本 v${UPSTREAM_VERSION}）
+          - 翻译门禁：已知翻译规则 100% 匹配后才允许发布
+          - **实时预览版**：每小时跟随上游 \`dev\` 分支最新提交构建，覆盖同名 tag
+          - 追求稳定请下载正式版（跟随官方 Release，见仓库 Releases 最新版）
+
+          ### 下载
+
+          | 平台 | 文件 |
+          |---|---|
+          | Windows x64 | \`opencode-zh-CN-${RELEASE_TAG}-windows-x64.zip\` |
+          | Linux/WSL x64 | \`opencode-zh-CN-${RELEASE_TAG}-linux-x64.zip\` |
+
+          所有文件的 SHA-256 摘要见 \`SHA256SUMS\`。
+
+          > 本项目是社区维护的非官方汉化构建，与 OpenCode 官方团队无隶属关系。
+          EOF
+      - uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ needs.resolve.outputs.release_tag }}
+          target_commitish: ${{ github.sha }}
+          name: "OpenCode v${{ needs.resolve.outputs.upstream_version }} 汉化版（实时预览版）"
+          body_path: release_notes.md
+          files: dist/*
+          overwrite_files: true
+          fail_on_unmatched_files: true
+          prerelease: true
