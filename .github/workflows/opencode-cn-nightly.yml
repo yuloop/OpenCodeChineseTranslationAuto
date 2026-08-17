@@ -1,7 +1,9 @@
 name: OpenCode Chinese Nightly
 
 # opencode 汉化版【实时预览版】自动构建发布流水线（nightly）
-# 每小时检查上游 dev 分支最新提交：有变化则校验翻译词表 100% 匹配 → 应用汉化 → 构建 → 发布 v<上游版本>-cn-nightly 预览版（覆盖同名 tag）
+# 每小时检查上游 dev 分支最新提交：有变化则校验翻译词表 100% 匹配 → 应用汉化 → 构建 →
+# 发布 v<上游版本>-cn-nightly-<SHA12> 新 tag（每次上游新提交即新 tag，展示真实发布时间；
+# 发布后自动清理旧预览版，页面只保留最新 1 个预览条目）
 # 正式版见 release.yml（跟随上游正式 Release tag）
 # 构建模式：不 merge 上游——独立 checkout 上游源码到 build/upstream，打补丁+应用翻译后构建
 
@@ -15,7 +17,7 @@ on:
         required: false
         type: string
       release_tag:
-        description: "本仓库发布 tag（留空为 v<上游版本>-cn-nightly）"
+        description: "本仓库发布 tag（留空为 v<上游版本>-cn-nightly-<SHA12>）"
         required: false
         type: string
 
@@ -67,23 +69,21 @@ jobs:
             exit 1
           }
 
-          release="${REQUESTED_RELEASE:-v${version}-cn-nightly}"
+          # tag 唯一化：默认 v<上游版本>-cn-nightly-<SHA12>，每次上游新提交都是全新 tag；
+          # 只有 REQUESTED_RELEASE 显式指定时才会覆盖同名 tag
+          release="${REQUESTED_RELEASE:-v${version}-cn-nightly-${sha:0:12}}"
           [[ "$release" =~ ^[0-9A-Za-z._-]+$ ]] || {
             echo "Invalid release tag: $release" >&2
             exit 1
           }
 
+          # 仅定时触发时：同名 tag 已存在（该 SHA 已构建发布过）→ 跳过本次构建。
+          # workflow_dispatch 由维护者显式触发：一律构建（同名 tag 会覆盖重建，便于手动重发）。
           should_build=true
-          prev_sha=""
           if [[ "${{ github.event_name }}" == "schedule" ]] &&
              gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${release}" >/dev/null 2>&1; then
-            # tag 已存在：读取上次构建记录的上游 SHA（release body 中反引号包裹的 12 位 hex）
-            # 与当前上游 SHA 比较：相同→跳过；不同→重建覆盖同名 release；提取失败→保守重建
-            body="$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${release}" --jq '.body' 2>/dev/null || true)"
-            prev_sha="$(printf '%s' "$body" | grep -oE '`[0-9a-f]{12}`' | head -1 | tr -d '`' || true)"
-            if [[ -n "$prev_sha" && "$prev_sha" == "${sha:0:12}" ]]; then
-              should_build=false
-            fi
+            should_build=false
+            echo "tag ${release} 已存在，本小时无需重复构建"
           fi
 
           echo "should_build=$should_build" >>"$GITHUB_OUTPUT"
@@ -91,7 +91,7 @@ jobs:
           echo "upstream_sha=$sha" >>"$GITHUB_OUTPUT"
           echo "upstream_version=$version" >>"$GITHUB_OUTPUT"
           echo "release_tag=$release" >>"$GITHUB_OUTPUT"
-          echo "上游: ${UPSTREAM_REPO}@${sha:0:12} (v${version})；发布 tag: ${release}；需要构建: $should_build；上次构建 SHA: ${prev_sha:-无}；当前 SHA: ${sha:0:12}"
+          echo "上游: ${UPSTREAM_REPO}@${sha:0:12} (v${version})；发布 tag: ${release}；需要构建: $should_build"
 
   translation-gate:
     name: Require complete translation match
@@ -235,7 +235,7 @@ jobs:
 
           - 上游最新提交：\`${UPSTREAM_SHA:0:12}\`（dev 分支，对应版本 v${UPSTREAM_VERSION}）
           - 翻译门禁：已知翻译规则 100% 匹配后才允许发布
-          - **实时预览版**：每小时跟随上游 \`dev\` 分支最新提交构建，覆盖同名 tag
+          - **实时预览版**：每小时跟随上游 \`dev\` 分支最新提交构建，每次上游新提交发布新 tag，自动清理旧预览版（页面只保留最新 1 个预览条目）
           - 追求稳定请下载正式版（跟随官方 Release，见仓库 Releases 最新版）
 
           ### 下载
@@ -246,6 +246,22 @@ jobs:
           | Linux/WSL x64 | \`opencode-zh-CN-${RELEASE_TAG}-linux-x64.zip\` |
 
           所有文件的 SHA-256 摘要见 \`SHA256SUMS\`。
+
+          ### 一键安装（预览版）
+
+          Windows PowerShell：
+
+          \`\`\`powershell
+          powershell -Command "irm https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAuto/main/install-preview.ps1 | iex"
+          \`\`\`
+
+          Linux / WSL：
+
+          \`\`\`bash
+          curl -fsSL https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAuto/main/install.sh | bash -s -- --preview
+          \`\`\`
+
+          预览版与正式版安装目录隔离（Windows \`%LOCALAPPDATA%\opencode-i18n-preview\`、Linux \`~/.opencode-i18n-preview\`），重跑同一命令即更新。
 
           > 本项目是社区维护的非官方汉化构建，与 OpenCode 官方团队无隶属关系。
           EOF
@@ -259,3 +275,15 @@ jobs:
           overwrite_files: true
           fail_on_unmatched_files: true
           prerelease: true
+      - name: Delete outdated preview releases
+        env:
+          GH_TOKEN: ${{ secrets.YU_TOKEN }}
+          CURRENT_TAG: ${{ needs.resolve.outputs.release_tag }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${GITHUB_REPOSITORY}/releases?per_page=100" --paginate \
+            --jq '.[] | select(.prerelease == true and .draft == false and .tag_name != env.CURRENT_TAG and (.tag_name | contains("-cn-nightly"))) | .id' \
+            | while read -r id; do
+                echo "deleting outdated preview release id=$id"
+                gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/$id" || echo "delete failed id=$id"
+              done

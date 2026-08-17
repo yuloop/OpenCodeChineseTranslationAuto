@@ -299,7 +299,7 @@ jobs:
 
           所有文件的 SHA-256 摘要见 \`SHA256SUMS\`。
 
-          ### 安装管理工具
+          ### 一键安装（正式版）
 
           Windows PowerShell：
 
@@ -312,6 +312,8 @@ jobs:
           \`\`\`bash
           curl -fsSL https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/main/install.sh | bash
           \`\`\`
+
+          实时预览版的一键安装命令见预览版 Release 页面与仓库 README。
 
           > 本项目是社区维护的非官方汉化构建，与 OpenCode 官方团队无隶属关系。
           EOF

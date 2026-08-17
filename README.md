@@ -21,6 +21,8 @@
 
 ## 快速安装
 
+### 正式版（跟随官方 Release）
+
 安装的是 `opencode-cli` 管理工具；随后用它下载经过校验的汉化版 OpenCode。
 
 ### Windows x64
@@ -50,6 +52,24 @@ opencode
 ```
 
 不希望通过管道执行脚本时，可以先下载并检查 `install.ps1` 或 `install.sh`，也可以直接从 Releases 下载对应压缩包。安装脚本会同时下载 `SHA256SUMS` 并校验管理工具。
+
+### 实时预览版（dev 分支，每日多次更新）
+
+> 预览版安装到独立目录（Linux `~/.opencode-i18n-preview`、Windows `%LOCALAPPDATA%\opencode-i18n-preview`），与正式版互不影响；重跑同一命令即更新。上游 `dev` 每有新提交就发布新 tag，Releases 页面只保留最新 1 个预览条目。
+
+Windows PowerShell：
+
+```powershell
+powershell -Command "irm https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAuto/main/install-preview.ps1 | iex"
+```
+
+Linux / WSL：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAuto/main/install.sh | bash -s -- --preview
+```
+
+安装的是汉化版 OpenCode TUI 本体，重新打开终端后直接运行 `opencode`。
 
 ## 自动汉化怎样工作
 
