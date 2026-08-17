@@ -40,7 +40,7 @@ if ($IsPreview) {
             $Releases = Invoke-RestMethod `
                 -Headers @{ Accept = "application/vnd.github+json"; "User-Agent" = "opencode-i18n-installer" } `
                 -Uri "https://api.github.com/repos/$Repo/releases?per_page=10"
-            $Release = $Releases | Where-Object { $_.prerelease -and $_.tag_name -like "*-cn-nightly" } | Select-Object -First 1
+            $Release = $Releases | Where-Object { $_.prerelease -and $_.tag_name -like "*-cn-nightly*" } | Select-Object -First 1
             if (-not $Release) {
                 throw "未找到 -cn-nightly 预览版 Release"
             }
