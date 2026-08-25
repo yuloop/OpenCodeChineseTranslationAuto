@@ -234,6 +234,9 @@ export async function handler(
             }
             headers.set(k, v)
           })
+          if (isNewInference) {
+            headers.set("x-opencode-model", model)
+          }
           headers.delete("host")
           headers.delete("content-length")
           if (!isNewInference) {
@@ -241,6 +244,7 @@ export async function handler(
             headers.delete("x-opencode-project")
             headers.delete("x-opencode-client")
             headers.delete("x-opencode-request")
+            headers.delete("x-opencode-model")
           }
           return headers
         })(),
