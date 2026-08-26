@@ -174,14 +174,16 @@ describe("inference stat normalization", () => {
     expect(queries[0]?.cohortDates).toEqual(["2026-08-10", "2026-08-17"])
     expect(queries[0]?.query).toContain("AND product = 'go'")
     expect(queries[0]?.query).toContain("COUNT(*) AS model_requests")
+    expect(queries[0]?.query).toContain("SUM(model_requests) AS total_requests")
+    expect(queries[0]?.query).toContain("MAX(model_requests) AS max_model_requests")
+    expect(queries[0]?.query).toContain("GROUP BY cohort_date, user_key")
+    expect(queries[0]?.query).toContain("INNER JOIN user_totals")
+    expect(queries[0]?.query).toContain("model_usage.model_requests = user_totals.max_model_requests")
+    expect(queries[0]?.query).toContain("user_totals.total_requests >= 10")
     expect(queries[0]?.query).toContain(
-      "SUM(model_requests) OVER (PARTITION BY cohort_date, user_key) AS total_requests",
+      "CAST(model_usage.model_requests AS double) / NULLIF(user_totals.total_requests, 0) >= 0.8",
     )
-    expect(queries[0]?.query).toContain("ROW_NUMBER() OVER")
-    expect(queries[0]?.query).toContain("PARTITION BY cohort_date, user_key")
-    expect(queries[0]?.query).toContain("ORDER BY model_requests DESC, model ASC")
-    expect(queries[0]?.query).toContain("total_requests >= 10")
-    expect(queries[0]?.query).toContain("CAST(model_requests AS double) / NULLIF(total_requests, 0) >= 0.8")
+    expect(queries[0]?.query).not.toContain(" OVER (")
     expect(queries[0]?.query).toContain("WHEN '2026-08-17' THEN '2026-08-10'")
     expect(queries[0]?.query).toContain("WHEN '2026-08-24' THEN '2026-08-17'")
     expect(queries[0]?.query).toContain("started_at >= '2026-08-10T00:00:00.000Z'")
