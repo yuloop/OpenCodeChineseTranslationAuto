@@ -163,24 +163,32 @@ describe("inference stat normalization", () => {
     expect(query).toContain("(source = 'inference' AND started_at >= '2026-08-11T10:57:48.186Z')")
   })
 
-  test("builds complete seven-day cohort retention queries", () => {
-    const queries = buildRetentionQueries(new Date("2026-08-10T00:00:00.000Z"), new Date("2026-08-20T00:00:00.000Z"), {
+  test("builds complete week-over-week retention queries", () => {
+    const queries = buildRetentionQueries(new Date("2026-08-10T00:00:00.000Z"), new Date("2026-08-31T00:00:00.000Z"), {
       namespace: "inference",
       table: "generation",
       dataset: "zen",
     })
 
     expect(queries).toHaveLength(1)
-    expect(queries[0]?.cohortDates).toEqual(["2026-08-10", "2026-08-11", "2026-08-12"])
+    expect(queries[0]?.cohortDates).toEqual(["2026-08-10", "2026-08-17"])
+    expect(queries[0]?.query).toContain("AND product = 'go'")
+    expect(queries[0]?.query).toContain("COUNT(*) AS model_requests")
+    expect(queries[0]?.query).toContain(
+      "SUM(model_requests) OVER (PARTITION BY cohort_date, user_key) AS total_requests",
+    )
     expect(queries[0]?.query).toContain("ROW_NUMBER() OVER")
     expect(queries[0]?.query).toContain("PARTITION BY cohort_date, user_key")
-    expect(queries[0]?.query).toContain("ORDER BY total_tokens DESC, requests DESC, model ASC")
+    expect(queries[0]?.query).toContain("ORDER BY model_requests DESC, model ASC")
+    expect(queries[0]?.query).toContain("total_requests >= 10")
+    expect(queries[0]?.query).toContain("CAST(model_requests AS double) / NULLIF(total_requests, 0) >= 0.8")
     expect(queries[0]?.query).toContain("WHEN '2026-08-17' THEN '2026-08-10'")
-    expect(queries[0]?.query).toContain("WHEN '2026-08-19' THEN '2026-08-12'")
+    expect(queries[0]?.query).toContain("WHEN '2026-08-24' THEN '2026-08-17'")
     expect(queries[0]?.query).toContain("started_at >= '2026-08-10T00:00:00.000Z'")
-    expect(queries[0]?.query).toContain("started_at < '2026-08-20T00:00:00.000Z'")
+    expect(queries[0]?.query).toContain("started_at < '2026-08-31T00:00:00.000Z'")
     expect(queries[0]?.query).toContain("LEFT JOIN returned ON primary_models.user_key = returned.user_key")
     expect(queries[0]?.query).toContain("primary_models.cohort_date = returned.cohort_date")
+    expect(queries[0]?.query).toContain("'Go' AS tier")
     expect(queries[0]?.query).toContain("COUNT(*) AS eligible_users")
     expect(queries[0]?.query).toContain("LIMIT 10000")
   })
