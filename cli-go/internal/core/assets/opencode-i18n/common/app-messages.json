@@ -11,7 +11,7 @@
     "title: \"Agent cycle\"": "title: \"智能体循环\"",
     "title: \"Agent cycle reverse\"": "title: \"智能体反向循环\"",
     "message: \"Failed to fork session\"": "message: \"分支会话失败\"",
-    "message: `Updating to v${version}...`": "message: `正在更新至 v${version}...`"
+    "message: `Updating to v${version}…`": "message: `正在更新至 v${version}...`"
   },
   "note": "已移除不再存在于源代码中的条目: update-available, copy issue URL, openrouter, console selection"
 }
