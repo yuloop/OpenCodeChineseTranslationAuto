@@ -11,7 +11,6 @@
     "(Recommended)": "(推荐)",
     "(API key)": "(API密钥)",
     "(ChatGPT Plus/Pro or API key)": "(ChatGPT Plus/Pro 或 API密钥)",
-    "<text fg={theme.textMuted}>Waiting for authorization...</text>": "<text fg={theme.textMuted}>等待授权...</text>",
     "<text fg={theme.error}>Invalid code</text>": "<text fg={theme.error}>无效的授权码</text>",
     "c <span style={{ fg: theme.textMuted }}>copy</span>": "c <span style={{ fg: theme.textMuted }}>复制</span>",
     "Low cost subscription for everyone": "适合所有人的低成本订阅",
@@ -20,6 +19,7 @@
     "to get a key": "获取密钥",
     "Copied to clipboard": "已复制到剪贴板",
     "Custom provider": "自定义提供商",
-    "This only stores a credential. Configure the provider in opencode.json to use it.": "这仅存储凭据。在 opencode.json 中配置提供商以使用它。"
+    "This only stores a credential. Configure the provider in opencode.json to use it.": "这仅存储凭据。在 opencode.json 中配置提供商以使用它。",
+    "<text fg={theme.textMuted}>Waiting for authorization…</text>": "<text fg={theme.textMuted}>等待授权...</text>"
   }
 }
