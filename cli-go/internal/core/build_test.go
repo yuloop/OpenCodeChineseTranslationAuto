@@ -133,14 +133,46 @@ func TestNewBuilderAutoDetectV2(t *testing.T) {
 
 func TestGetDistPathV1V2(t *testing.T) {
 	tmpDir := t.TempDir()
-	for _, layout := range []Layout{LayoutV1, LayoutV2} {
-		buildDir := filepath.Join(tmpDir, string(layout))
-		b := &Builder{buildDir: buildDir, layout: layout}
-		got := b.GetDistPath("linux-x64")
-		want := filepath.Join(buildDir, "dist", "opencode-linux-x64", "bin", "opencode")
-		if got != want {
-			t.Errorf("[%s] GetDistPath = %q, want %q", layout, got, want)
+	cases := []struct {
+		layout   Layout
+		platform string
+		bin      string
+	}{
+		{LayoutV1, "linux-x64", "opencode"},
+		{LayoutV2, "linux-x64", "opencode"},
+		{LayoutV2, "windows-x64", "opencode.exe"},
+		{LayoutV1, "windows-x64", "opencode.exe"},
+	}
+	for _, c := range cases {
+		buildDir := filepath.Join(tmpDir, string(c.layout))
+		b := &Builder{buildDir: buildDir, layout: c.layout}
+		subdir := "opencode-" + c.platform
+		if c.layout == LayoutV2 {
+			// 上游 build.ts: name = targetName(item).replace("opencode","cli")
+			subdir = "cli-" + c.platform
 		}
+		want := filepath.Join(buildDir, "dist", subdir, "bin", c.bin)
+		got := b.GetDistPath(c.platform)
+		if got != want {
+			t.Errorf("[%s %s] GetDistPath = %q, want %q", c.layout, c.platform, got, want)
+		}
+	}
+}
+
+func TestSourceVersion(t *testing.T) {
+	tmpDir := t.TempDir()
+	if err := os.WriteFile(filepath.Join(tmpDir, "package.json"), []byte(`{"name":"x","version":"2.0.12"}`), 0644); err != nil {
+		t.Fatalf("write: %v", err)
+	}
+	b := &Builder{buildDir: tmpDir}
+	if got := b.sourceVersion(); got != "2.0.12" {
+		t.Errorf("sourceVersion = %q, want %q", got, "2.0.12")
+	}
+
+	// 缺 package.json 时返回空字符串（调用方跳过设置 OPENCODE_VERSION）
+	empty := &Builder{buildDir: filepath.Join(tmpDir, "missing")}
+	if got := empty.sourceVersion(); got != "" {
+		t.Errorf("sourceVersion(missing) = %q, want empty", got)
 	}
 }
 
