@@ -268,7 +268,7 @@ func runFullWorkflow() {
 	runVerify(false, false)
 
 	fmt.Println("\n[4/5] 编译构建")
-	if err := RunBuild("", true, false); err != nil {
+	if err := RunBuild("", true, false, ""); err != nil {
 		fmt.Println("\n❌ 全流程中断: 构建失败")
 		return
 	}

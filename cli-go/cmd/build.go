@@ -15,8 +15,9 @@ var buildCmd = &cobra.Command{
 		platform, _ := cmd.Flags().GetString("platform")
 		deploy, _ := cmd.Flags().GetBool("deploy")
 		silent, _ := cmd.Flags().GetBool("silent")
+		layout, _ := cmd.Flags().GetString("layout")
 
-		if err := RunBuild(platform, deploy, silent); err != nil {
+		if err := RunBuild(platform, deploy, silent, layout); err != nil {
 			os.Exit(1)
 		}
 	},
@@ -27,19 +28,21 @@ func init() {
 	buildCmd.Flags().StringP("platform", "p", "", "Target platform (windows-x64, darwin-arm64, linux-x64)")
 	buildCmd.Flags().BoolP("deploy", "d", true, "Deploy to local bin directory")
 	buildCmd.Flags().Bool("silent", false, "Suppress output")
+	buildCmd.Flags().String("layout", "", "Force upstream source layout: v1|v2 (default: auto-detect)")
 }
 
 // RunBuild 供外部调用的构建函数
 // platform: 目标平台（如 windows-x64, darwin-arm64, linux-x64），空字符串自动检测
 // deploy: 构建后是否部署到本地 bin 目录
 // silent: 是否抑制输出
+// layout: 强制指定上游源码布局（v1|v2），空字符串自动探测
 // 返回: 构建错误，nil 表示成功
-func RunBuild(platform string, deploy bool, silent bool) error {
+func RunBuild(platform string, deploy bool, silent bool, layout string) error {
 	if platform == "" {
 		platform = core.DetectPlatform()
 	}
 
-	builder, err := core.NewBuilder()
+	builder, err := core.NewBuilder(layout)
 	if err != nil {
 		fmt.Printf("错误: 初始化构建器失败: %v\n", err)
 		return err
