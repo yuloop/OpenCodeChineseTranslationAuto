@@ -28,12 +28,37 @@ jobs:
           # 非 fork、无共享历史：必须 --allow-unrelated-histories
           # -X ours：README.md/CHANGELOG.md/.gitignore 等两边都有的根文档冲突时保留汉化仓库版本
           # 上游独有文件（packages/、src/ 等源码）作为新增文件正常合入
-          # --no-commit：先暂存 merge 不提交，让下面的 restore 生效时 HEAD 仍是 merge 前的本仓库版本
-          # （若用自动提交的 merge，恢复 workflow 目录的命令将无效）
-          git merge --no-commit --allow-unrelated-histories -X ours FETCH_HEAD
-          # 上游带入的 workflow 文件不保留（恢复本仓库自己的 .github/workflows），避免 push 需要 workflows 权限
-          # 用 git restore 而非 checkout HEAD：目录路径的 checkout 不会删除上游新增的 workflow 文件
-          git restore --source=HEAD --staged --worktree .github/workflows
+          # --no-commit：先暂存 merge 不提交，让下面的还原生效时 HEAD 仍是 merge 前的本仓库版本
+          # （若用自动提交的 merge，还原 workflow 目录的命令将无效）
+          # 本仓库删除了部分上游 workflow（如 models-snapshot.yml），上游仍在修改它们 → modify/delete 冲突
+          # 注意：-X ours 只作用于两边都存在文件的文本冲突，对 modify/delete 冲突无效，
+          # merge 会带着未解决冲突以非零退出；set -euo pipefail 会直接把 step 判失败，
+          # 导致下面的还原逻辑根本没机会执行（曾因此连续失败）。
+          # || true：不让 merge 的非零退出中止 step，未解决冲突统一在下面按 workflow 目录整体处理
+          git merge --no-commit --allow-unrelated-histories -X ours --no-edit FETCH_HEAD || true
+          # 先清掉 .github/workflows/ 下的全部 unmerged 条目：
+          # modify/delete 冲突会让后面的 checkout 报错（Merging is not possible because you have
+          # unmerged files），-f 也是必须的——unmerged 条目的工作区文件与索引、HEAD 都不同，普通
+          # git rm 会拒绝执行
+          git ls-files -u | awk '{print $4}' | sort -u | grep '^\.github/workflows/' | xargs -r git rm -f -q || true
+          # 整体还原本仓库的 workflow 目录：上游修改/删除的内容一律回退为 HEAD 版本
+          git checkout -q HEAD -- .github/workflows || true
+          git add .github/workflows
+          # 上游新增的 workflow 文件不在 HEAD 里，上面的 checkout 不会删除它们，git add 反而会把它们
+          # 带上并提交；显式清掉，保证 push 时 .github/workflows 与本仓库 merge 前完全一致
+          # （否则 push 会因引入上游 workflow 文件而需要 workflows 权限被拒）
+          git diff --cached --name-only --diff-filter=A -- .github/workflows | xargs -r git rm -f -q || true
+          # 若仍有非 workflow 的未解决冲突 → 打印 status 并 exit 2（明确失败，不假装成功）
+          if git ls-files -u | grep -v "^\.github/workflows/" | grep -q .; then
+            echo "存在非 workflow 文件冲突，需人工处理"
+            git status --short | head -20
+            exit 2
+          fi
+          # 若无任何变更（git diff --cached --quiet）→ 打印“无变更，跳过提交”并 exit 0
+          if git diff --cached --quiet; then
+            echo "无变更，跳过提交"
+            exit 0
+          fi
           # 生成 merge commit（workflow 目录与 merge 前一致，push 仅需 contents: write）
           git commit --no-edit
           git push origin main
