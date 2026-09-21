@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -323,6 +324,16 @@ func (b *Builder) Build(platform string, silent bool) error {
 		env = append(env, "OPENCODE_CHANNEL=latest")
 	}
 
+	// 用源码 package.json 的 version 固定嵌入版本号。
+	// 上游 packages/script/src/index.ts 在 channel=latest 且未显式设 OPENCODE_VERSION 时，
+	// 会 fetch npm @opencode/cli 的 latest 版本并 patch+1，导致从 v2.0.12 源码构建出 v2.0.13，
+	// 与 git tag 不一致。显式设 OPENCODE_VERSION=<源码版本> 可让 --version 忠实反映所构建的源码。
+	if _, exists := os.LookupEnv("OPENCODE_VERSION"); !exists {
+		if v := b.sourceVersion(); v != "" {
+			env = append(env, "OPENCODE_VERSION="+v)
+		}
+	}
+
 	if err := ExecLiveEnv(b.bunPath, args, env); err != nil {
 		return fmt.Errorf("bun 构建脚本执行失败: %w", err)
 	}
@@ -408,14 +419,38 @@ func (b *Builder) ensureWorkspaceLinks(repoRoot string, silent bool) {
 	}
 }
 
+// sourceVersion 读取构建包 package.json 的 version 字段
+// V1: packages/opencode/package.json；V2: packages/cli/package.json（即 buildDir/package.json）。
+// 读取失败返回空字符串（调用方据此跳过设置 OPENCODE_VERSION）。
+func (b *Builder) sourceVersion() string {
+	data, err := os.ReadFile(filepath.Join(b.buildDir, "package.json"))
+	if err != nil {
+		return ""
+	}
+	var pkg struct {
+		Version string `json:"version"`
+	}
+	if err := json.Unmarshal(data, &pkg); err != nil {
+		return ""
+	}
+	return pkg.Version
+}
+
 // GetDistPath 获取编译产物路径
-// V1/V2 产物布局一致：<buildDir>/dist/opencode-<platform>/bin/opencode[.exe]
+// V1 产物布局: <buildDir>/dist/opencode-<platform>/bin/opencode[.exe]
+// V2 产物布局: <buildDir>/dist/cli-<platform>/bin/opencode[.exe]
+// 依据上游 packages/cli/script/build.ts: 输出目录名 = targetName(item).replace("opencode","cli")，
+// 而 --target 仍为 opencode-<platform>，故 V2 的产物子目录是 cli-<platform> 而非 opencode-<platform>。
 func (b *Builder) GetDistPath(platform string) string {
 	ext := ""
 	if strings.HasPrefix(platform, "windows") {
 		ext = ".exe"
 	}
-	return filepath.Join(b.buildDir, "dist", "opencode-"+platform, "bin", "opencode"+ext)
+	subdir := "opencode-" + platform
+	if b.layout == LayoutV2 {
+		subdir = "cli-" + platform
+	}
+	return filepath.Join(b.buildDir, "dist", subdir, "bin", "opencode"+ext)
 }
 
 // DeployToLocal 部署到本地 bin 目录 (统一目录: ~/.opencode-i18n/build)
