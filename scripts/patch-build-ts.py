@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Teach OpenCode's build script to compile one requested cross-platform target."""
+"""Teach OpenCode's build script to compile one requested cross-platform target.
+
+V2 upstream already supports --target= and --outdir= natively; for V2 this script
+is a no-op and simply returns success so callers (including CI) can keep invoking
+it unconditionally.
+"""
 
 from pathlib import Path
 import sys
@@ -44,10 +49,25 @@ const targets = requestedTarget
 
 
 def main() -> None:
-    if len(sys.argv) != 2:
-        raise SystemExit("usage: patch-build-ts.py <path-to-build.ts>")
+    if len(sys.argv) < 2:
+        raise SystemExit("usage: patch-build-ts.py [--layout v1|v2] <path-to-build.ts>")
 
-    path = Path(sys.argv[1])
+    layout = "v1"
+    argv = sys.argv[1:]
+    if argv[0] == "--layout":
+        if len(sys.argv) < 4:
+            raise SystemExit("usage: patch-build-ts.py --layout v1|v2 <path-to-build.ts>")
+        layout = sys.argv[2].lower()
+        argv = sys.argv[3:]
+
+    if layout == "v2":
+        print("V2 layout detected: build.ts already supports --target=/--outdir= natively; skipping patch")
+        raise SystemExit(0)
+
+    if len(argv) != 1:
+        raise SystemExit("usage: patch-build-ts.py [--layout v1|v2] <path-to-build.ts>")
+
+    path = Path(argv[0])
     if not path.is_file():
         raise SystemExit(f"build script not found: {path}")
     patch(path)
