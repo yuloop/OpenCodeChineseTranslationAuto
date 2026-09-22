@@ -1,7 +1,7 @@
 name: OpenCode V2 Nightly (inject + build + release)
 
 # ============================================================================
-# opencode V2 linux-x64 汉化构建发布流水线（注入 V2 中文 → 构建 → 打包 → 发 Release）
+# opencode V2 linux-x64 + windows-x64 汉化构建发布流水线（注入 V2 中文 → 构建 → 打包 → 发 Release）
 # ----------------------------------------------------------------------------
 # 【本版定位】V2 专用线，与 V1 生产流水线 .github/workflows/opencode-cn-nightly.yml
 #   零共享：独立文件名、独立 concurrency group、独立缓存 key 前缀、独立 job。
@@ -136,7 +136,7 @@ jobs:
           echo "上游: ${UPSTREAM_REPO} tag ${tag} = ${upstream_sha:0:12} (v${version})；发布 tag: ${release}；需要构建: $should_build"
 
   build-v2:
-    name: Inject V2 zh-CN, build linux-x64, publish release
+    name: Inject V2 zh-CN, build linux-x64 + windows-x64, publish release
     needs: resolve
     if: needs.resolve.outputs.should_build == 'true'
     runs-on: ubuntu-latest
@@ -221,40 +221,80 @@ jobs:
           OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
         run: ./dist/opencode-cli apply --strict --min-match-rate "${V2_MIN_MATCH_RATE}"
 
-      # 9) 构建 linux-x64（cli-go 自动探测 V2 布局；未显式设 OPENCODE_VERSION 时
-      #    由工具从 packages/cli/package.json 读取注入，--version 忠实反映上游版本）
-      - name: Build V2 linux-x64 binary
+      # 9) 构建两个平台二进制（linux-x64 + windows-x64）。cli-go 对 V2 布局自动探测，
+      #    --target=opencode-<platform>；未显式设 OPENCODE_VERSION 时由工具从
+      #    packages/cli/package.json 读取注入，--version 忠实反映上游版本。
+      #    注入/门禁只在本步之前跑一遍（共享），此处按平台并列构建、不重复注入。
+      #    关键：上游 build.ts 每次运行都会 rm -rf packages/cli/dist，故每构建完一个
+      #    平台立即把二进制拷出到顶层 dist/，否则下一个平台会抹掉上一个的产物。
+      - name: Build V2 binaries (linux-x64 + windows-x64)
         env:
           OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
           OPENCODE_CHANNEL: latest
-        run: ./dist/opencode-cli build --platform linux-x64 --deploy=false
+          TAG: ${{ needs.resolve.outputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          for platform in linux-x64 windows-x64; do
+            ext=""
+            [[ "$platform" == windows-* ]] && ext=".exe"
+            src="build/upstream/packages/cli/dist/cli-${platform}/bin/opencode${ext}"
+            echo "::group::Build V2 ${platform}"
+            ./dist/opencode-cli build --platform "${platform}" --deploy=false
+            echo "::endgroup::"
+            [[ -f "$src" ]] || { echo "Binary not found: $src" >&2; exit 1; }
+            cp "$src" "dist/opencode-v2-${TAG}-${platform}"
+            echo "copied ${src} -> dist/opencode-v2-${TAG}-${platform} ($(stat -c %s "dist/opencode-v2-${TAG}-${platform}") bytes)"
+          done
+          ls -l "dist/opencode-v2-${TAG}-"*
 
-      # 10) 校验产物：文件存在 + --version 与上游 packages/cli/package.json 一致
-      - name: Verify built binary
+      # 10) 校验两个产物：linux 二进制 --version 须 = 上游 packages/cli/package.json；
+      #     windows 是 PE，linux runner 跑不了 .exe，改核 PE 结构（MZ 签名 + PE 头 + x64）。
+      - name: Verify built binaries
         id: verify
         env:
           VERSION: ${{ needs.resolve.outputs.version }}
+          TAG: ${{ needs.resolve.outputs.tag }}
         run: |
           set -euo pipefail
-          binary="build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode"
-          [[ -f "$binary" ]] || { echo "Binary not found: $binary" >&2; exit 1; }
-          output="$("$binary" --version)"
-          echo "$binary --version -> $output"
+          linux_bin="dist/opencode-v2-${TAG}-linux-x64"
+          windows_bin="dist/opencode-v2-${TAG}-windows-x64"
+          [[ -f "$linux_bin" ]] || { echo "linux binary not found: $linux_bin" >&2; exit 1; }
+          [[ -f "$windows_bin" ]] || { echo "windows binary not found: $windows_bin" >&2; exit 1; }
+
+          # linux：直接跑 --version 核对上游版本
+          output="$("$linux_bin" --version)"
+          echo "$linux_bin --version -> $output"
           [[ "$output" == *"v${VERSION}"* ]] || {
-            echo "版本不匹配：期望 v${VERSION}，实际 $output" >&2
+            echo "linux 版本不匹配：期望 v${VERSION}，实际 $output" >&2
             exit 1
           }
 
+          # windows：核 PE 结构（前两字节 MZ + 0x3C 处 e_lfanew 指向的 PE 头 + machine x64）
+          python3 - "$windows_bin" <<'PY'
+          import sys
+          p = sys.argv[1]
+          with open(p, "rb") as f:
+              data = f.read()
+          assert data[:2] == b"MZ", "not a PE: missing MZ signature"
+          pe_off = int.from_bytes(data[0x3C:0x40], "little")
+          assert data[pe_off:pe_off+4] == b"PE\x00\x00", "not a PE: missing PE header"
+          machine = int.from_bytes(data[pe_off+4:pe_off+6], "little")
+          assert machine == 0x8664, f"unexpected PE machine: {machine:#x} (expected 0x8664 x64)"
+          print(f"{p}: PE OK (MZ + PE header @ {pe_off}, machine=0x{machine:x} x64, {len(data)} bytes)")
+          PY
+
       # 11) 中文落地验证：注入的中文译文必须真的在二进制里（不只凭 CI 绿点）。
-      #     bun --compile（minify + bytecode）把非 ASCII 以 \uXXXX 转义形态嵌入
-      #     模块源码（bun 1.4.2 本地实测），故两种形态都接受；4 条已知译文
-      #     （与 assets/opencode-i18n-v2/anchors 真实译文一一对应）至少命中 3 条，
-      #     另输出 CJK 转义序列总量作为佐证。
-      - name: Verify Chinese strings landed in binary
+      #     对 linux + windows 两个产物同口径各跑一遍：4 条已知译文至少命中 3 条，
+      #     并输出 CJK 转义序列总量。bun --compile（minify + bytecode）把非 ASCII 以
+      #     \uXXXX 转义形态嵌入模块源码（bun 1.4.2 本地实测），故两种形态都接受；
+      #     grep -a 对 .exe 同样按字节匹配，windows 产物与 linux 同口径核验。
+      - name: Verify Chinese strings landed in binaries
         id: zhcheck
+        env:
+          TAG: ${{ needs.resolve.outputs.tag }}
         run: |
           set -euo pipefail
-          binary="build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode"
           python3 - <<'PY' >zh-targets.txt
           targets = [
               "列出所有智能体",                    # packages/cli/src/commands/commands.ts (agents)
@@ -266,59 +306,77 @@ jobs:
               esc = "".join(c if ord(c) < 128 else "\\u%04X" % ord(c) for c in t)
               print(f"{esc}\t{t}")
           PY
-          hits=0
           : >zh-check.txt
-          while IFS=$'\t' read -r esc raw; do
-            if grep -aqF "$esc" "$binary"; then
-              hits=$((hits + 1))
-              printf -- '- 命中注入译文（bun 转义形态）: %s\n' "$raw" >>zh-check.txt
-            elif grep -aqF "$raw" "$binary"; then
-              hits=$((hits + 1))
-              printf -- '- 命中注入译文（原始 UTF-8 形态）: %s\n' "$raw" >>zh-check.txt
-            else
-              printf -- '- 未命中: %s\n' "$raw" >>zh-check.txt
-            fi
-          done <zh-targets.txt
-          cjk="$(grep -ao '\\u[4-9][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]' "$binary" | wc -l || true)"
-          [[ "$cjk" =~ ^[0-9]+$ ]] || cjk=0
-          printf -- '- CJK 转义序列（\\u4E00-\\u9FFF）出现次数: %s\n' "$cjk" >>zh-check.txt
+          fail=0
+          for platform in linux-x64 windows-x64; do
+            binary="dist/opencode-v2-${TAG}-${platform}"
+            key="${platform%%-*}"
+            printf '### %s\n' "$platform" >>zh-check.txt
+            hits=0
+            while IFS=$'\t' read -r esc raw; do
+              if grep -aqF "$esc" "$binary"; then
+                hits=$((hits + 1))
+                printf -- '- 命中注入译文（bun 转义形态）: %s\n' "$raw" >>zh-check.txt
+              elif grep -aqF "$raw" "$binary"; then
+                hits=$((hits + 1))
+                printf -- '- 命中注入译文（原始 UTF-8 形态）: %s\n' "$raw" >>zh-check.txt
+              else
+                printf -- '- 未命中: %s\n' "$raw" >>zh-check.txt
+              fi
+            done <zh-targets.txt
+            cjk="$(grep -ao '\\u[4-9][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]' "$binary" | wc -l || true)"
+            [[ "$cjk" =~ ^[0-9]+$ ]] || cjk=0
+            printf -- '- CJK 转义序列（\\u4E00-\\u9FFF）出现次数: %s\n' "$cjk" >>zh-check.txt
+            printf -- '- 已知译文命中: %s/4\n\n' "$hits" >>zh-check.txt
+            echo "[$platform] hits=$hits cjk=$cjk"
+            [[ "$hits" -ge 3 ]] || {
+              echo "$platform 中文落地验证失败：已知译文仅命中 $hits/4 条" >&2
+              fail=1
+            }
+            echo "hits_${key}=$hits" >>"$GITHUB_OUTPUT"
+            echo "cjk_${key}=$cjk" >>"$GITHUB_OUTPUT"
+          done
           cat zh-check.txt
-          [[ "$hits" -ge 3 ]] || {
-            echo "中文落地验证失败：已知译文仅命中 $hits/4 条" >&2
-            exit 1
-          }
-          echo "hits=$hits" >>"$GITHUB_OUTPUT"
-          echo "cjk=$cjk" >>"$GITHUB_OUTPUT"
+          [[ "$fail" -eq 0 ]] || exit 1
 
-      # 12) 打包二进制 + sha256（V2 线发 Release：附二进制 + SHA256SUMS）
-      - name: Package binary and checksum
+      # 12) 打包两个二进制 + sha256（V2 线发 Release：附两个二进制 + SHA256SUMS 两行）。
+      - name: Package binaries and checksums
         id: package
         env:
           TAG: ${{ needs.resolve.outputs.tag }}
         run: |
           set -euo pipefail
           mkdir -p dist
-          binary="build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode"
-          cp "$binary" "dist/opencode-v2-${TAG}-linux-x64"
+          for platform in linux-x64 windows-x64; do
+            [[ -f "dist/opencode-v2-${TAG}-${platform}" ]] || {
+              echo "missing dist/opencode-v2-${TAG}-${platform}" >&2
+              exit 1
+            }
+          done
           (
             cd dist
-            sha256sum "opencode-v2-${TAG}-linux-x64" >SHA256SUMS
+            sha256sum "opencode-v2-${TAG}-linux-x64" "opencode-v2-${TAG}-windows-x64" >SHA256SUMS
             cat SHA256SUMS
           )
-          size_bytes="$(stat -c %s "dist/opencode-v2-${TAG}-linux-x64")"
-          size_human="$(numfmt --to=iec --suffix=B "$size_bytes")"
-          sha256="$(cut -d' ' -f1 dist/SHA256SUMS)"
-          echo "size_bytes=$size_bytes" >>"$GITHUB_OUTPUT"
-          echo "size_human=$size_human" >>"$GITHUB_OUTPUT"
-          echo "sha256=$sha256" >>"$GITHUB_OUTPUT"
-          echo "产物: opencode-v2-${TAG}-linux-x64 (${size_human}) sha256=${sha256}"
+          for platform in linux-x64 windows-x64; do
+            f="dist/opencode-v2-${TAG}-${platform}"
+            key="${platform%%-*}"
+            size_bytes="$(stat -c %s "$f")"
+            size_human="$(numfmt --to=iec --suffix=B "$size_bytes")"
+            sha256="$(sha256sum "$f" | cut -d' ' -f1)"
+            echo "size_bytes_${key}=$size_bytes" >>"$GITHUB_OUTPUT"
+            echo "size_human_${key}=$size_human" >>"$GITHUB_OUTPUT"
+            echo "sha256_${key}=$sha256" >>"$GITHUB_OUTPUT"
+            echo "产物: opencode-v2-${TAG}-${platform} (${size_human}) sha256=${sha256}"
+          done
 
-      - name: Upload binary artifact
+      - name: Upload binary artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: opencode-v2-${{ needs.resolve.outputs.tag }}-linux-x64
+          name: opencode-v2-${{ needs.resolve.outputs.tag }}-binaries
           path: |
             dist/opencode-v2-${{ needs.resolve.outputs.tag }}-linux-x64
+            dist/opencode-v2-${{ needs.resolve.outputs.tag }}-windows-x64
             dist/SHA256SUMS
           if-no-files-found: error
 
@@ -330,19 +388,21 @@ jobs:
           UPSTREAM_SHA: ${{ needs.resolve.outputs.upstream_sha }}
           RELEASE_TAG: ${{ needs.resolve.outputs.release_tag }}
           ASSETS_COMMIT: ${{ steps.assets.outputs.assets_commit }}
-          SHA256: ${{ steps.package.outputs.sha256 }}
-          SIZE_HUMAN: ${{ steps.package.outputs.size_human }}
+          SHA256_LINUX: ${{ steps.package.outputs.sha256_linux }}
+          SIZE_HUMAN_LINUX: ${{ steps.package.outputs.size_human_linux }}
+          SHA256_WINDOWS: ${{ steps.package.outputs.sha256_windows }}
+          SIZE_HUMAN_WINDOWS: ${{ steps.package.outputs.size_human_windows }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           set -euo pipefail
           gate="$(grep -E '📁 文件:|📝 替换:' apply-dry.log | sed 's/^ *//' | tr '\n' ' ')"
           cat >release_notes.md <<EOF
-          ## OpenCode CLI/TUI 简体中文汉化版 · V2 线（linux-x64）
+          ## OpenCode CLI/TUI 简体中文汉化版 · V2 线（linux-x64 + windows-x64）
 
           - 上游基线：\`${UPSTREAM_REPO}\` tag \`${TAG}\`（commit \`${UPSTREAM_SHA:0:12}\`，版本 v${VERSION}）
           - 注入的汉化资产：commit \`${ASSETS_COMMIT:0:12}\`（\`cli-go/internal/core/assets/opencode-i18n-v2/\`，V2 专用资产，由 V1 词表重新锚定生成）
           - 翻译门禁：\`apply --dry-run --strict --min-match-rate ${V2_MIN_MATCH_RATE}\` → ${gate}
-          - 构建：linux-x64 单平台（bun ${BUN_VERSION} + cli-go 工具链），\`--version\` = \`opencode v${VERSION}\`
+          - 构建：linux-x64 + windows-x64 两平台（bun ${BUN_VERSION} + cli-go 工具链，注入/门禁只跑一遍、两平台共享）；linux \`--version\` = \`opencode v${VERSION}\`
           - 构建流水线：${RUN_URL}
 
           ### 中文落地验证（CI 实测）
@@ -351,15 +411,19 @@ jobs:
 
           ### 下载与校验
 
-          | 文件 | sha256 | 体积 |
-          |---|---|---|
-          | \`opencode-v2-${TAG}-linux-x64\` | \`${SHA256}\` | ${SIZE_HUMAN} |
-          | \`SHA256SUMS\` | — | 全部产物摘要 |
+          | 文件 | 平台 | sha256 | 体积 |
+          |---|---|---|---|
+          | \`opencode-v2-${TAG}-linux-x64\` | Linux x64 | \`${SHA256_LINUX}\` | ${SIZE_HUMAN_LINUX} |
+          | \`opencode-v2-${TAG}-windows-x64\` | Windows x64 (PE) | \`${SHA256_WINDOWS}\` | ${SIZE_HUMAN_WINDOWS} |
+          | \`SHA256SUMS\` | — | 上面两行的摘要 | — |
 
           \`\`\`bash
+          # linux-x64
           curl -fsLO https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/opencode-v2-${TAG}-linux-x64
+          # windows-x64（PE 可执行；在 Windows 上重命名为 .exe 后运行）
+          curl -fsLO https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/opencode-v2-${TAG}-windows-x64
           curl -fsLO https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/SHA256SUMS
-          sha256sum -c SHA256SUMS
+          sha256sum -c SHA256SUMS        # 两行都应 OK
           chmod +x opencode-v2-${TAG}-linux-x64
           ./opencode-v2-${TAG}-linux-x64 --version
           \`\`\`
@@ -371,7 +435,7 @@ jobs:
           - 社区维护的非官方汉化构建，与 OpenCode 官方团队无隶属关系。
           EOF
 
-      # 14) 发布 Release（tag v2-cn-<上游版本>；附二进制 + SHA256SUMS）
+      # 14) 发布 Release（tag v2-cn-<上游版本>；一次附上 linux + windows 两个二进制 + SHA256SUMS）
       - name: Publish release
         uses: softprops/action-gh-release@v3
         with:
@@ -381,6 +445,7 @@ jobs:
           body_path: release_notes.md
           files: |
             dist/opencode-v2-${{ needs.resolve.outputs.tag }}-linux-x64
+            dist/opencode-v2-${{ needs.resolve.outputs.tag }}-windows-x64
             dist/SHA256SUMS
           overwrite_files: true
           fail_on_unmatched_files: true
