@@ -1,0 +1,13 @@
+{
+  "file": "packages/tui/src/component/dialog-model.tsx",
+  "replacements": {
+    "\"Favorites\"": "\"收藏\"",
+    "\"Free\"": "\"免费\"",
+    "\"Recent\"": "\"最近\"",
+    "(Favorite)": "(收藏)",
+    "category: \"Popular providers\"": "category: \"热门提供商\"",
+    "return \"Select model\"": "return \"选择模型\"",
+    "title: \"Favorite\"": "title: \"收藏\"",
+    "title: connected() ? \"Connect provider\" : \"View all providers\"": "title: connected() ? \"连接提供商\" : \"查看所有提供商\""
+  }
+}

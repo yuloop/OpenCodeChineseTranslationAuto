@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/dialog-session-rename.tsx",
+  "replacements": {
+    "title=\"Rename Session\"": "title=\"重命名会话\""
+  }
+}

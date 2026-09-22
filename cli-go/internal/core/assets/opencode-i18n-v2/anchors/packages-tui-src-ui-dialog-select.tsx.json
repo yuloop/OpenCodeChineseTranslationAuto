@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/ui/dialog-select.tsx",
+  "replacements": {
+    "<text fg={theme.textMuted}>No results found</text>": "<text fg={theme.textMuted}>未找到结果</text>",
+    "placeholder={props.placeholder ?? \"Search\"}": "placeholder={props.placeholder ?? \"搜索\"}"
+  }
+}

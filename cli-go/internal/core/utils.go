@@ -128,6 +128,35 @@ func GetI18nDir() (string, error) {
 	return "", nil // 返回空表示使用内嵌资源
 }
 
+// GetI18nDirForLayout 按源码布局获取汉化资产目录
+// V1 布局：与历史行为完全一致（外部 opencode-i18n > 源码树 assets > 内嵌）
+// V2 布局：优先 V2 专用资产（外部 opencode-i18n-v2 > assets/opencode-i18n-v2）；
+// 都找不到时返回空字符串，由调用方回落到内嵌 assets/opencode-i18n-v2
+func GetI18nDirForLayout(layout Layout) (string, error) {
+	if layout != LayoutV2 {
+		return GetI18nDir()
+	}
+
+	projectDir, err := GetProjectDir()
+	if err != nil {
+		return "", nil // 返回空表示使用内嵌资源
+	}
+
+	// 检查项目根目录下的外部 V2 资产目录（开发/覆盖用）
+	externalDir := filepath.Join(projectDir, "opencode-i18n-v2")
+	if DirExists(externalDir) {
+		return externalDir, nil
+	}
+
+	// 检查 cli-go 内的 V2 资产目录（源码开发环境）
+	assetsDir := filepath.Join(projectDir, "cli-go", "internal", "core", "assets", "opencode-i18n-v2")
+	if DirExists(assetsDir) {
+		return assetsDir, nil
+	}
+
+	return "", nil // 返回空表示使用内嵌资源
+}
+
 // IsUsingEmbeddedI18n 检查是否使用内嵌的汉化资源
 func IsUsingEmbeddedI18n() bool {
 	dir, _ := GetI18nDir()

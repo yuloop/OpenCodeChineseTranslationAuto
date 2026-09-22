@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/ui/dialog.tsx",
+  "replacements": {
+    "message: \"Copied to clipboard\"": "message: \"已复制到剪贴板\""
+  }
+}

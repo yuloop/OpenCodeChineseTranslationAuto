@@ -1,0 +1,6 @@
+{
+  "file": "packages/opencode/src/cli/error.ts",
+  "replacements": {
+    "Try: \\`opencode models\\` to list available models": "试试：\\`opencode models\\` 列出可用模型"
+  }
+}

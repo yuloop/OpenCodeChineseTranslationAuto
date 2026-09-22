@@ -1,0 +1,10 @@
+{
+  "file": "packages/tui/src/mini/footer.permission.tsx",
+  "replacements": {
+    "Always allow": "始终允许",
+    "No diff provided": "未提供差异内容",
+    "Permission required": "需要权限",
+    "Reject permission": "拒绝权限",
+    "Tell OpenCode what to do differently": "告诉 OpenCode 如何调整"
+  }
+}

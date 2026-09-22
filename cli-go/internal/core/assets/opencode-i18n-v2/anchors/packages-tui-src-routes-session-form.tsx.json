@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/routes/session/form.tsx",
+  "replacements": {
+    "(not answered)": "(未回答)",
+    "Type your own answer": "输入你自己的答案",
+    "placeholder=\"Type your own answer\"": "placeholder=\"输入你自己的答案\""
+  }
+}

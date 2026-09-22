@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/ui/dialog-prompt.tsx",
+  "replacements": {
+    "<span style={{ fg: theme.textMuted }}>submit</span>": "<span style={{ fg: theme.textMuted }}>提交</span>",
+    "placeholder={props.placeholder ?? \"Enter text\"}": "placeholder={props.placeholder ?? \"输入文本\"}"
+  }
+}

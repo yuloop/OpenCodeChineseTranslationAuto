@@ -1,0 +1,10 @@
+{
+  "file": "packages/tui/src/component/dialog-session-list.tsx",
+  "replacements": {
+    "\"Today\"": "\"今天\"",
+    "`Press ${deleteHint()} again to confirm`": "`再次按 ${deleteHint()} 确认`",
+    "title: \"delete\"": "title: \"删除\"",
+    "title: \"rename\"": "title: \"重命名\"",
+    "title=\"Sessions\"": "title=\"会话列表\""
+  }
+}

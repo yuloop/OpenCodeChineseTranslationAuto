@@ -1,0 +1,6 @@
+{
+  "file": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
+  "replacements": {
+    "Allow always": "始终允许"
+  }
+}

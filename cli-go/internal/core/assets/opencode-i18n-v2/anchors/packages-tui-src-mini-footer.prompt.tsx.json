@@ -1,0 +1,23 @@
+{
+  "file": "packages/tui/src/mini/footer.prompt.tsx",
+  "replacements": {
+    "Autocomplete": "自动补全",
+    "Clear prompt or exit": "清除提示或退出",
+    "Complete autocomplete item": "确认自动补全项",
+    "Hide autocomplete": "隐藏自动补全",
+    "Interrupt session": "中断会话",
+    "Next autocomplete item": "下一个自动补全项",
+    "Next prompt history": "下一条提示历史",
+    "Open editor": "打开编辑器",
+    "Previous autocomplete item": "上一个自动补全项",
+    "Previous prompt history": "上一条提示历史",
+    "Select autocomplete item": "选择自动补全项",
+    "close OpenCode": "关闭 OpenCode",
+    "compose in your external editor": "在外部编辑器中编写",
+    "empty prompt ignored": "已忽略空提示",
+    "failed to open editor": "打开编辑器失败",
+    "loading commands": "命令加载中",
+    "start a new session": "开始新会话",
+    "waiting for current response": "等待当前响应完成"
+  }
+}

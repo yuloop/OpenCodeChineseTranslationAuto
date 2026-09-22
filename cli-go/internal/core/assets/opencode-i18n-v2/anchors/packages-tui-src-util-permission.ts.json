@@ -1,0 +1,16 @@
+{
+  "file": "packages/tui/src/util/permission.ts",
+  "replacements": {
+    "Allow once": "允许一次",
+    "Cancel": "取消",
+    "Confirm": "确认",
+    "Continue after repeated failures": "连续失败后继续",
+    "Path: ": "路径: ",
+    "Pattern: ": "模式: ",
+    "Reject": "拒绝",
+    "Shell command": "Shell 命令",
+    "This keeps the session running despite repeated failures.": "即使连续失败也保持会话运行。",
+    "title: \"Continue after repeated failures\"": "title: \"连续失败后继续\"",
+    "title: `WebFetch ${url}`": "title: `网页获取 ${url}`"
+  }
+}

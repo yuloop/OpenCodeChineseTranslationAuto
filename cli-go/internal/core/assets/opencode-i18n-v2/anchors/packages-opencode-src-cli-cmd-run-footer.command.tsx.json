@@ -1,0 +1,10 @@
+{
+  "file": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+  "replacements": {
+    "MCP Commands": "MCP 命令",
+    "Project Commands": "项目命令",
+    "Skills": "技能",
+    "Skills loading": "技能加载中",
+    "current": "当前"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/util/permission.ts",
+  "replacements": {
+    "This keeps the session running despite repeated failures.": "这使会话在重复失败后继续运行。"
+  }
+}
