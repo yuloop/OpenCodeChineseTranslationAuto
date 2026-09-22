@@ -235,3 +235,107 @@ gh workflow run opencode-cn-v2-nightly.yml \
 - V1 铁律:`.github/workflows/opencode-cn-nightly.yml`、`release.yml`、`scripts/patch-build-ts.py`、V1 词表、cli-go Go 代码零改动。
 - 未推 upstream(`upstream` remote 保持 DISABLED);未新增凭据;Release 为原地更新(未删旧发新),tag 不变。
 - 文中 run 链接、sha256、体积、门禁数字、对比结论均为真实运行结果;「未变中文」部分如实呈现,未美化。
+
+---
+
+## ⑪ Windows 平台接入:V2 nightly 从 linux-x64 单平台扩到 linux-x64 + windows-x64(2026-09-22)
+
+- 日期:2026-09-22(23:41 UTC 触发,23:44 UTC 发布完成)
+- 分支:`feat/v2-windows`(基于 main `43829e87f`;main 此时已含 PR #17「commands.ts --help flag/参数描述」翻译,故门禁基数较 ⑩ 的 2016 上升)
+- 范围:只改 `.github/workflows/opencode-cn-v2-nightly.yml` + 本报告;**V1 线、门禁逻辑/阈值、cli-go 代码零改动**;未推 upstream;未动 `/root/xiangmudata_sync/opencode-v2-cn/`。
+- 结论一句话:**V2 nightly 现一次流水线同时产出 `opencode-v2-<tag>-linux-x64` 与 `opencode-v2-<tag>-windows-x64`,进同一个 Release `v2-cn-2.0.14`,`SHA256SUMS` 两行、各自 `sha256sum -c` 均 OK;windows 产物经下载核 sha256、核 PE 结构(MZ+PE 头+x64)、数 CJK 转义(与 linux 同口径、数量一致)三重验证——但 .exe 未在 Windows 上运行(linux 主机跑不了 PE),不做「已运行」声明。**
+
+### ① 改了什么(工作流,最小改动)
+
+注入/门禁只在构建前跑**一遍**(两平台共享),构建步并列产出两平台,发布步一次附两产物:
+
+| 步骤 | 改动 |
+|---|---|
+| 注入 + 门禁(step 7/8) | **零改动**:`apply --dry-run --strict --min-match-rate 1` + 真实 `apply` 仍只跑一次,两平台共享同一注入结果 |
+| 构建(step 9) | `Build V2 linux-x64 binary` → `Build V2 binaries (linux-x64 + windows-x64)`:bash 循环 `for platform in linux-x64 windows-x64`,各跑 `./dist/opencode-cli build --platform <p> --deploy=false` |
+| 拷出时机 | 上游 `packages/cli/script/build.ts` 每次运行都 `rm -rf packages/cli/dist`(v2.0.14 实测,`await rm(outdir,{recursive:true,force:true})`),故**每构建完一个平台立即 `cp` 到顶层 `dist/`**,否则下一个平台会抹掉上一个产物 |
+| 校验(step 10) | linux 跑 `--version` 对上游版本;windows 是 PE、linux runner 跑不了,改核 PE 结构(MZ + 0x3C 处 e_lfanew 指向 PE 头 + machine=0x8664 x64) |
+| 中文落地(step 11) | 同一 4 条已知译文 + CJK 转义计数,对 linux + windows **两个产物同口径各跑一遍**(`grep -a` 按字节匹配,.exe 同样适用),各自 ≥3 命中 |
+| 打包(step 12) | `sha256sum` 两个二进制 → `SHA256SUMS` **两行**;per-platform 输出 size/sha |
+| 上传/发布(step 13/14) | upload-artifact 与 `softprops/action-gh-release` 的 `files:` 均一次列 linux + windows + SHA256SUMS,进同一 Release |
+
+产物命名沿用既有约定(裸名、无扩展名):`opencode-v2-v2.0.14-linux-x64` / `opencode-v2-v2.0.14-windows-x64`(windows 在 Windows 上重命名为 `.exe` 后运行,Release 正文已注明)。
+
+### ② 手动触发与产物(Run 两平台全绿)
+
+- **Run(手动触发,`upstream_tag=v2.0.14`,`--ref feat/v2-windows`,resolve + build-v2 两 job 全绿)**:https://github.com/yuloop/OpenCodeChineseTranslationAuto/actions/runs/35798629045
+- 关键步骤实测(摘自 Run 日志):
+
+```
+# 构建(注入/门禁只跑一遍;两平台并列构建,各构建完立即拷出)
+building cli-linux-x64
+copied build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode -> dist/opencode-v2-v2.0.14-linux-x64 (200857056 bytes)
+building cli-windows-x64
+copied build/upstream/packages/cli/dist/cli-windows-x64/bin/opencode.exe -> dist/opencode-v2-v2.0.14-windows-x64 (203537408 bytes)
+
+# 校验(step 10)
+dist/opencode-v2-v2.0.14-linux-x64 --version -> opencode v2.0.14
+dist/opencode-v2-v2.0.14-windows-x64: PE OK (MZ + PE header @ 120, machine=0x8664 x64, 203537408 bytes)
+
+# 中文落地(step 11,两平台同口径)
+[linux-x64]   hits=4 cjk=67208
+[windows-x64] hits=4 cjk=67208
+
+# 打包(step 12)
+3dc9af4de92b7f5c0ee172679bbf904b40e604f172ff79bb0beafabe2ecb061d  opencode-v2-v2.0.14-linux-x64
+0b68c53685bf378ffd293c4c1dae825700a2999fbc92bf3b8ed6c07d1fe913de  opencode-v2-v2.0.14-windows-x64
+
+# 发布(step 14)
+✅ Uploaded opencode-v2-v2.0.14-windows-x64
+✅ Uploaded opencode-v2-v2.0.14-linux-x64
+```
+
+- 门禁(dry-run,口径与阈值均未改):📁 文件: **227 成功, 0 跳过, 0 失败** / 📝 替换: **2085/2085 成功 (100.0%)**;注入的资产 commit `19bf09015e63`(main 上最后改动 `cli-go/internal/core/assets/opencode-i18n-v2/` 的提交,PR #17 时代)。
+
+### ③ Release 核验(v2-cn-2.0.14)
+
+`gh release view v2-cn-2.0.14` 附件实测(3 个):
+
+| 文件 | 体积 |
+|---|---|
+| `opencode-v2-v2.0.14-linux-x64` | 200,857,056 B |
+| `opencode-v2-v2.0.14-windows-x64` | 203,537,408 B |
+| `SHA256SUMS` | 194 B(**2 行**) |
+
+`SHA256SUMS` 发布内容(`wc -l` = 2):
+
+```
+3dc9af4de92b7f5c0ee172679bbf904b40e604f172ff79bb0beafabe2ecb061d  opencode-v2-v2.0.14-linux-x64
+0b68c53685bf378ffd293c4c1dae825700a2999fbc92bf3b8ed6c07d1fe913de  opencode-v2-v2.0.14-windows-x64
+```
+
+本机(linux-x64)重新 `curl` 下载三附件后 `sha256sum -c SHA256SUMS`:
+
+```
+opencode-v2-v2.0.14-linux-x64: OK
+opencode-v2-v2.0.14-windows-x64: OK
+```
+
+两行各自 OK;下载所得 sha256 与 CI 打包步、Release 正文表中的值三者一致。
+
+### ④ Windows 产物验证(可查证据;如实呈现)
+
+Linux 主机无法运行 `.exe`,故**不对 windows 产物做「运行/`--version`」验证**——只做三项可查证据(本机下载后实测):
+
+1. **sha256 核验**:下载后 `sha256sum -c SHA256SUMS` → `opencode-v2-v2.0.14-windows-x64: OK`(见 ③)。
+2. **合法 PE 核验**:前两字节 `4d 5a`(= `MZ`);0x3C 处 e_lfanew 指向 `PE\x00\x00` 头;machine = `0x8664`(x64)。实测:
+   ```
+   opencode-v2-v2.0.14-windows-x64: PE OK (MZ + PE header @ 120, machine=0x8664 x64, 203537408 bytes)
+   $ xxd -l 2 opencode-v2-v2.0.14-windows-x64
+   00000000: 4d5a  MZ
+   ```
+3. **CJK `\uXXXX` 转义计数**(与 linux 产物、CI zhcheck 同一正则 `\\u[4-9][0-9A-Fa-f]{3}`):windows **67208**、linux **67208**,两平台**完全一致**;CI 内两平台亦各 `hits=4 cjk=67208`(4 条已知注入译文全部命中)。即:注入的中文以 bun 转义形态等量落在 windows 二进制里。
+
+**未验证/不做声明**:windows `.exe` **未在 Windows 上执行**,因此**没有**「已测试运行」「`--version` 输出」之类结论;windows 侧的中文界面效果需在 Windows 上 `重命名 .exe 后运行 --help` 自行确认。上述三项(sha256 / PE 结构 / CJK 转义计数)是本单对 windows 产物的全部核验口径。
+
+### ⑤ 合规自查(本单)
+
+- `git diff main --stat`:仅 `.github/workflows/opencode-cn-v2-nightly.yml` + `docs/opencode-v2-release.md` 两文件。
+- V1 铁律:`.github/workflows/opencode-cn-nightly.yml`、`release.yml`、`scripts/patch-build-ts.py`、V1 词表、cli-go Go 代码零改动;门禁逻辑与 `V2_MIN_MATCH_RATE=1` 阈值未改。
+- 未推 upstream(`upstream` remote 保持 DISABLED);未新增凭据;未做范围外目录改动;未动 `/root/xiangmudata_sync/opencode-v2-cn/`。
+- 文中 run 链接、sha256、体积、门禁数字、PE/CJK 核验输出均为真实运行结果;windows「未运行」已如实声明,未美化。
