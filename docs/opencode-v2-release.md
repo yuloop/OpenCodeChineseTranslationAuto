@@ -170,3 +170,68 @@ strings -a opencode-v2-v2.0.14-linux-x64 | grep -c '\\u[4-9][0-9A-Fa-f][0-9A-Fa-
 - V1 铁律:`.github/workflows/opencode-cn-nightly.yml`、`release.yml`、`scripts/patch-build-ts.py`、V1 词表、cli-go Go 代码**零改动**(`git diff main --stat` 仅 workflow + 本报告)。
 - 未推 upstream(`upstream` remote 保持 DISABLED);未做范围外目录的改动;未新增任何凭据,未改仓库权限(仅本 workflow 文件内 `permissions: contents: write`,与 V1 生产流水线同权限)。
 - 文中 run 链接、tag、sha256、体积、门禁数字、`--help` 输出均为真实运行结果。
+
+---
+
+## ⑩ 重发记录:V2 资产更新后重发同一上游版本(2026-09-22)
+
+- 日期:2026-09-22(15:45 UTC 触发,15:47 UTC 发布完成)
+- 基线:main `805030174`(PR #14 `feat/v2-i18n-tail` 已合入;V2 门禁 1669 → **2016/2016 = 100.0%**、217 → **227 文件**)
+- 动机:线上 `v2-cn-2.0.14`(15:26 UTC 发布)是 PR #12 时代的**旧资产**构建;PR #14 合入后,用新资产**重发同一上游版本**(上游仍 `v2.0.14`,commit `08462140ec0d`,未变)。
+
+### 重发机制(既有入口,零工作流改动)
+
+`opencode-cn-v2-nightly.yml` 既有语义(①/③ 设计时已写明):
+
+- `workflow_dispatch`:**一律构建**(`should_build=true`);「Release 已存在则跳过」只对 `schedule` 触发生效(workflow 第 122-129 行)。
+- 发布步 `softprops/action-gh-release@v3` 带 `overwrite_files: true`:同名 Release `v2-cn-2.0.14` **原地覆盖更新**,二进制 + SHA256SUMS 替换为新构建。
+
+即「重发同一上游版本」= 对同一 `upstream_tag` 再 dispatch 一次,**不需要新增 force 之类的手动输入,工作流一行未改**:
+
+```bash
+gh workflow run opencode-cn-v2-nightly.yml \
+  --repo yuloop/OpenCodeChineseTranslationAuto --ref main -f upstream_tag=v2.0.14
+```
+
+### 本次重发结果
+
+- **Run(两 job 全绿,head SHA `805030174`)**:https://github.com/yuloop/OpenCodeChineseTranslationAuto/actions/runs/35749502266
+- **Release(原地更新,tag 不变)**:https://github.com/yuloop/OpenCodeChineseTranslationAuto/releases/tag/v2-cn-2.0.14
+- 注入的资产 commit:`5558de61956e`(PR #14 提交,main 上最后改动 `cli-go/internal/core/assets/opencode-i18n-v2/` 的 commit;Release 正文已写明)
+- 门禁(dry-run):📁 文件: **227 成功, 0 跳过, 0 失败** / 📝 替换: **2016/2016 成功 (100.0%)**(旧构建为 1669/1669、217 文件)
+- 新产物(Release 附件实测,本地重新下载复核 sha256 一致):
+
+  | 文件 | sha256 | 体积 |
+  |---|---|---|
+  | `opencode-v2-v2.0.14-linux-x64`(新构建) | `b23a7dddcd3826b35920629ec86ec556aad04bff95aec749027470caf22df472` | 200,852,960 B(约 192 MB) |
+  | `opencode-v2-v2.0.14-linux-x64`(旧构建,15:26 发布) | `f45cd366594590bb75f2d2c5f5c41df5d5ca9d4fc5165d7a849d20cc93e2f9df` | 200,844,768 B(约 191.5 MB) |
+
+### 中文前后对比(重点;如实报告,未美化)
+
+同机 linux-x64 下载新旧两个二进制,`--version` 均为 `opencode v2.0.14`,逐项对比:
+
+**`--help` 输出前后逐字节相同(diff 为空)。上一版仍是英文的项,本版依旧英文,没有变中文:**
+
+- flag 说明:`--standalone  Run with a private server instead of the background service`、`--server string  Connect to a server URL instead of the background service`、`--auto  Auto-approve permissions that are not explicitly denied`、`--continue, -c  Continue the last session`、`--session, -s string  Session ID to continue`、`--prompt string  Prompt to use`
+- GLOBAL FLAGS:`--help, -h  Show help information`、`--version, -v  Show version information`、`--wizard  Start wizard mode for a command`、`--completions …  Print shell completion script (choices: bash, zsh, fish, sh)`、`--log-level …  Sets the minimum log level (choices: …)`、`--print-logs  Print logs to stderr (server logs require --standalone)`
+- 分区标题:`DESCRIPTION`、`USAGE`、`ARGUMENTS`、`FLAGS`、`GLOBAL FLAGS`、`SUBCOMMANDS`;及 `ARGUMENTS` 区 `directory string  Directory to start OpenCode in (optional)`
+- 子命令 `auth/mcp/run/session --help` 同样逐一对比,全部相同。
+- 旧版已译的部分(DESCRIPTION 正文「OpenCode 命令行界面」、SUBCOMMANDS 全部子命令描述)本版保持中文,无回退。
+
+**根因(资产侧实证,非推测)**:上述英文串是上游 `packages/cli/src/commands/commands.ts` 的行内字面量(`Flag.withDescription("Run with a private server instead of the background service")` 等)与 `effect/unstable/cli` 库自带串;逐一比对 V2 资产 `anchors/*.json` 的全部 **2016 条 replacements**,这 13 条串**一条都未登记**——从来不是翻译候选,注入流水线结构上就碰不到它们。
+
+**新资产确实进了二进制(层面对拍)**:CJK `\uXXXX` 转义序列 64,147 → **66,487**;去重后新增 **196 条**中文串、消失 0 条,全部来自 PR #14 尾批翻译,落在 **TUI 层**(`--help` 层无感):keybind 描述(「上一个/下一个收藏模型」「上一个/下一个智能体」「上一个/下一个最近使用的模型」「上一条/下一条历史项」「中断当前会话」「全屏」「关闭当前会话页签」「从消息分支会话」「停止待确认」…)、devtools-bar 标签、session-frame/session-tabs/reconnecting 串、B 组散点(「事件循环」「会话将自动恢复」「从插件对话框安装插件」…)。
+
+一句话结论:**重发成功、新资产 2016/2016 全量落地,但任务点名的 `--help` 层英文项本版未变;要汉化它们需把对应串登记进 V2 资产(下一步)。**
+
+### 遗留事项(下一单候选,本单未做)
+
+1. `--help` 顶层 13 条英文串(flag 说明 + ARGUMENTS 区)+ 分区标题的汉化:需将 `commands.ts` 行内 `Flag.withDescription(...)` 与 `effect/unstable/cli` 库串登记为 V2 资产 replacements(注意库串随上游 bun 依赖变动,锚定方式待设计)。
+2. Release 正文模板(`opencode-cn-v2-nightly.yml` 第 369 行「已知边界」段)仍写着「约 60 条散点 + 237 条 keybind + 25 条 devtools 未译」的 PR #12 时代数字,PR #14 已译该批,下次改动工作流时一并更新文案(本单遵守最小改动未动)。
+
+### 合规自查(本单)
+
+- 工作流零改动:重发全程只用既有 `workflow_dispatch` 入口;`git diff main --stat` 仅本报告一个文件,未新增任何手动输入。
+- V1 铁律:`.github/workflows/opencode-cn-nightly.yml`、`release.yml`、`scripts/patch-build-ts.py`、V1 词表、cli-go Go 代码零改动。
+- 未推 upstream(`upstream` remote 保持 DISABLED);未新增凭据;Release 为原地更新(未删旧发新),tag 不变。
+- 文中 run 链接、sha256、体积、门禁数字、对比结论均为真实运行结果;「未变中文」部分如实呈现,未美化。
