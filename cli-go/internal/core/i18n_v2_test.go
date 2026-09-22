@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -123,7 +124,6 @@ func TestEmbeddedV2AssetsLoadAndSkipMeta(t *testing.T) {
 	if len(configs) == 0 {
 		t.Fatal("V2 资产加载结果为空")
 	}
-	total := 0
 	for _, config := range configs {
 		if config.File == "" {
 			t.Errorf("V2 规则 %s 缺少 file 字段", config.FileName)
@@ -131,11 +131,58 @@ func TestEmbeddedV2AssetsLoadAndSkipMeta(t *testing.T) {
 		if config.FileName == "config.json" {
 			t.Errorf("config.json 是元信息文件，不应作为规则加载")
 		}
-		total += len(config.Replacements)
 	}
-	// 分母不变：V2 资产保留全部 497 条（迁移不动的保留旧锚点）
-	if total != 497 {
-		t.Errorf("V2 资产条目数应为 497(分母不变): got %d", total)
+}
+
+// TestEmbeddedV2AssetsCoverEveryV1Entry 保证「条目不丢」：V1 词表的每一条
+// (规则, 原文) 都必须在 V2 资产的 manifest 里有对应条目。
+// 注意：同一 UI 串在 V2 多处等价位置出现时会逐处锚定，因此 V2 的规则文件键数
+// 会多于 V1 条目数（门禁分母随之变大）；这里断言的是覆盖关系，不是键数相等。
+func TestEmbeddedV2AssetsCoverEveryV1Entry(t *testing.T) {
+	type entry struct{ rule, key string }
+
+	// V1 的 FileName 只是 basename，规则相对路径要拼上 Category（root 级除外）
+	rulePath := func(category, fileName string) string {
+		if category == "root" {
+			return fileName
+		}
+		return category + "/" + fileName
+	}
+
+	want := map[entry]struct{}{}
+	for _, config := range loadEmbedded(t, "assets/opencode-i18n", embeddedAssets) {
+		for key := range config.Replacements {
+			want[entry{rulePath(config.Category, config.FileName), key}] = struct{}{}
+		}
+	}
+
+	raw, err := fs.ReadFile(embeddedAssetsV2, "assets/opencode-i18n-v2/config.json")
+	if err != nil {
+		t.Fatalf("读取 V2 config.json 失败: %v", err)
+	}
+	var meta struct {
+		Manifest struct {
+			Entries []struct {
+				Rule string `json:"rule"`
+				Key  string `json:"key"`
+			} `json:"entries"`
+		} `json:"manifest"`
+	}
+	if err := json.Unmarshal(raw, &meta); err != nil {
+		t.Fatalf("解析 V2 config.json 失败: %v", err)
+	}
+
+	got := make(map[entry]struct{}, len(meta.Manifest.Entries))
+	for _, e := range meta.Manifest.Entries {
+		got[entry{e.Rule, e.Key}] = struct{}{}
+	}
+	for e := range want {
+		if _, ok := got[e]; !ok {
+			t.Errorf("V1 条目在 V2 资产中丢失: %s / %q", e.rule, e.key)
+		}
+	}
+	if len(got) < len(want) {
+		t.Errorf("V2 资产条目数不应少于 V1: got %d, want >= %d", len(got), len(want))
 	}
 }
 

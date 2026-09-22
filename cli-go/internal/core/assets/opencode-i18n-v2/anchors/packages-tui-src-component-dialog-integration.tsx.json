@@ -2,6 +2,7 @@
   "file": "packages/tui/src/component/dialog-integration.tsx",
   "replacements": {
     "Copied to clipboard": "已复制到剪贴板",
+    "message: \"Copied to clipboard\"": "message: \"已复制到剪贴板\"",
     "placeholder=\"API key\"": "placeholder=\"API密钥\"",
     "placeholder=\"Authorization code\"": "placeholder=\"授权码\""
   }

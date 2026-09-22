@@ -1,0 +1,6 @@
+{
+  "file": "packages/__no_v2_location__/packages/tui/src/routes/session/index.tsx",
+  "replacements": {
+    "interrupted": "已中断"
+  }
+}

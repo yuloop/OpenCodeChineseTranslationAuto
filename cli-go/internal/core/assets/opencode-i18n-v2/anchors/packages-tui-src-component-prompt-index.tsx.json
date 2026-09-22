@@ -1,6 +1,7 @@
 {
   "file": "packages/tui/src/component/prompt/index.tsx",
   "replacements": {
+    "\"Manage workspaces\"": "\"管理工作空间\"",
     "Shell mode": "命令行模式",
     "again to interrupt": "再次中断",
     "category: \"Prompt\"": "category: \"提示\"",

@@ -13,27 +13,31 @@ OPENCODE_SOURCE_DIR=<v2.0.12 检出> ./opencode-cli apply --dry-run --strict --m
 
 | 口径 | 改前(origin/main) | 改后(本分支) |
 |---|---|---|
-| 替换匹配 | 154/497 (31.0%) | 246/497 (49.5%) |
-| 匹配率 | 31.0% | 49.5% |
-| 文件统计 | 26 成功, 21 跳过, 7 失败 | 39 成功, 17 跳过, 6 失败 |
-| strict 门禁(100%) | 未通过(要求 100%) | 未通过(要求 100%;V2 阈值策略不在本单范围) |
+| 替换匹配 | 246/497 | 252/501 |
+| 匹配率 | 49.5% | 50.3% |
+| 文件统计 | 39 成功, 17 跳过, 6 失败 | 40 成功, 18 跳过, 5 失败 |
+| strict 门禁(100%) | rc=1(49.5% < 100%) | rc=1(50.3% < 100%) |
 
-> 分母不变:V2 资产保留全部 497 条条目(迁移不动的保留旧锚点,继续计未匹配),因此前后匹配率可直接对比;
+> 条目不丢:V2 资产保留全部 497 条 V1 条目(迁移不动的保留旧锚点或隔离锚点,继续计未匹配);
+> 但同一 UI 串在 V2 多处等价位置出现时会逐处锚定(见 ④-b re-anchored 行),
+> 门禁分母因此可能略高于 497——上表「替换匹配」列已同时给出分子/分母,可自行折算;
+> 按 V1 条目去重计的匹配条目数见 PR 描述。
 > V2 门禁阈值策略(阶梯/双轨)不在本单范围,本单只交付锚点迁移与度量。
 
 V1 线回归(同一命令,V1 门禁 `--min-match-rate 1` 不变,源码=上游 dev):
 
 | 口径 | 改前(origin/main 二进制) | 改后(本分支二进制) |
 |---|---|---|
-| V1 替换匹配 | 497/497 (100.0%), rc=0 | 497/497 (100.0%), rc=0 |
+| V1 替换匹配 | 497/497 (100.0%) rc=0 | 497/497 (100.0%) rc=0 |
 
 ## ② 条目变更统计
 
 | 分类 | 条数 | 占比 | 说明 |
 |---|---|---|---|
-| kept(锚点不变) | 152 | 30.6% | V1 目标路径在 V2 仍在且条目命中 |
-| moved(重新锚定) | 92 | 18.5% | 唯一命中 39 条;聚类/路径消歧 53 条 |
-| deferred(待人工确认) | 253 | 50.9% | V2 全树 0 命中 217 条;仅宇宙外命中 17 条;多候选并列 8 条;简单词无同规则共识 3 条;弱证据 1 条;标识符碰撞 7 条 |
+| kept(锚点不变) | 153 | 30.8% | V1 目标路径在 V2 仍在且条目命中 |
+| moved(重新锚定) | 95 | 19.1% | 唯一命中 39 条;聚类/路径消歧 56 条;人工复核逐条定位 3 条 |
+| deferred(待人工确认) | 248 | 49.9% | V2 全树 0 命中 217 条;仅宇宙外命中 17 条;多候选并列 5 条;简单词无同规则共识 3 条;弱证据 1 条;标识符碰撞 5 条 |
+| suppressed(判定不得应用) | 1 | 0.2% | 替换会伤及代码;锚点隔离到 V2 不存在的路径,继续计未匹配(该 V1 条目仍在分母里) |
 | **合计** | **497** | 100% | |
 
 ## ③ 逐规则迁移表(旧位置 → 新位置 → 匹配依据)
@@ -49,7 +53,7 @@ V1 线回归(同一命令,V1 门禁 `--min-match-rate 1` 不变,源码=上游 de
 | `common/share-error.json` | 1 | 0 | 0 | 1 | `packages/tui/src/routes/session/index.tsx(保留旧锚点)` × 1 |
 | `common/system-prompt.json` | 1 | 0 | 0 | 1 | `packages/opencode/src/session/system.ts(保留旧锚点)` × 1 |
 | `components/autocomplete.json` | 1 | 0 | 0 | 1 | `packages/tui/src/component/prompt/autocomplete.tsx(保留旧锚点)` × 1 |
-| `components/command-panel.json` | 39 | 29 | 1 | 9 | `packages/tui/src/app.tsx(保留旧锚点)` × 9; `packages/tui/src/config/v1/keybind.ts` × 1 |
+| `components/command-panel.json` | 39 | 29 | 2 | 8 | `packages/tui/src/app.tsx(保留旧锚点)` × 8; `packages/tui/src/component/prompt/index.tsx` × 1; `packages/tui/src/config/v1/keybind.ts` × 1 |
 | `components/component-prompt.json` | 12 | 11 | 0 | 1 | `packages/tui/src/component/prompt/index.tsx(保留旧锚点)` × 1 |
 | `components/component-question.json` | 6 | 0 | 4 | 2 | `packages/tui/src/mini/footer.form.tsx` × 1; `packages/tui/src/routes/session/form.tsx` × 3; `packages/tui/src/routes/session/question.tsx(保留旧锚点)` × 2 |
 | `components/component-sidebar.json` | 0 | 0 | 0 | 0 | - |
@@ -81,18 +85,18 @@ V1 线回归(同一命令,V1 门禁 `--min-match-rate 1` 不变,源码=上游 de
 | `dialogs/dialog-session.json` | 5 | 4 | 0 | 1 | `packages/tui/src/component/dialog-session-list.tsx(保留旧锚点)` × 1 |
 | `dialogs/dialog-skill.json` | 3 | 1 | 0 | 2 | `packages/tui/src/component/dialog-skill.tsx(保留旧锚点)` × 2 |
 | `dialogs/dialog-stash.json` | 8 | 7 | 0 | 1 | `packages/tui/src/component/dialog-stash.tsx(保留旧锚点)` × 1 |
-| `dialogs/dialog-status.json` | 9 | 3 | 0 | 6 | `packages/tui/src/component/dialog-status.tsx(保留旧锚点)` × 6 |
+| `dialogs/dialog-status.json` | 9 | 4 | 0 | 5 | `packages/tui/src/component/dialog-status.tsx(保留旧锚点)` × 5 |
 | `dialogs/dialog-subagent.json` | 3 | 0 | 0 | 3 | `packages/tui/src/routes/session/dialog-subagent.tsx(保留旧锚点)` × 3 |
 | `dialogs/dialog-tag.json` | 1 | 0 | 0 | 1 | `packages/tui/src/component/dialog-tag.tsx(保留旧锚点)` × 1 |
 | `dialogs/dialog-theme.json` | 1 | 1 | 0 | 0 | - |
 | `dialogs/dialog-timeline.json` | 1 | 1 | 0 | 0 | - |
-| `dialogs/dialog-toast.json` | 1 | 0 | 0 | 1 | `packages/tui/src/ui/dialog.tsx(保留旧锚点)` × 1 |
+| `dialogs/dialog-toast.json` | 1 | 0 | 1 | 0 | `packages/tui/src/component/dialog-integration.tsx` × 1 |
 | `routes/route-footer.json` | 2 | 0 | 0 | 2 | `packages/tui/src/routes/session/footer.tsx(保留旧锚点)` × 2 |
 | `routes/route-header.json` | 4 | 0 | 0 | 4 | `packages/tui/src/routes/session/subagent-footer.tsx(保留旧锚点)` × 4 |
 | `routes/route-home-page.json` | 3 | 3 | 0 | 0 | - |
-| `routes/route-home.json` | 2 | 0 | 0 | 2 | `packages/tui/src/feature-plugins/home/tips.tsx(保留旧锚点)` × 2 |
+| `routes/route-home.json` | 2 | 0 | 1 | 1 | `packages/tui/src/app.tsx` × 1; `packages/tui/src/feature-plugins/home/tips.tsx(保留旧锚点)` × 1 |
 | `routes/route-permission.json` | 24 | 2 | 6 | 16 | `packages/tui/src/routes/session/permission.tsx(保留旧锚点)` × 16; `packages/tui/src/util/permission.ts` × 6 |
-| `routes/route-session.json` | 57 | 37 | 0 | 20 | `packages/tui/src/routes/session/index.tsx(保留旧锚点)` × 20 |
+| `routes/route-session.json` | 57 | 37 | 0 | 19 | `packages/tui/src/routes/session/index.tsx(保留旧锚点)` × 19 |
 | `routes/route-sidebar.json` | 6 | 4 | 0 | 2 | `packages/tui/src/feature-plugins/sidebar/mcp.tsx(保留旧锚点)` × 2 |
 
 ## ④ 待人工确认清单(deferred)
@@ -125,7 +129,6 @@ V1 线回归(同一命令,V1 门禁 `--min-match-rate 1` 不变,源码=上游 de
 | `components/command-panel.json` | "Connect provider" | outside-universe | `packages/app/src/runtime/i18n/en.ts` |
 | `components/command-panel.json` | "Toggle MCPs" | outside-universe | `packages/app/src/runtime/i18n/en.ts` |
 | `components/command-panel.json` | "Copy worktree path" | no-hit | - |
-| `components/command-panel.json` | "Manage workspaces" | ambiguous | `packages/tui/src/component/prompt/index.tsx`, `packages/tui/src/config/keybind.ts` |
 | `components/command-panel.json` | "Switch org" | no-hit | - |
 | `components/command-panel.json` | "Disable session directory filtering" | no-hit | - |
 | `components/command-panel.json` | "Enable session directory filtering" | no-hit | - |
@@ -304,7 +307,6 @@ V1 线回归(同一命令,V1 门禁 `--min-match-rate 1` 不变,源码=上游 de
 | `dialogs/dialog-skill.json` | category: "Skills" | no-hit | - |
 | `dialogs/dialog-skill.json` | placeholder="Search skills…" | no-hit | - |
 | `dialogs/dialog-stash.json` | `Press ${deleteHint()} again to confirm` | no-hit | - |
-| `dialogs/dialog-status.json` | Status | identifier-collision | `packages/tui/src/component/dialog-status.tsx` |
 | `dialogs/dialog-status.json` | No MCP Servers | no-hit | - |
 | `dialogs/dialog-status.json` | MCP Servers | no-hit | - |
 | `dialogs/dialog-status.json` | LSP Servers | no-hit | - |
@@ -314,7 +316,6 @@ V1 线回归(同一命令,V1 门禁 `--min-match-rate 1` 不变,源码=上游 de
 | `dialogs/dialog-subagent.json` | title: "Open" | outside-universe | `packages/app/src/shell/commands/command.test.ts` |
 | `dialogs/dialog-subagent.json` | the subagent's session | no-hit | - |
 | `dialogs/dialog-tag.json` | title="Autocomplete" | no-hit | - |
-| `dialogs/dialog-toast.json` | message: "Copied to clipboard" | ambiguous | `packages/tui/src/app.tsx`, `packages/tui/src/component/dialog-integration.tsx`, `packages/tui/src/routes/session/index.tsx` |
 | `routes/route-footer.json` | Get started | outside-universe | `packages/app/src/runtime/i18n/en.ts`, `packages/console/app/src/i18n/en.ts` |
 | `routes/route-footer.json` | Permission | no-consensus | `packages/tui/src/component/session-frame.tsx`, `packages/tui/src/context/permission.tsx`, `packages/tui/src/feature-plugins/system/notifications.ts` |
 | `routes/route-header.json` | label: "Subagent" | outside-universe | `packages/tui/src/mini/demo.ts` |
@@ -322,7 +323,6 @@ V1 线回归(同一命令,V1 门禁 `--min-match-rate 1` 不变,源码=上游 de
 | `routes/route-header.json` | Prev | outside-universe | `packages/ui/src/components/text-reveal.stories.tsx`, `packages/ui/src/components/thinking-heading.stories.tsx` |
 | `routes/route-header.json` | Next | ambiguous | `packages/tui/src/app.tsx`, `packages/tui/src/component/dialog-config.tsx`, `packages/tui/src/component/dialog-experiments.tsx` |
 | `routes/route-home.json` | title: props.hidden ? "Show tips" : "Hide tips" | no-hit | - |
-| `routes/route-home.json` | category: "System" | ambiguous | `packages/tui/src/app.tsx`, `packages/tui/src/mini/footer.command.tsx` |
 | `routes/route-permission.json` | title="Always allow" | no-hit | - |
 | `routes/route-permission.json` | options={{ once: "Allow once", always: "Allow always", rejec | no-hit | - |
 | `routes/route-permission.json` | "Unknown" | ambiguous | `packages/tui/src/component/devtools-bar.tsx`, `packages/tui/src/mini/tool.ts` |
@@ -353,7 +353,6 @@ V1 线回归(同一命令,V1 门禁 `--min-match-rate 1` 不变,源码=上游 de
 | `routes/route-session.json` | message: `Session exported to ${filename}` | no-hit | - |
 | `routes/route-session.json` | "Confirm Redo" | no-hit | - |
 | `routes/route-session.json` | "Are you sure you want to restore the reverted messages?" | no-hit | - |
-| `routes/route-session.json` | interrupted | identifier-collision | `packages/tui/src/routes/session/index.tsx` |
 | `routes/route-session.json` | title=" Compaction " | no-hit | - |
 | `routes/route-session.json` | title="# Todos" | no-hit | - |
 | `routes/route-session.json` | message: "Failed to copy URL to clipboard" | no-hit | - |
@@ -361,6 +360,52 @@ V1 线回归(同一命令,V1 门禁 `--min-match-rate 1` 不变,源码=上游 de
 | `routes/route-session.json` | Skill "{stringValue(props.input.name)}" | no-hit | - |
 | `routes/route-sidebar.json` | >Needs auth</Match> | no-hit | - |
 | `routes/route-sidebar.json` | Needs client ID | no-hit | - |
+
+### ④-b 第二轮人工逐条复核结论(36 条:17 宇宙外 + 12 并列/无共识/弱证据 + 7 标识符碰撞)
+
+逐条在 V2 源码定位后的处置。只对「找到确切位置且角色/语义等价」的条目补锚点;
+其余保留旧锚点并在此列明所见事实,不做猜测性改写。
+
+| 规则 | 条目 | 结论 | 锚点/命中 | 依据 |
+|---|---|---|---|---|
+| `components/command-panel.json` | "Connect provider" | pending(待人工确认) | 原锚点 `packages/tui/src/app.tsx`;宇宙内/外命中:`packages/app/src/runtime/i18n/en.ts` | V2 app.tsx:934 同一命令 id `provider.connect` 的标题已改名为 "Connect an integration"（keybind.ts:168 为 "Connect integration"）；V1 原文在 V2 tui/cli 产品源码 0 命中，唯一命中在 packages/app/src/runtime/i18n/en.ts:89（桌面端英文词典，另一产品面）。 |
+| `components/command-panel.json` | "Toggle MCPs" | pending(待人工确认) | 原锚点 `packages/tui/src/app.tsx`;宇宙内/外命中:`packages/app/src/runtime/i18n/en.ts` | V2 app.tsx:882 同一命令 id `mcp.list` 标题改为 "MCP servers"，keybind.ts:167 为 "List MCP servers"；产品源码 0 命中，唯一命中 packages/app/src/runtime/i18n/en.ts:132。 |
+| `components/command-panel.json` | "Manage workspaces" | re-anchored(已补锚点) | `packages/tui/src/component/prompt/index.tsx`; `packages/tui/src/config/keybind.ts` | V1 锚点 app.tsx 是命令面板定义处；V2 该命令仍存在且同名同 id：prompt/index.tsx:618 title/619 desc（palette:true, name=session.move），keybind.ts:108 是同一命令 id 的键位标签。两处均为用户可见字符串。 |
+| `components/inline-tools.json` | pending="Preparing patch…" | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/index.tsx`;宇宙内/外命中:`packages/tui/test/cli/tui/inline-tool-wrap-snapshot.test.tsx` | V2 routes/session/index.tsx:3072 仅余 "Preparing write…"、3379 "# Preparing edit…"，补丁工具的 pending 文案已不在该文件；唯一命中是测试快照 packages/tui/test/cli/tui/inline-tool-wrap-snapshot.test.tsx:77（断言旧行为）。 |
+| `dialogs/cli-footer-command.json` | current | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.command.tsx`;宇宙内/外命中:`packages/cli/src/acp/event.ts`, `packages/cli/src/acp/service.ts`, `packages/cli/src/commands/commands.ts` | V2 宇宙内 105 个文件命中，但全是更长标签内的词（"Close current session tab"/"Share current session"…）或注释；V1 侧 footer.command.tsx 本身就把 current 同时用作接口字段 `current: boolean`（第 30/35/44 行），V2 不新引入该类破损。 |
+| `dialogs/cli-footer-command.json` | Skills | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.command.tsx`;宇宙内/外命中:`packages/tui/src/component/dialog-skill.tsx`, `packages/tui/src/component/prompt/index.tsx` | V2 两处 UI 面均已被更精确的键覆盖：prompt/index.tsx:580 `title: "Skills"` 由 components/component-prompt.json 译，dialog-skill.tsx:58 `title="Skills"` 由 dialogs/dialog-skill.json 译；裸 \bSkills\b 还会命中 dialog-skill.tsx:76 "Close and reopen Skills to try again."，替换后成 "Close and reopen 技能 to try again."（中英混杂）。 |
+| `dialogs/cli-footer-view.json` | EXIT | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.view.tsx`;宇宙内/外命中:`packages/core/test/shell-scan/generated.test.ts`, `packages/desktop/src/main/remote/cli.ts` | V1 footer.view.tsx:388 `if (exiting()) return "EXIT"`；V2 mini/footer.view.tsx 已无 EXIT 徽标（改用 "Shell"/"normal"/"Running"）。唯一命中是 bash trap 串 packages/desktop/src/main/remote/cli.ts:90 与 shell 扫描测试 generated.test.ts:90。 |
+| `dialogs/cli-footer-view.json` | SHELL | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.view.tsx`;宇宙内/外命中:`packages/cli/src/commands/handlers/uninstall.ts`, `packages/tui/src/prompt/traits.ts` | V2 mini/footer.view.tsx:412/417 用 title case 的 "Shell"，\bSHELL\b 不再命中；宇宙内两处命中分别是 uninstall.ts:151 `process.env.SHELL`（环境变量，替换即破坏）与 prompt/traits.ts:25 的 @opentui/core EditorTraits 协议值。 |
+| `dialogs/cli-footer-view.json` | BUILD | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.view.tsx`;宇宙内/外命中:`packages/tui/test/mini/footer.view.test.tsx` | V1 footer.view.tsx:391 `shell() ? "SHELL" : "BUILD"`；V2 已无 BUILD 徽标，唯一命中是 packages/tui/test/mini/footer.view.test.tsx:517 的 `expect(frame).not.toContain("BUILD")`（负向断言）。 |
+| `dialogs/cli-footer-view.json` | interrupt | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.view.tsx`;宇宙内/外命中:`packages/cli/src/acp/event.ts`, `packages/cli/src/acp/service.ts`, `packages/cli/src/run/noninteractive.ts` | V2 每个候选文件里 interrupt 都同时是代码标识符：mini/footer.view.tsx:203 `const interrupt = ...`、209 `props.state().interrupt`、1018 `interrupt={...}`；footer.prompt.tsx:1193 是命令 id "session.interrupt"（替换会断开键位绑定）。 |
+| `dialogs/cli-footer-view.json` | background | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.view.tsx`;宇宙内/外命中:`packages/cli/src/acp/event.ts`, `packages/cli/src/acp/service.ts`, `packages/cli/src/commands/commands.ts` | V2 background 在候选文件中大量是属性/标识符：footer.view.tsx:699/723/753/963 `backgroundColor=`、762 `runTheme().background`、187 `!item.background`；dialog-update.tsx:148 `backgroundColor=`；footer.width.ts:17/32/72 是联合类型字面量。 |
+| `dialogs/cli-footer-view.json` | subagents | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.view.tsx`;宇宙内/外命中:`packages/cli/src/commands/handlers/stats.ts`, `packages/tui/src/feature-plugins/prompt/footer.tsx`, `packages/tui/src/mini/footer.command.tsx` | V2 footer 已无 "subagents" 标签；宇宙内命中是 import 路径 composer/index.tsx:7 `./subagents-tab`、composer tab id index.tsx:1174/1359 `tab: "subagents"`、prop `subagents={tabs}`（index.tsx:809）以及 footer.width.ts 的联合类型字面量。 |
+| `dialogs/cli-footer-view.json` | cmd | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.view.tsx`;宇宙内/外命中:`packages/cli/src/acp/tool.ts`, `packages/cli/src/commands/handlers/session/list.ts`, `packages/tui/src/context/keymap.tsx` | V1 footer.view.tsx:487 `label: "cmd"`；V2 mini/footer.view.tsx:473 同一处已改名 `label: "menu"`，V1 原文在 V2 产品源码 0 命中。 |
+| `dialogs/cli-permission.json` | Allow always | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/permission.shared.ts`;宇宙内/外命中:`packages/ui/src/i18n/en.ts` | V2 util/permission.ts:164 同分支返回 "Always allow"（语序被上游调整），V1 原文在产品源码 0 命中；唯一命中 packages/ui/src/i18n/en.ts:231（UI 库英文词典）。 |
+| `dialogs/cli-question.json` | Confirm | pending(待人工确认) | 原锚点 `packages/opencode/src/cli/cmd/run/footer.question.tsx`;宇宙内/外命中:`packages/tui/src/component/dialog-update.tsx`, `packages/tui/src/component/prompt/autocomplete.tsx`, `packages/tui/src/routes/session/form.tsx` | V2 问题表单脚 footer.form.tsx（承接了本规则另外 4 条）已无独立 "Confirm" 标签（改用 formConfirm 逻辑与 "Review"）；宇宙内唯一独立 "Confirm" 是 util/permission.ts:166 的权限选项标签，已由 dialogs/cli-permission.json 锚定，再锚只会重复计数。 |
+| `dialogs/dialog-agent.json` | native | pending(待人工确认) | 原锚点 `packages/tui/src/component/dialog-agent.tsx`;宇宙内/外命中:`packages/cli/src/framework/spec.ts`, `packages/tui/src/app.tsx`, `packages/tui/src/component/prompt/index.tsx` | V1 dialog-agent.tsx:15 `description: item.native ? "native" : item.description`；V2 该文件已重写为 698 字节的 DialogSelect 薄封装，无 "native" 串；其余宇宙内命中全部是注释。 |
+| `dialogs/dialog-export.json` | to confirm | pending(待人工确认) | 原锚点 `packages/tui/src/ui/dialog-export-options.tsx`;宇宙内/外命中:`packages/tui/src/component/dialog-integration.tsx`, `packages/tui/src/component/dialog-session-list.tsx`, `packages/tui/src/component/dialog-stash.tsx` | V1 锚点 dialog-export-options.tsx:177/182 的提示语在 V2 被键位标题取代（61 "Next export option"/73 "Select export option"），V1 原文不在该文件；宇宙内其余命中分散在 6 个无关对话框，按子串替换会得到 "Press X again 确认" 式中英混杂串。 |
+| `dialogs/dialog-provider.json` | label: "API key" | pending(待人工确认) | 原锚点 `packages/tui/src/component/dialog-provider.tsx`;宇宙内/外命中:`packages/app/e2e/utils/mock-server.ts`, `packages/app/src/providers/connect/dialog.stories.tsx`, `packages/core/src/plugin/provider/azure.ts` | V2 dialog-integration.tsx 已有 `placeholder="API key"`（本规则已迁），`label: "API key"` 在产品源码 0 命中；宇宙外命中是 app 的 mock-server/stories 与 core 的 azure 插件提示词。 |
+| `dialogs/dialog-provider.json` | (Recommended) | pending(待人工确认) | 原锚点 `packages/tui/src/component/dialog-provider.tsx`;宇宙内/外命中:`packages/core/src/tool/plugin/question.ts` | V1 锚点 dialog-provider.tsx 在 V2 已被 dialog-integration.tsx 取代且无该串；唯一命中 packages/core/src/tool/plugin/question.ts:21 是给模型的提示词模板。 |
+| `dialogs/dialog-provider.json` | Low cost subscription for everyone | pending(待人工确认) | 原锚点 `packages/tui/src/component/dialog-provider.tsx`;宇宙内/外命中:`packages/app/src/runtime/i18n/en.ts` | 产品源码 0 命中；唯一命中 packages/app/src/runtime/i18n/en.ts:173（桌面端英文词典）。 |
+| `dialogs/dialog-provider.json` | Go to  | pending(待人工确认) | 原锚点 `packages/tui/src/component/dialog-provider.tsx`;宇宙内/外命中:`packages/tui/src/config/keybind.ts`, `packages/tui/src/config/v1/keybind.ts`, `packages/tui/src/feature-plugins/system/diff-viewer.tsx` | V1 dialog-provider.tsx:378/389 `Go to <span>https://opencode.ai/zen</span> to get a key`；V2 dialog-integration.tsx 无 "Go to"；宇宙内命中全是无关导航标签（"Go to the start of the diff"/"Go to parent session"），子串替换会得到 "前往 the start of the diff"。 |
+| `dialogs/dialog-provider.json` | Custom provider | pending(待人工确认) | 原锚点 `packages/tui/src/component/dialog-provider.tsx`;宇宙内/外命中:`packages/app/src/runtime/i18n/en.ts`, `packages/core/src/v1/config/config.ts` | 产品源码 0 命中；命中在 packages/app/src/runtime/i18n/en.ts:231 与 packages/core/src/v1/config/config.ts（桌面端词典/配置注释）。 |
+| `dialogs/dialog-rename.json` | title="Rename Session" | pending(待人工确认) | 原锚点 `packages/tui/src/component/dialog-session-rename.tsx`;宇宙内/外命中:`packages/tui/test/cli/tui/dialog-prompt.test.tsx` | V1 锚点文件在 V2 仍在，但 dialog-session-rename.tsx:15 已改为 `title="Rename session"`（s 小写）；V1 原文唯一命中是 packages/tui/test/cli/tui/dialog-prompt.test.tsx:47 的测试渲染。 |
+| `dialogs/dialog-status.json` | Status | keep-as-is(护栏误报) | `packages/tui/src/component/dialog-status.tsx`(锚点不变) | 护栏误报：code_skeleton 只抹引号字符串，JSX 文本节点不在其列。V2 packages/tui/src/component/dialog-status.tsx:23 全文件唯一一处 \bStatus\b 即 <text attributes={BOLD}>Status</text> 标签，与 V1 同文件:47 同一处 UI 文本，替换安全。 |
+| `dialogs/dialog-subagent.json` | title: "Open" | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/dialog-subagent.tsx`;宇宙内/外命中:`packages/app/src/shell/commands/command.test.ts` | V1 锚点 routes/session/dialog-subagent.tsx 在 V2 不存在；产品源码 0 命中，命中在 packages/app/src/shell/commands/command.test.ts:14（桌面端命令目录解码单测）。 |
+| `dialogs/dialog-toast.json` | message: "Copied to clipboard" | re-anchored(已补锚点) | `packages/tui/src/component/dialog-integration.tsx`; `packages/tui/src/routes/session/index.tsx`; `packages/tui/src/util/selection.ts` | V1 锚点 ui/dialog.tsx:192 的 toast 调用；V2 全宇宙 4 处均为同一 toast.show({ message: "Copied to clipboard", ... }) 调用，字符串与角色完全一致。app.tsx:582 那处已由 common/error-messages.json 的同名 kept 条目覆盖，此处不重复锚定。 |
+| `routes/route-footer.json` | Get started | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/footer.tsx`;宇宙内/外命中:`packages/app/src/runtime/i18n/en.ts`, `packages/console/app/src/i18n/en.ts` | V1 footer.tsx:59 `Get started <span>/connect</span>`；V2 该文件不存在，产品源码 0 命中；命中在 packages/app 与 packages/console 的英文词典。 |
+| `routes/route-footer.json` | Permission | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/footer.tsx`;宇宙内/外命中:`packages/tui/src/component/session-frame.tsx`, `packages/tui/src/context/permission.tsx`, `packages/tui/src/feature-plugins/system/notifications.ts` | V1 footer.tsx:65 是 `{permissions().length} Permission(s)` 计数徽标，V2 该文件不存在。宇宙内唯一独立 "Permission" 是 mini/footer.permission.tsx:185 `width() < 24 ? "Permission" : "Permission required"`，只替换前半会得到 `? "权限" : "Permission required"` 的中英混杂三元式。 |
+| `routes/route-header.json` | label: "Subagent" | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/subagent-footer.tsx`;宇宙内/外命中:`packages/tui/src/mini/demo.ts` | V1 锚点 subagent-footer.tsx 在 V2 不存在；产品源码 0 命中，唯一宇宙内命中是开发 playground packages/tui/src/mini/demo.ts:748/776（按 demo 规则排除）。 |
+| `routes/route-header.json` | Parent | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/subagent-footer.tsx`;宇宙内/外命中:`packages/app/e2e/regression/session-message-revert.spec.ts`, `packages/app/e2e/regression/session-timeline-hydration.spec.ts`, `packages/app/e2e/regression/subagent-child-navigation.spec.ts` | V1 subagent-footer.tsx:104 导航标签；该文件在 V2 不存在，产品源码 0 命中；宇宙外命中全是 packages/app/e2e 回归用例。 |
+| `routes/route-header.json` | Prev | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/subagent-footer.tsx`;宇宙内/外命中:`packages/ui/src/components/text-reveal.stories.tsx`, `packages/ui/src/components/thinking-heading.stories.tsx` | V1 subagent-footer.tsx:114 导航标签；V2 无该导航标签，宇宙内 0 命中，命中在 packages/ui/src/components/*.stories.tsx。 |
+| `routes/route-header.json` | Next | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/subagent-footer.tsx`;宇宙内/外命中:`packages/tui/src/app.tsx`, `packages/tui/src/component/dialog-config.tsx`, `packages/tui/src/component/dialog-experiments.tsx` | V1 subagent-footer.tsx:124 独立导航标签；V2 该文件不存在，宇宙内 23 处 \bNext\b 全是复合键位标题（"Next item"/"Next export option"…），子串替换会得到 "上一个 item" 式中英混杂。 |
+| `routes/route-home.json` | category: "System" | re-anchored(已补锚点) | `packages/tui/src/app.tsx`; `packages/tui/src/mini/footer.command.tsx` | V1 首页 tips 分类标签（tips 功能随 V2 消失）；同串在 V2 命令面板仍是 category 标签：app.tsx 22 处、mini/footer.command.tsx 3 处，与 V2 资产已译的 category:"Suggested"/"Prompt" 同角色。 |
+| `routes/route-permission.json` | "Unknown" | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/permission.tsx`;宇宙内/外命中:`packages/tui/src/component/devtools-bar.tsx`, `packages/tui/src/mini/tool.ts` | V1 permission.tsx:287 `typeof data.subagent_type === "string" ? data.subagent_type : "Unknown"`；V2 该文件仍在但已无此回退；宇宙内命中是 devtools-bar.tsx:60 的地址回退与 mini/tool.ts:335 的工具入参回退（角色不同）。 |
+| `routes/route-session.json` | "Failed to unshare session" | pending(待人工确认) | 原锚点 `packages/tui/src/routes/session/index.tsx`;宇宙内/外命中:`packages/app/src/runtime/i18n/en.ts` | V1 锚点 index.tsx 在 V2 仍在但该串已不在；产品源码 0 命中，唯一命中 packages/app/src/runtime/i18n/en.ts:644。 |
+| `routes/route-session.json` | interrupted | suppressed(不得应用) | 隔离到 V2 不存在的路径,继续计未匹配 | V2 packages/tui/src/routes/session/index.tsx:1954 起新增 `const interrupted = createMemo(...)` 及 1957/1963/1977 的 interrupted() 调用；\b 替换会把 const 声明与调用点一起改成中文而直接构建失败。真正的 UI 串在 1978 行 ` · interrupted`（与 V1 index.tsx:1568 同），需人工改用精确键，本轮不动。 |
+
+小计:keep-as-is(护栏误报) 1 条;pending(待人工确认) 31 条;re-anchored(已补锚点) 3 条;suppressed(不得应用) 1 条
 
 ## ⑤ 复现与审计
 
