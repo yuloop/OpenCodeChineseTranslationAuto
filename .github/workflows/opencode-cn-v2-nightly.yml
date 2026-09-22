@@ -366,7 +366,7 @@ jobs:
 
           ### 已知边界（重要）
 
-          - 门禁 100% ≠ 界面全中文：资产含身份锚点（保持原文，如键位提示/枚举值/命令 id），且仍有约 60 条散点 + 237 条 keybind 描述 + 25 条 devtools 界面串未译（见 \`docs/opencode-v2-i18n-gate-close.md\` §5）。
+          - 门禁 100% ≠ 界面全中文：资产含身份锚点（保持原文，如键位提示/枚举值/命令 id）；keybind/devtools 尾批与 commands.ts 的 --help flag/参数描述均已汉化（见 \`docs/opencode-v2-help-i18n.md\`），仅 GLOBAL FLAGS 描述与 DESCRIPTION/USAGE/ARGUMENTS/FLAGS/SUBCOMMANDS 分区标题来自 \`effect/unstable/cli\` 库（node_modules，构建时 bun install 重取），按设计保持英文。
           - 本 Release 属 V2 线，与 V1 正式版/实时预览版相互独立、互不影响（V1 流水线、注入/发布脚本、词表零改动）。
           - 社区维护的非官方汉化构建，与 OpenCode 官方团队无隶属关系。
           EOF
