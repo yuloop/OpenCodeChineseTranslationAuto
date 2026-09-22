@@ -1,7 +1,21 @@
 {
   "file": "packages/tui/src/ui/dialog-select.tsx",
   "replacements": {
-    "<text fg={theme.textMuted}>No results found</text>": "<text fg={theme.textMuted}>未找到结果</text>",
-    "placeholder={props.placeholder ?? \"Search\"}": "placeholder={props.placeholder ?? \"搜索\"}"
+    "placeholder={props.placeholder ?? \"Search\"}": "placeholder={props.placeholder ?? \"搜索\"}",
+    "<text fg={theme.text.muted}>No results found</text>": "<text fg={theme.text.muted}>未找到结果</text>",
+    "<text fg={theme.text.muted}>No items available</text>": "<text fg={theme.text.muted}>暂无可用项</text>",
+    "title: \"Previous item\"": "title: \"上一个\"",
+    "title: \"Next item\"": "title: \"下一个\"",
+    "title: \"Page up\"": "title: \"向上翻页\"",
+    "title: \"Page down\"": "title: \"向下翻页\"",
+    "title: \"First item\"": "title: \"第一个\"",
+    "title: \"Last item\"": "title: \"最后一个\"",
+    "title: \"Select item\"": "title: \"选择当前项\"",
+    "title: \"Next dialog action\"": "title: \"下一个操作\"",
+    "title: \"Previous dialog action\"": "title: \"上一个操作\"",
+    "title: \"Back\"": "title: \"返回\"",
+    "title: \"Previous section\"": "title: \"上一个分组\"",
+    "title: \"Next section\"": "title: \"下一个分组\"",
+    "group: \"Dialog\"": "group: \"对话框\""
   }
 }

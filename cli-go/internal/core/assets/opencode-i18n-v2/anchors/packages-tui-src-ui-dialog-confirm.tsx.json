@@ -1,0 +1,10 @@
+{
+  "file": "packages/tui/src/ui/dialog-confirm.tsx",
+  "replacements": {
+    "title: \"Confirm dialog selection\"": "title: \"确认当前选择\"",
+    "title: \"Previous dialog option\"": "title: \"上一个选项\"",
+    "title: \"Next dialog option\"": "title: \"下一个选项\"",
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "{Locale.titlecase(props.label?.[key] ?? key)}": "{Locale.titlecase(props.label?.[key] ?? (key === \"cancel\" ? \"取消\" : \"确认\"))}"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/ui/working-directory-actions.tsx",
+  "replacements": {
+    "title=\"Working directory\"": "title=\"工作目录\"",
+    "title: \"Copy path\"": "title: \"复制路径\"",
+    "message: \"Path copied to clipboard\"": "message: \"路径已复制到剪贴板\"",
+    "title: \"Open folder\"": "title: \"打开文件夹\"",
+    "description: \"in system file manager\"": "description: \"在系统文件管理器中\"",
+    "title: \"Workspaces\"": "title: \"工作空间\"",
+    "description: \"to another working directory\"": "description: \"到另一个工作目录\""
+  }
+}

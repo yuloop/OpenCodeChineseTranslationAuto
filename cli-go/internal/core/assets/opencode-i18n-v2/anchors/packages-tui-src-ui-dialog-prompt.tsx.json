@@ -1,7 +1,12 @@
 {
   "file": "packages/tui/src/ui/dialog-prompt.tsx",
   "replacements": {
-    "<span style={{ fg: theme.textMuted }}>submit</span>": "<span style={{ fg: theme.textMuted }}>提交</span>",
+    "title: \"Submit dialog prompt\"": "title: \"提交输入\"",
+    "title: \"Back\"": "title: \"返回\"",
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "{props.busyText ?? \"Working…\"}": "{props.busyText ?? \"处理中...\"}",
+    "<text fg={theme.text.muted}>processing…</text>": "<text fg={theme.text.muted}>处理中...</text>",
+    "<span style={{ fg: theme.text.muted }}>submit</span>": "<span style={{ fg: theme.text.muted }}>提交</span>",
     "placeholder={props.placeholder ?? \"Enter text\"}": "placeholder={props.placeholder ?? \"输入文本\"}"
   }
 }
