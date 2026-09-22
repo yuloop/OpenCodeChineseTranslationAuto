@@ -1,36 +1,40 @@
-name: OpenCode V2 Nightly Build (build-only)
+name: OpenCode V2 Nightly (inject + build + release)
 
 # ============================================================================
-# opencode V2 linux-x64 构建流水线（build-only，完全独立于 V1 生产流水线）
+# opencode V2 linux-x64 汉化构建发布流水线（注入 V2 中文 → 构建 → 打包 → 发 Release）
 # ----------------------------------------------------------------------------
-# 【本版定位】只构建、不发 Release、不注入中文翻译。
-#   * 不注入中文：中文注入 + 翻译门禁方案定稿后另开单再接（V2 翻译资产当前
-#     匹配率仅约 31%，无法直接套用 V1 的 --min-match-rate 1 门禁，见
-#     docs/opencode-v2-build-trial.md ⑨）。
-#   * 不发 Release：产物只通过 actions/upload-artifact 存成构建产物。
-#   * 不动 V1：V1 生产流水线 .github/workflows/opencode-cn-nightly.yml
-#     （每小时构建并发 Release）保持原样；本文件与其零共享——独立文件名、
-#     独立 concurrency group、独立缓存 key 前缀、独立 job。
+# 【本版定位】V2 专用线，与 V1 生产流水线 .github/workflows/opencode-cn-nightly.yml
+#   零共享：独立文件名、独立 concurrency group、独立缓存 key 前缀、独立 job。
+#   V1 的 workflow、注入/发布脚本、词表一律不碰（铁律：V1 线一个字都不改）。
 #
-# 【触发】每天一次（21:23 UTC，避开 V1 每小时 :37 的构建时段）+ 手动
-#   workflow_dispatch（可指定上游 tag，留空则自动取最新 v2.0.x）。
-#   无 push 触发。
+# 【相对 build-only 版的新增】只加 V2 专用步骤，不改 V1 任何东西：
+#   1) 翻译门禁 + 真实注入：cli-go `apply` 按上游源码布局自动选择 V2 专用资产
+#      cli-go/internal/core/assets/opencode-i18n-v2/（见 cli-go/internal/core/i18n.go
+#      的 NewI18n：检测到 packages/cli + --target= 即判 V2 布局）。门禁口径与 V1
+#      相同：--strict --min-match-rate 1。main 39caaa58e 上门禁已收口到 100%
+#      （docs/opencode-v2-i18n-gate-close.md §7.1：v2.0.13/v2.0.14 实测均
+#      1669/1669，217 文件 0 跳过 0 失败）。上游漂移导致匹配率下降时构建失败——
+#      有意为之：不发布未过门禁的产物。
+#   2) 中文落地验证：对构建出的二进制抽样校验注入的中文译文真的在里面
+#      （不只看 CI 绿点）。bun --compile 对非 ASCII 以 \uXXXX 转义形态嵌入模块
+#      源码（bun 1.4.2 本地实测），故验证同时接受「转义形态 / 原始 UTF-8」两种命中。
+#   3) 发布 Release：tag = v2-cn-<上游版本>（上游 tag v2.0.14 → v2-cn-2.0.14，
+#      版本取 packages/cli/package.json，与二进制 --version 一致）；附二进制 +
+#      SHA256SUMS；正文写清基于的上游 tag/commit 与注入的资产 commit。
 #
-# 【实测依据】docs/opencode-v2-build-trial.md（对 v2.0.12 首跑通）：
-#   * 上游 V2 源码 = anomalyco/opencode 的 tag v2.0.x；V2 没有 GitHub
-#     Release，版本号读 packages/cli/package.json（不用 gh api releases/latest）。
-#   * bun 锁 1.4.2（与上游根 packageManager 一致）；冷构建 ~9 min、
-#     热构建 ~18 s。
-#   * 缓存点（热构建的关键）：~/.bun/install/cache + monorepo 根 node_modules。
-#   * 构建命令：OPENCODE_SOURCE_DIR=<源码> opencode-cli build
-#     --platform linux-x64 --deploy=false；产物在
-#     packages/cli/dist/cli-linux-x64/bin/opencode。
-#   * 超时预算：单平台冷构建 ~9 min，job 超时设 40 min 留足余量。
+# 【触发】每天 21:23 UTC 一次（V1 是每小时 :37，错开分钟避免抢占 runner）+
+#   手动 workflow_dispatch（可指定上游 tag，留空自动取最新 v2.0.x 稳定版）。
+#   定时触发时若该上游版本的 Release 已存在则跳过（tag 按上游版本唯一，不随
+#   资产更新重复发）；workflow_dispatch 一律构建，同名 Release 覆盖更新
+#   （便于汉化资产更新后重发同一上游版本）。
+#
+# 【实测依据】docs/opencode-v2-build-trial.md（v2.0.12 首跑通：冷构建 ~9 min、
+#   热构建 ~18 s；缓存点 = ~/.bun/install/cache + monorepo 根 node_modules）。
 # ============================================================================
 
 on:
   schedule:
-    # 每天 21:23 UTC 一次；V1 是每小时 :37，错开分钟避免两个 hourly 流水线
+    # 每天 21:23 UTC 一次；V1 是每小时 :37，错开分钟避免两个流水线
     # 在同一时刻抢占 runner（两者 concurrency group 相互独立，不会互相取消）。
     - cron: "23 21 * * *"
   workflow_dispatch:
@@ -45,35 +49,45 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  # build-only：只读仓库内容即可，不需要 contents:write（V1 才需要发 Release）
-  contents: read
+  # 发 Release 需要 contents:write（与 V1 生产流水线同权限）
+  contents: write
 
 env:
   UPSTREAM_REPO: anomalyco/opencode
   UPSTREAM_TAG_GLOB: "v2.0.*"
   BUN_VERSION: "1.4.2"
+  # V2 汉化门禁阈值：与 V1 同为 1（100%）。main 39caaa58e 实测 v2.0.13/v2.0.14
+  # 均 1669/1669 = 100.0%；上游漂移会让构建失败而不是发布未过门禁的产物。
+  V2_MIN_MATCH_RATE: "1"
 
 jobs:
-  build-v2:
-    name: Build opencode V2 linux-x64 (build-only)
+  resolve:
+    name: Resolve upstream tag / release tag
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 5
+    outputs:
+      should_build: ${{ steps.resolve.outputs.should_build }}
+      tag: ${{ steps.resolve.outputs.tag }}
+      upstream_sha: ${{ steps.resolve.outputs.upstream_sha }}
+      version: ${{ steps.resolve.outputs.version }}
+      release_tag: ${{ steps.resolve.outputs.release_tag }}
     steps:
-      # 1) 本仓：提供 cli-go 工具链（已含 V2 布局支持：自动探测 / --layout v2）
-      - name: Checkout this repo (cli-go toolchain)
-        uses: actions/checkout@v6
-
-      # 2) 解析上游最新 v2.0.x tag（V2 无 GitHub Release，轮询 tag 而非 Release）
-      - name: Resolve upstream v2.0.x tag
-        id: resolve
+      - id: resolve
         env:
+          GH_TOKEN: ${{ github.token }}
           REQUESTED_TAG: ${{ github.event.inputs.upstream_tag }}
         run: |
           set -euo pipefail
+
+          # 上游 tag：dispatch 显式指定 > 自动取最新 v2.0.x 稳定版
+          # （V2 无 GitHub Release，轮询 tag；过滤 peel 行与 -rc 等预发布后缀）
           if [[ -n "$REQUESTED_TAG" ]]; then
+            [[ "$REQUESTED_TAG" =~ ^v[0-9A-Za-z][0-9A-Za-z._-]*$ ]] || {
+              echo "Invalid upstream tag: $REQUESTED_TAG" >&2
+              exit 1
+            }
             tag="$REQUESTED_TAG"
           else
-            # 只取稳定版：过滤掉 ^{} peel 行与 -rc 等预发布后缀，再按版本排序取最新
             tag="$(git ls-remote --tags "https://github.com/${UPSTREAM_REPO}.git" "refs/tags/${UPSTREAM_TAG_GLOB}" \
               | sed -n 's#.*refs/tags/##p' \
               | grep -v '\^{}' \
@@ -81,19 +95,67 @@ jobs:
               | sort -V | tail -1)"
           fi
           [[ -n "$tag" ]] || { echo "未解析到上游 ${UPSTREAM_TAG_GLOB} tag" >&2; exit 1; }
-          echo "tag=$tag" >>"$GITHUB_OUTPUT"
-          echo "上游 V2 tag: ${tag}"
 
-      # 3) 浅克隆该 tag 的上游源码到临时目录（不用 gh token，公开仓库）
+          # 上游 commit（tag 解析为 commit）；版本号读 packages/cli/package.json
+          # （V2 布局；V1 读的是 packages/opencode/package.json）
+          upstream_sha="$(gh api "repos/${UPSTREAM_REPO}/commits/${tag}" --jq '.sha')"
+          [[ -n "$upstream_sha" && "$upstream_sha" != "null" ]] || {
+            echo "无法解析上游 ${tag} 的 commit" >&2
+            exit 1
+          }
+          version="$(gh api "repos/${UPSTREAM_REPO}/contents/packages/cli/package.json?ref=${upstream_sha}" \
+            --jq '.content' | base64 -d | jq -r '.version')"
+          [[ -n "$version" && "$version" != "null" ]] || {
+            echo "无法从上游解析版本号" >&2
+            exit 1
+          }
+          [[ "$tag" == "v${version}" ]] || echo "警告: 上游 tag ${tag} 与 package.json 版本 ${version} 不一致" >&2
+
+          # 发布 tag：v2-cn-<上游版本>（v2.0.14 → v2-cn-2.0.14）。版本取
+          # packages/cli/package.json，与二进制 --version 保持一致。
+          release="v2-cn-${version}"
+          [[ "$release" =~ ^[0-9A-Za-z._-]+$ ]] || {
+            echo "Invalid release tag: $release" >&2
+            exit 1
+          }
+
+          # 定时触发：该上游版本的 Release 已存在 → 跳过（tag 按版本唯一）。
+          # workflow_dispatch：一律构建，同名 Release 覆盖更新（资产更新后重发）。
+          should_build=true
+          if [[ "${{ github.event_name }}" == "schedule" ]] &&
+             gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${release}" >/dev/null 2>&1; then
+            should_build=false
+            echo "Release ${release} 已存在，本次定时构建跳过（workflow_dispatch 可强制重建）"
+          fi
+
+          echo "should_build=$should_build" >>"$GITHUB_OUTPUT"
+          echo "tag=$tag" >>"$GITHUB_OUTPUT"
+          echo "upstream_sha=$upstream_sha" >>"$GITHUB_OUTPUT"
+          echo "version=$version" >>"$GITHUB_OUTPUT"
+          echo "release_tag=$release" >>"$GITHUB_OUTPUT"
+          echo "上游: ${UPSTREAM_REPO} tag ${tag} = ${upstream_sha:0:12} (v${version})；发布 tag: ${release}；需要构建: $should_build"
+
+  build-v2:
+    name: Inject V2 zh-CN, build linux-x64, publish release
+    needs: resolve
+    if: needs.resolve.outputs.should_build == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      # 1) 本仓：cli-go 工具链（V2 布局支持：自动探测 / --layout v2）+ V2 汉化资产
+      - name: Checkout this repo (cli-go toolchain + V2 assets)
+        uses: actions/checkout@v6
+
+      # 2) 浅克隆该 tag 的上游源码到临时目录（公开仓库，无需 token）
       - name: Checkout upstream V2 source
         uses: actions/checkout@v6
         with:
           repository: ${{ env.UPSTREAM_REPO }}
-          ref: ${{ steps.resolve.outputs.tag }}
+          ref: ${{ needs.resolve.outputs.tag }}
           path: build/upstream
           fetch-depth: 1
 
-      # 4) 工具链：Go（构建 cli-go）+ bun 1.4.2（与上游根 packageManager 一致）
+      # 3) 工具链：Go（构建 cli-go）+ bun 1.4.2（与上游根 packageManager 一致）
       - uses: actions/setup-go@v6
         with:
           go-version-file: cli-go/go.mod
@@ -103,7 +165,7 @@ jobs:
         with:
           bun-version: ${{ env.BUN_VERSION }}
 
-      # 5) 缓存：bun 下载缓存 + monorepo 根 node_modules（按 tag+lockfile 命中）。
+      # 4) 缓存：bun 下载缓存 + monorepo 根 node_modules（按 tag+lockfile 命中）。
       #    这两处命中后单平台重建从 ~9 min 降到 ~18 s（见试跑报告 ⑤/⑩）。
       - name: Cache bun downloads and monorepo node_modules
         uses: actions/cache@v5
@@ -111,61 +173,214 @@ jobs:
           path: |
             ~/.bun/install/cache
             build/upstream/node_modules
-          key: ${{ runner.os }}-ocv2-${{ steps.resolve.outputs.tag }}-${{ hashFiles('build/upstream/bun.lock') }}
+          key: ${{ runner.os }}-ocv2-${{ needs.resolve.outputs.tag }}-${{ hashFiles('build/upstream/bun.lock') }}
           restore-keys: |
-            ${{ runner.os }}-ocv2-${{ steps.resolve.outputs.tag }}-
+            ${{ runner.os }}-ocv2-${{ needs.resolve.outputs.tag }}-
             ${{ runner.os }}-ocv2-
 
-      # 6) 构建 cli-go 工具
+      # 5) 构建 cli-go 工具
       - name: Build cli-go tool
         working-directory: cli-go
         run: go build -trimpath -o ../dist/opencode-cli .
 
-      # 7) V2 linux-x64 完整构建（照试跑报告命令；cli-go 自动探测 V2 布局，
-      #    未显式设 OPENCODE_VERSION 时由工具从 packages/cli/package.json
-      #    读取并注入，保证 --version 忠实反映所构建源码）。
+      # 6) 记录本次注入的 V2 资产 commit（Release 正文要写清资产来源）。
+      #    优先 GitHub API 按 path 取当前分支上最近一次改动该目录的提交；
+      #    失败回退本地 git log，再回退本次运行 commit（并告警）。
+      - name: Record injected V2 asset commit
+        id: assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ref="$(python3 -c 'import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1],safe=""))' "$GITHUB_REF_NAME")"
+          assets_commit="$(gh api "repos/${GITHUB_REPOSITORY}/commits?sha=${ref}&path=cli-go/internal/core/assets/opencode-i18n-v2/&per_page=1" \
+            --jq '.[0].sha' 2>/dev/null || true)"
+          if [[ -z "$assets_commit" || "$assets_commit" == "null" ]]; then
+            assets_commit="$(git log -1 --format=%H -- cli-go/internal/core/assets/opencode-i18n-v2/ || true)"
+          fi
+          if [[ -z "$assets_commit" || "$assets_commit" == "null" ]]; then
+            assets_commit="${GITHUB_SHA}"
+            echo "警告: 未能解析 V2 资产 commit，回退为本次运行 commit ${GITHUB_SHA}" >&2
+          fi
+          echo "assets_commit=$assets_commit" >>"$GITHUB_OUTPUT"
+          echo "注入的 V2 汉化资产 commit: ${assets_commit}"
+
+      # 7) 翻译门禁（dry-run；apply 按 V2 布局自动选 assets/opencode-i18n-v2）。
+      #    口径与 V1 相同：--strict --min-match-rate 1（见 env.V2_MIN_MATCH_RATE）。
+      - name: V2 translation gate (dry-run)
+        env:
+          OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
+        run: |
+          set -euo pipefail
+          ./dist/opencode-cli apply --dry-run --strict --min-match-rate "${V2_MIN_MATCH_RATE}" 2>&1 | tee apply-dry.log
+          ./dist/opencode-cli verify --dry-run
+
+      # 8) 真实注入 V2 中文翻译（同一门禁口径；不过则构建失败，不发布）
+      - name: Inject V2 Chinese translations
+        env:
+          OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
+        run: ./dist/opencode-cli apply --strict --min-match-rate "${V2_MIN_MATCH_RATE}"
+
+      # 9) 构建 linux-x64（cli-go 自动探测 V2 布局；未显式设 OPENCODE_VERSION 时
+      #    由工具从 packages/cli/package.json 读取注入，--version 忠实反映上游版本）
       - name: Build V2 linux-x64 binary
         env:
           OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
           OPENCODE_CHANNEL: latest
         run: ./dist/opencode-cli build --platform linux-x64 --deploy=false
 
-      # 8) 校验产物：文件存在 + --version 与上游 packages/cli/package.json 一致
+      # 10) 校验产物：文件存在 + --version 与上游 packages/cli/package.json 一致
       - name: Verify built binary
         id: verify
+        env:
+          VERSION: ${{ needs.resolve.outputs.version }}
         run: |
           set -euo pipefail
-          version="$(jq -r '.version' build/upstream/packages/cli/package.json)"
-          [[ -n "$version" && "$version" != "null" ]] || { echo "无法读取上游版本号" >&2; exit 1; }
           binary="build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode"
           [[ -f "$binary" ]] || { echo "Binary not found: $binary" >&2; exit 1; }
           output="$("$binary" --version)"
           echo "$binary --version -> $output"
-          [[ "$output" == *"v${version}"* ]] || {
-            echo "版本不匹配：期望 v${version}，实际 $output" >&2
+          [[ "$output" == *"v${VERSION}"* ]] || {
+            echo "版本不匹配：期望 v${VERSION}，实际 $output" >&2
             exit 1
           }
-          echo "version=$version" >>"$GITHUB_OUTPUT"
 
-      # 9) 打包二进制 + sha256，存成构建产物（不发 Release）
+      # 11) 中文落地验证：注入的中文译文必须真的在二进制里（不只凭 CI 绿点）。
+      #     bun --compile（minify + bytecode）把非 ASCII 以 \uXXXX 转义形态嵌入
+      #     模块源码（bun 1.4.2 本地实测），故两种形态都接受；4 条已知译文
+      #     （与 assets/opencode-i18n-v2/anchors 真实译文一一对应）至少命中 3 条，
+      #     另输出 CJK 转义序列总量作为佐证。
+      - name: Verify Chinese strings landed in binary
+        id: zhcheck
+        run: |
+          set -euo pipefail
+          binary="build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode"
+          python3 - <<'PY' >zh-targets.txt
+          targets = [
+              "列出所有智能体",                    # packages/cli/src/commands/commands.ts (agents)
+              "OpenCode 登录",                    # packages/cli/src/acp/service.ts (terminal-auth)
+              "卸载 OpenCode 并删除所有相关文件",  # packages/cli/src/commands/commands.ts (uninstall)
+              "调试与故障排查工具",                # packages/cli/src/commands/commands.ts (debug)
+          ]
+          for t in targets:
+              esc = "".join(c if ord(c) < 128 else "\\u%04X" % ord(c) for c in t)
+              print(f"{esc}\t{t}")
+          PY
+          hits=0
+          : >zh-check.txt
+          while IFS=$'\t' read -r esc raw; do
+            if grep -aqF "$esc" "$binary"; then
+              hits=$((hits + 1))
+              printf -- '- 命中注入译文（bun 转义形态）: %s\n' "$raw" >>zh-check.txt
+            elif grep -aqF "$raw" "$binary"; then
+              hits=$((hits + 1))
+              printf -- '- 命中注入译文（原始 UTF-8 形态）: %s\n' "$raw" >>zh-check.txt
+            else
+              printf -- '- 未命中: %s\n' "$raw" >>zh-check.txt
+            fi
+          done <zh-targets.txt
+          cjk="$(grep -ao '\\u[4-9][0-9A-Fa-f][0-9A-Fa-f][0-9A-Fa-f]' "$binary" | wc -l || true)"
+          [[ "$cjk" =~ ^[0-9]+$ ]] || cjk=0
+          printf -- '- CJK 转义序列（\\u4E00-\\u9FFF）出现次数: %s\n' "$cjk" >>zh-check.txt
+          cat zh-check.txt
+          [[ "$hits" -ge 3 ]] || {
+            echo "中文落地验证失败：已知译文仅命中 $hits/4 条" >&2
+            exit 1
+          }
+          echo "hits=$hits" >>"$GITHUB_OUTPUT"
+          echo "cjk=$cjk" >>"$GITHUB_OUTPUT"
+
+      # 12) 打包二进制 + sha256（V2 线发 Release：附二进制 + SHA256SUMS）
       - name: Package binary and checksum
+        id: package
         env:
-          TAG: ${{ steps.resolve.outputs.tag }}
+          TAG: ${{ needs.resolve.outputs.tag }}
         run: |
           set -euo pipefail
           mkdir -p dist
-          cp build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode "dist/opencode-v2-${TAG}-linux-x64"
+          binary="build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode"
+          cp "$binary" "dist/opencode-v2-${TAG}-linux-x64"
           (
             cd dist
             sha256sum "opencode-v2-${TAG}-linux-x64" >SHA256SUMS
             cat SHA256SUMS
           )
+          size_bytes="$(stat -c %s "dist/opencode-v2-${TAG}-linux-x64")"
+          size_human="$(numfmt --to=iec --suffix=B "$size_bytes")"
+          sha256="$(cut -d' ' -f1 dist/SHA256SUMS)"
+          echo "size_bytes=$size_bytes" >>"$GITHUB_OUTPUT"
+          echo "size_human=$size_human" >>"$GITHUB_OUTPUT"
+          echo "sha256=$sha256" >>"$GITHUB_OUTPUT"
+          echo "产物: opencode-v2-${TAG}-linux-x64 (${size_human}) sha256=${sha256}"
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v7
         with:
-          name: opencode-v2-${{ steps.resolve.outputs.tag }}-linux-x64
+          name: opencode-v2-${{ needs.resolve.outputs.tag }}-linux-x64
           path: |
-            dist/opencode-v2-${{ steps.resolve.outputs.tag }}-linux-x64
+            dist/opencode-v2-${{ needs.resolve.outputs.tag }}-linux-x64
             dist/SHA256SUMS
           if-no-files-found: error
+
+      # 13) Release 正文：基于的上游 tag/commit、注入的资产 commit、门禁与验证证据
+      - name: Create release notes
+        env:
+          TAG: ${{ needs.resolve.outputs.tag }}
+          VERSION: ${{ needs.resolve.outputs.version }}
+          UPSTREAM_SHA: ${{ needs.resolve.outputs.upstream_sha }}
+          RELEASE_TAG: ${{ needs.resolve.outputs.release_tag }}
+          ASSETS_COMMIT: ${{ steps.assets.outputs.assets_commit }}
+          SHA256: ${{ steps.package.outputs.sha256 }}
+          SIZE_HUMAN: ${{ steps.package.outputs.size_human }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          gate="$(grep -E '📁 文件:|📝 替换:' apply-dry.log | sed 's/^ *//' | tr '\n' ' ')"
+          cat >release_notes.md <<EOF
+          ## OpenCode CLI/TUI 简体中文汉化版 · V2 线（linux-x64）
+
+          - 上游基线：\`${UPSTREAM_REPO}\` tag \`${TAG}\`（commit \`${UPSTREAM_SHA:0:12}\`，版本 v${VERSION}）
+          - 注入的汉化资产：commit \`${ASSETS_COMMIT:0:12}\`（\`cli-go/internal/core/assets/opencode-i18n-v2/\`，V2 专用资产，由 V1 词表重新锚定生成）
+          - 翻译门禁：\`apply --dry-run --strict --min-match-rate ${V2_MIN_MATCH_RATE}\` → ${gate}
+          - 构建：linux-x64 单平台（bun ${BUN_VERSION} + cli-go 工具链），\`--version\` = \`opencode v${VERSION}\`
+          - 构建流水线：${RUN_URL}
+
+          ### 中文落地验证（CI 实测）
+
+          $(cat zh-check.txt)
+
+          ### 下载与校验
+
+          | 文件 | sha256 | 体积 |
+          |---|---|---|
+          | \`opencode-v2-${TAG}-linux-x64\` | \`${SHA256}\` | ${SIZE_HUMAN} |
+          | \`SHA256SUMS\` | — | 全部产物摘要 |
+
+          \`\`\`bash
+          curl -fsLO https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/opencode-v2-${TAG}-linux-x64
+          curl -fsLO https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/SHA256SUMS
+          sha256sum -c SHA256SUMS
+          chmod +x opencode-v2-${TAG}-linux-x64
+          ./opencode-v2-${TAG}-linux-x64 --version
+          \`\`\`
+
+          ### 已知边界（重要）
+
+          - 门禁 100% ≠ 界面全中文：资产含身份锚点（保持原文，如键位提示/枚举值/命令 id），且仍有约 60 条散点 + 237 条 keybind 描述 + 25 条 devtools 界面串未译（见 \`docs/opencode-v2-i18n-gate-close.md\` §5）。
+          - 本 Release 属 V2 线，与 V1 正式版/实时预览版相互独立、互不影响（V1 流水线、注入/发布脚本、词表零改动）。
+          - 社区维护的非官方汉化构建，与 OpenCode 官方团队无隶属关系。
+          EOF
+
+      # 14) 发布 Release（tag v2-cn-<上游版本>；附二进制 + SHA256SUMS）
+      - name: Publish release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ needs.resolve.outputs.release_tag }}
+          target_commitish: ${{ github.sha }}
+          name: "OpenCode v${{ needs.resolve.outputs.version }} 简体中文汉化版（V2 线）"
+          body_path: release_notes.md
+          files: |
+            dist/opencode-v2-${{ needs.resolve.outputs.tag }}-linux-x64
+            dist/SHA256SUMS
+          overwrite_files: true
+          fail_on_unmatched_files: true
