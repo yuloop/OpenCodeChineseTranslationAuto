@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/mini/splash.ts",
+  "replacements": {
+    "Continue": "继续",
+    "Session": "会话",
+    "Untitled session": "未命名会话"
+  }
+}

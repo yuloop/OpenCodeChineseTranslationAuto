@@ -15,6 +15,9 @@ import (
 //go:embed assets/opencode-i18n
 var embeddedAssets embed.FS
 
+//go:embed assets/opencode-i18n-v2
+var embeddedAssetsV2 embed.FS
+
 // TranslationConfig 汉化配置结构
 type TranslationConfig struct {
 	Category     string
@@ -54,27 +57,45 @@ type I18n struct {
 	i18nDir     string
 	opencodeDir string
 	useEmbedded bool
+	embedded    fs.FS
 }
 
 // NewI18n 创建 I18n 实例
+// 按上游源码布局选择汉化资产：V1 布局用 assets/opencode-i18n（行为与历史一致），
+// V2 布局（packages/cli）用 V2 专用资产 assets/opencode-i18n-v2
+// （由 tools/v2_anchor_migrate.py 从 V1 词表重新锚定生成，V1 词表零改动）。
 func NewI18n() (*I18n, error) {
-	i18nDir, err := GetI18nDir()
-	useEmbedded := false
-
-	// 如果获取目录失败或目录不存在，尝试使用内置资源
-	if err != nil || !DirExists(i18nDir) {
-		useEmbedded = true
-		i18nDir = "assets/opencode-i18n" // embedded 中的相对路径
-	}
-
 	opencodeDir, err := GetOpencodeDir()
 	if err != nil {
 		// 如果连 OpenCode 源码目录都找不到，那就真的无法继续了
 		return nil, err
 	}
 
+	layout := detectLayout(opencodeDir)
+
+	i18nDir, err := GetI18nDirForLayout(layout)
+	useEmbedded := false
+
+	// 如果获取目录失败或目录不存在，尝试使用内置资源
+	if err != nil || !DirExists(i18nDir) {
+		useEmbedded = true
+		i18nDir = "assets/opencode-i18n" // embedded 中的相对路径
+		if layout == LayoutV2 {
+			i18nDir = "assets/opencode-i18n-v2"
+		}
+	}
+
+	embedded := embeddedAssets
+	if layout == LayoutV2 {
+		embedded = embeddedAssetsV2
+	}
+
 	if useEmbedded {
-		fmt.Println("提示: 使用内置汉化配置")
+		if layout == LayoutV2 {
+			fmt.Println("提示: 使用内置汉化配置 (V2 资产)")
+		} else {
+			fmt.Println("提示: 使用内置汉化配置")
+		}
 	} else {
 		fmt.Printf("提示: 使用外部汉化配置: %s\n", i18nDir)
 	}
@@ -83,6 +104,7 @@ func NewI18n() (*I18n, error) {
 		i18nDir:     i18nDir,
 		opencodeDir: opencodeDir,
 		useEmbedded: useEmbedded,
+		embedded:    embedded,
 	}, nil
 }
 
@@ -93,7 +115,7 @@ func (i *I18n) LoadConfig() ([]TranslationConfig, error) {
 	var err error
 
 	if i.useEmbedded {
-		entries, err = fs.ReadDir(embeddedAssets, i.i18nDir)
+		entries, err = fs.ReadDir(i.embedded, i.i18nDir)
 	} else {
 		entries, err = os.ReadDir(i.i18nDir)
 	}
@@ -111,7 +133,7 @@ func (i *I18n) LoadConfig() ([]TranslationConfig, error) {
 			if i.useEmbedded {
 				// Embedded FS 路径必须使用正斜杠
 				embedPath := i.i18nDir + "/" + categoryName
-				files, err = fs.ReadDir(embeddedAssets, embedPath)
+				files, err = fs.ReadDir(i.embedded, embedPath)
 			} else {
 				categoryDir := filepath.Join(i.i18nDir, categoryName)
 				files, err = os.ReadDir(categoryDir)
@@ -158,7 +180,7 @@ func (i *I18n) loadSingleConfig(category, fileName string) *TranslationConfig {
 			configPath = i.i18nDir + "/" + category + "/" + fileName
 		}
 		var data []byte
-		data, readErr = fs.ReadFile(embeddedAssets, configPath)
+		data, readErr = fs.ReadFile(i.embedded, configPath)
 		if readErr == nil {
 			readErr = json.Unmarshal(data, &config)
 		}

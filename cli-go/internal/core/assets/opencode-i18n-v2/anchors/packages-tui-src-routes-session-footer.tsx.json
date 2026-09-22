@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/routes/session/footer.tsx",
+  "replacements": {
+    "Get started": "开始使用",
+    "Permission": "权限"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/ui/toast.tsx",
+  "replacements": {
+    "message: \"An unknown error has occurred\"": "message: \"发生未知错误\""
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "file": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+  "replacements": {
+    "BUILD": "构建",
+    "EXIT": "退出",
+    "SHELL": "命令行",
+    "background": "后台",
+    "cmd": "命令",
+    "interrupt": "中断",
+    "subagents": "子代理"
+  }
+}

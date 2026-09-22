@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/ui/dialog-alert.tsx",
+  "replacements": {
+    "<text fg={theme.selectedListItemText}>ok</text>": "<text fg={theme.selectedListItemText}>确定</text>"
+  }
+}

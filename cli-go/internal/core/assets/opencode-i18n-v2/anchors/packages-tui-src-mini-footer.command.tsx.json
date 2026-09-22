@@ -1,0 +1,27 @@
+{
+  "file": "packages/tui/src/mini/footer.command.tsx",
+  "replacements": {
+    "Agent": "智能体",
+    "Commands": "命令",
+    "Default": "默认",
+    "Exit": "退出",
+    "Free": "免费",
+    "Models loading": "模型加载中",
+    "New session": "新会话",
+    "No results found": "未找到结果",
+    "No subagents found": "未找到子代理",
+    "Open editor": "打开编辑器",
+    "Prompt": "提示",
+    "Search": "搜索",
+    "Session": "会话",
+    "Switch model": "切换模型",
+    "Switch model variant": "切换模型变体",
+    "System": "系统",
+    "Variant cycle": "循环变体",
+    "View subagents": "查看子代理",
+    "done": "完成",
+    "return \"cancelled\"": "return \"已取消\"",
+    "return \"error\"": "return \"错误\"",
+    "return \"running\"": "return \"运行中\""
+  }
+}

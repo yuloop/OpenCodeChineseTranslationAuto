@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/routes/session/dialog-subagent.tsx",
+  "replacements": {
+    "the subagent's session": "子智能体会话",
+    "title: \"Open\"": "title: \"打开\"",
+    "title=\"Subagent Actions\"": "title=\"子智能体操作\""
+  }
+}

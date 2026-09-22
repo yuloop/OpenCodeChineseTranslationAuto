@@ -1,0 +1,14 @@
+{
+  "file": "packages/tui/src/component/dialog-status.tsx",
+  "replacements": {
+    "Connected</Match>": "已连接</Match>",
+    "Disabled in configuration</Match>": "已在配置中禁用</Match>",
+    "Formatters": "格式化器",
+    "LSP Servers": "LSP 服务器",
+    "MCP Servers": "MCP 服务器",
+    "Needs authentication": "需要认证",
+    "No Formatters": "暂无格式化器",
+    "No MCP Servers": "暂无 MCP 服务器",
+    "Status": "状态"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/routes/session/dialog-fork.tsx",
+  "replacements": {
+    "title=\"Fork session\"": "title=\"从消息分支\""
+  }
+}

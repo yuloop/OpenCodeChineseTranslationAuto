@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/config/v1/keybind.ts",
+  "replacements": {
+    "\"Write heap snapshot\"": "\"写入堆快照\""
+  }
+}

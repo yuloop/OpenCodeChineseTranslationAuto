@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/component/dialog-skill.tsx",
+  "replacements": {
+    "No skills found": "未找到技能",
+    "category: \"Skills\"": "category: \"技能\"",
+    "placeholder=\"Search skills…\"": "placeholder=\"搜索技能...\"",
+    "title=\"Skills\"": "title=\"技能\""
+  }
+}

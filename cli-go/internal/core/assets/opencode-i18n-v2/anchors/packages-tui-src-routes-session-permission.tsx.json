@@ -1,0 +1,23 @@
+{
+  "file": "packages/tui/src/routes/session/permission.tsx",
+  "replacements": {
+    "\"This will allow \" + props.request.permission + \" until OpenCode is restarted.\"": "\"这将允许 \" + props.request.permission + \" 直到OpenCode重启。\"",
+    "\"Unknown\"": "\"未知\"",
+    "<text fg={theme.textMuted}>Tell OpenCode what to do differently</text>": "<text fg={theme.textMuted}>告诉OpenCode如何处理</text>",
+    "<text fg={theme.text}>Reject permission</text>": "<text fg={theme.text}>拒绝权限</text>",
+    "No diff provided": "没有提供差异",
+    "This will allow the following patterns until OpenCode is restarted": "这将允许以下模式，直到 OpenCode 重启",
+    "options={{ confirm: \"Confirm\", cancel: \"Cancel\" }}": "options={{ confirm: \"确认\", cancel: \"取消\" }}",
+    "options={{ once: \"Allow once\", always: \"Allow always\", reject: \"Reject\" }}": "options={{ once: \"允许一次\", always: \"始终允许\", reject: \"拒绝\" }}",
+    "title: `${Locale.titlecase(type)} Task`": "title: `${Locale.titlecase(type)} 任务`",
+    "title: `Access external directory ${dir}`": "title: `访问外部目录 ${dir}`",
+    "title: `Call tool ${permission}`": "title: `调用工具 ${permission}`",
+    "title: `Edit ${pathFormatter.format(filepath)}`": "title: `编辑 ${pathFormatter.format(filepath)}`",
+    "title: `Glob \"${pattern}\"`": "title: `通配符 \"${pattern}\"`",
+    "title: `Grep \"${pattern}\"`": "title: `搜索 \"${pattern}\"`",
+    "title: `List ${pathFormatter.format(dir)}`": "title: `列出 ${pathFormatter.format(dir)}`",
+    "title: `Read ${pathFormatter.format(filePath)}`": "title: `读取 ${pathFormatter.format(filePath)}`",
+    "title=\"Always allow\"": "title=\"始终允许\"",
+    "title=\"Permission required\"": "title=\"需要权限\""
+  }
+}

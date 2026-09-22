@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/footer.subagent.tsx",
+  "replacements": {
+    "No subagent activity yet": "暂无子代理活动"
+  }
+}

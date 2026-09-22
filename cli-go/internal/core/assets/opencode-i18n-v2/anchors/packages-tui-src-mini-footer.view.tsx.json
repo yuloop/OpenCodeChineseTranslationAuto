@@ -1,0 +1,10 @@
+{
+  "file": "packages/tui/src/mini/footer.view.tsx",
+  "replacements": {
+    "Background subagents": "后台子代理",
+    "Cycle model variant": "循环切换模型变体",
+    "Open command palette": "打开命令面板",
+    "View subagents": "查看子代理",
+    "normal": "普通"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/dialog-theme-list.tsx",
+  "replacements": {
+    "title=\"Themes\"": "title=\"主题\""
+  }
+}

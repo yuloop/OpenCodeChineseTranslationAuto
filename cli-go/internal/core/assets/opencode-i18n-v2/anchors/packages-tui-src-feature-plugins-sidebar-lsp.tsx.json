@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/feature-plugins/sidebar/lsp.tsx",
+  "replacements": {
+    "LSPs are disabled": "LSP 已禁用",
+    "LSPs will activate as files are read": "LSP 将在读取文件时激活"
+  }
+}

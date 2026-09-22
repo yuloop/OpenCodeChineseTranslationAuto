@@ -1,0 +1,14 @@
+{
+  "file": "packages/tui/src/component/error-component.tsx",
+  "replacements": {
+    "() => (copied() ? \"✓ Copied\" : \"Copy report\")": "() => (copied() ? \"✓ 已复制\" : \"复制报告\")",
+    "An unexpected error stopped the session.": "意外错误导致会话中断。",
+    "An unknown error occurred.": "发生了未知错误。",
+    "Copy the report and open a GitHub issue to help us fix this.": "复制报告并打开 GitHub issue 帮助我们修复。",
+    "Quit": "退出",
+    "Report copied — paste it into a new GitHub issue.": "报告已复制 — 粘贴到新的 GitHub issue。",
+    "Restart": "重新启动",
+    "opencode crashed": "opencode 崩溃",
+    "✓ Copied": "✓ 已复制"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "file": "packages/tui/src/mini/footer.form.tsx",
+  "replacements": {
+    " (select all that apply)": " (全选所有适用的)",
+    "(not answered)": "(未回答)",
+    "(select all that apply)": "(可多选)",
+    "Review": "审查",
+    "Type your own answer": "输入自定义答案"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "file": "packages/tui/src/util/error.ts",
+  "replacements": {
+    "Check credentials and configuration.": "请检查凭据和配置。",
+    "Did you mean": "您是不是要找",
+    "Failed to initialize provider": "初始化提供商失败",
+    "Model not found": "模型未找到",
+    "Or check your config (opencode.json) provider/model names": "或检查配置文件 (opencode.json) 中的提供商/模型名称",
+    "is not valid JSON(C)": "不是有效的 JSON(C)",
+    "is not valid. Rename the directory to": "无效。请将目录重命名为",
+    "or remove it. This is a common typo.": "或移除它。这是常见拼写错误。"
+  }
+}

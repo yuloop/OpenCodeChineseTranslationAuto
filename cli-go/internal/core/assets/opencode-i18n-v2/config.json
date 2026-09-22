@@ -1,0 +1,4391 @@
+{
+  "name": "opencode-zh-CN-v2",
+  "description": "V2 专用汉化资产:由 tools/v2_anchor_migrate.py 从 V1 词表重新锚定生成(V1 词表零改动)",
+  "layout": "v2",
+  "generatedBy": "tools/v2_anchor_migrate.py",
+  "upstream": {
+    "repo": "anomalyco/opencode",
+    "tag": "v2.0.12",
+    "commit": "2670273ff17da96f85c5826ced57aa1b368754fa"
+  },
+  "v1AssetsVersion": "6.2",
+  "totals": {
+    "total": 497,
+    "kept": 152,
+    "moved": 92,
+    "moved_unique": 39,
+    "moved_disambiguated": 53,
+    "deferred": 253,
+    "deferred_no_hit": 217,
+    "deferred_outside_universe": 17,
+    "deferred_ambiguous": 8,
+    "deferred_no_consensus": 3,
+    "deferred_weak_evidence": 1,
+    "deferred_identifier_collision": 7
+  },
+  "manifest": {
+    "totals": {
+      "total": 497,
+      "kept": 152,
+      "moved": 92,
+      "moved_unique": 39,
+      "moved_disambiguated": 53,
+      "deferred": 253,
+      "deferred_no_hit": 217,
+      "deferred_outside_universe": 17,
+      "deferred_ambiguous": 8,
+      "deferred_no_consensus": 3,
+      "deferred_weak_evidence": 1,
+      "deferred_identifier_collision": 7
+    },
+    "entries": [
+      {
+        "rule": "app.json",
+        "key": "title: \"Exit the app\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "message: `Invalid model format: ${args.model}`",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "title: \"Model cycle\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "title: \"Favorite cycle reverse\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "title: \"Favorite cycle\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "title: \"Model cycle reverse\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "title: \"Variant cycle\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "title: \"Agent cycle\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "title: \"Agent cycle reverse\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "message: \"Failed to fork session\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/app-messages.json",
+        "key": "message: `Updating to v${version}…`",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/common-toast.json",
+        "key": "message: \"An unknown error has occurred\"",
+        "status": "kept",
+        "from": "packages/tui/src/ui/toast.tsx",
+        "to": "packages/tui/src/ui/toast.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/error-messages.json",
+        "key": "message: \"Copied to clipboard\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/error-messages.json",
+        "key": "message: \"The current session was deleted\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/error-messages.json",
+        "key": "`Update Available`",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/error-messages.json",
+        "key": "title: \"Update Failed\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/error-messages.json",
+        "key": "message: \"Update failed\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/fatal-error.json",
+        "key": "An unknown error occurred.",
+        "status": "kept",
+        "from": "packages/tui/src/component/error-component.tsx",
+        "to": "packages/tui/src/component/error-component.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/fatal-error.json",
+        "key": "An unexpected error stopped the session.",
+        "status": "kept",
+        "from": "packages/tui/src/component/error-component.tsx",
+        "to": "packages/tui/src/component/error-component.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/fatal-error.json",
+        "key": "Restart",
+        "status": "kept",
+        "from": "packages/tui/src/component/error-component.tsx",
+        "to": "packages/tui/src/component/error-component.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/fatal-error.json",
+        "key": "Quit",
+        "status": "kept",
+        "from": "packages/tui/src/component/error-component.tsx",
+        "to": "packages/tui/src/component/error-component.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/fatal-error.json",
+        "key": "✓ Copied",
+        "status": "kept",
+        "from": "packages/tui/src/component/error-component.tsx",
+        "to": "packages/tui/src/component/error-component.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/fatal-error.json",
+        "key": "Report copied — paste it into a new GitHub issue.",
+        "status": "kept",
+        "from": "packages/tui/src/component/error-component.tsx",
+        "to": "packages/tui/src/component/error-component.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/fatal-error.json",
+        "key": "Copy the report and open a GitHub issue to help us fix this.",
+        "status": "kept",
+        "from": "packages/tui/src/component/error-component.tsx",
+        "to": "packages/tui/src/component/error-component.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/fatal-error.json",
+        "key": "opencode crashed",
+        "status": "deferred",
+        "from": "packages/tui/src/component/error-component.tsx",
+        "to": "packages/tui/src/component/error-component.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/fatal-error.json",
+        "key": "() => (copied() ? \"✓ Copied\" : \"Copy report\")",
+        "status": "deferred",
+        "from": "packages/tui/src/component/error-component.tsx",
+        "to": "packages/tui/src/component/error-component.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/local-context.json",
+        "key": "message: \"Add a favorite model to use this shortcut\"",
+        "status": "kept",
+        "from": "packages/tui/src/context/local.tsx",
+        "to": "packages/tui/src/context/local.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/local-context.json",
+        "key": "model: \"No provider selected\"",
+        "status": "kept",
+        "from": "packages/tui/src/context/local.tsx",
+        "to": "packages/tui/src/context/local.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/local-context.json",
+        "key": "provider: \"Connect a provider\"",
+        "status": "kept",
+        "from": "packages/tui/src/context/local.tsx",
+        "to": "packages/tui/src/context/local.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "common/local-context.json",
+        "key": "message: `Agent not found: ${name}`",
+        "status": "deferred",
+        "from": "packages/tui/src/context/local.tsx",
+        "to": "packages/tui/src/context/local.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/local-context.json",
+        "key": "message: `Model ${model.providerID}/${model.modelID} is not valid`",
+        "status": "deferred",
+        "from": "packages/tui/src/context/local.tsx",
+        "to": "packages/tui/src/context/local.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/local-context.json",
+        "key": "message: `Agent ${value.name}'s configured model ${value.model.providerID}/${value.model.modelID} is not valid`",
+        "status": "deferred",
+        "from": "packages/tui/src/context/local.tsx",
+        "to": "packages/tui/src/context/local.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/share-error.json",
+        "key": "message: \"Failed to copy URL to clipboard\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/system-prompt.json",
+        "key": "return (yield* (yield* Reference.Service).list()).filter((reference) => reference.description !== undefined)",
+        "status": "deferred",
+        "from": "packages/opencode/src/session/system.ts",
+        "to": "packages/opencode/src/session/system.ts",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/autocomplete.json",
+        "key": "<text fg={theme.textMuted}>No matching items</text>",
+        "status": "deferred",
+        "from": "packages/tui/src/component/prompt/autocomplete.tsx",
+        "to": "packages/tui/src/component/prompt/autocomplete.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Switch session\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"New session\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Switch model\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Switch agent\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"View status\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Switch theme\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Help\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Open docs\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Exit the app\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Toggle debug panel\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Toggle console\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Suspend terminal\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Disable terminal title\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Enable terminal title\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Show command palette\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Switch to light mode\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Switch to dark mode\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Unlock theme mode\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Lock theme mode\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"View debug info\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Switch model variant\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Disable animations\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Enable animations\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Disable file context\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Enable file context\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Disable diff wrapping\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Enable diff wrapping\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Disable paste summary\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Enable paste summary\"",
+        "status": "kept",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Write heap snapshot\"",
+        "status": "moved",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/config/v1/keybind.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Connect provider\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/app/src/runtime/i18n/en.ts"
+        ]
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Toggle MCPs\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/app/src/runtime/i18n/en.ts"
+        ]
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Copy worktree path\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Manage workspaces\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "ambiguous",
+        "hits": [
+          "packages/tui/src/component/prompt/index.tsx",
+          "packages/tui/src/config/keybind.ts"
+        ]
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Switch org\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Disable session directory filtering\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Enable session directory filtering\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Disable auto-approve permissions\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Enable auto-approve permissions\"",
+        "status": "deferred",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "title: \"Clear prompt\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "title: \"Submit prompt\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "title: \"Paste\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "title: \"Interrupt session\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "title: \"Open editor\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "title: \"Stash prompt\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "title: \"Stash pop\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "title: \"Stash list\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "title: \"Skills\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "category: \"Prompt\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "placeholder={placeholderText()}",
+        "status": "kept",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/component-prompt.json",
+        "key": "message: \"Connect a provider to send prompts\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/prompt/index.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-question.json",
+        "key": "placeholder=\"Type your own answer\"",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/question.tsx",
+        "to": "packages/tui/src/routes/session/form.tsx",
+        "basis": "consensus=0,cluster=3,sim=7"
+      },
+      {
+        "rule": "components/component-question.json",
+        "key": " (select all that apply)",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/question.tsx",
+        "to": "packages/tui/src/mini/footer.form.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "components/component-question.json",
+        "key": "(not answered)",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/question.tsx",
+        "to": "packages/tui/src/routes/session/form.tsx",
+        "basis": "consensus=1,cluster=3,sim=7"
+      },
+      {
+        "rule": "components/component-question.json",
+        "key": "Type your own answer",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/question.tsx",
+        "to": "packages/tui/src/routes/session/form.tsx",
+        "basis": "consensus=2,cluster=3,sim=7"
+      },
+      {
+        "rule": "components/component-question.json",
+        "key": ">Confirm</",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/question.tsx",
+        "to": "packages/tui/src/routes/session/question.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-question.json",
+        "key": ">Review</",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/question.tsx",
+        "to": "packages/tui/src/routes/session/question.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "● Tip{\" \"}",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Type {highlight}@{/highlight} followed by a filename to fuzzy search and attach files",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Start a message with {highlight}!{/highlight} to run shell commands (e.g., {highlight}!ls -la{/highlight})",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.agentCycle(), \"to cycle between Build and Plan agents\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}/undo{/highlight} to revert the last message and file changes",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}/redo{/highlight} to restore previously undone messages and file changes",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}/share{/highlight} to create a public opencode.ai link",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Drag and drop images or PDFs into the terminal as context",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.inputPaste(), \"to paste images from your clipboard into the prompt\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`Use ${commandText(\"/editor\", shortcuts.editorOpen())} to compose messages in your external editor`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}/init{/highlight} to auto-generate project rules based on your codebase",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`Use ${commandText(\"/models\", shortcuts.modelList())} to switch between available AI models`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`Use ${commandText(\"/new\", shortcuts.sessionNew())} to start a fresh conversation session`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`Use ${commandText(\"/sessions\", shortcuts.sessionList())} to list, pin, and continue sessions`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}/compact{/highlight} to summarize long sessions near context limits",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`Use ${commandText(\"/export\", shortcuts.sessionExport())} to save the conversation as Markdown`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.messagesCopy(), \"to copy the assistant's last message to clipboard\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.commandList(), \"to see all available actions and commands\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}/connect{/highlight} to add API keys for 75+ supported LLM providers",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`The leader key is ${shortcutText(shortcuts.leader())}; combine with other keys for quick actions`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.modelCycleRecent(), \"to quickly switch between recently used models\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.sessionSidebarToggle(), \"in a session to show or hide the sidebar panel\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`Use ${shortcutText(shortcuts.messagesPageUp())}/${shortcutText(shortcuts.messagesPageDown())} to navigate through conversation history`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.messagesFirst(), \"to jump to the beginning of the conversation\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.messagesLast(), \"to jump to the most recent message\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.inputNewline(), \"to add newlines in your prompt\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.inputClear(), \"when typing to clear the input field\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.sessionInterrupt(), \"to stop the AI mid-response\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Switch to {highlight}Plan{/highlight} agent for suggestions without making changes",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}@agent-name{/highlight} in prompts to invoke specialized subagents",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "for parent/child sessions",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Create {highlight}opencode.json{/highlight} for server settings, and {highlight}tui.json{/highlight} for TUI",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Place TUI settings in {highlight}~/.config/opencode/tui.json{/highlight} for global config",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Add {highlight}$schema{/highlight} to your config for autocomplete in your editor",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Configure {highlight}model{/highlight} in config to set your default model",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Override any keybind in {highlight}tui.json{/highlight} via the {highlight}keybinds{/highlight} section",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set any keybind to {highlight}none{/highlight} to disable it completely",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Configure local or remote MCP servers in the {highlight}mcp{/highlight} config section",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Add {highlight}.md{/highlight} files to {highlight}.opencode/commands/{/highlight} for reusable prompts",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}$ARGUMENTS{/highlight}, {highlight}$1{/highlight}, {highlight}$2{/highlight} in custom commands for dynamic input",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use backticks to inject shell output (e.g., {highlight}`git status`{/highlight})",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Add {highlight}.md{/highlight} files to {highlight}.opencode/agents/{/highlight} for specialized AI personas",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Configure per-agent permissions for {highlight}edit{/highlight}, {highlight}bash{/highlight}, and {highlight}webfetch{/highlight} tools",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use patterns like {highlight}\"git *\": \"allow\"{/highlight} for granular bash permissions",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set {highlight}\"rm -rf *\": \"deny\"{/highlight} to block destructive commands",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Configure {highlight}\"git push\": \"ask\"{/highlight} to require approval before pushing",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set {highlight}\"formatter\": true{/highlight} to enable built-in formatters",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set {highlight}\"formatter\": false{/highlight} to disable inherited formatters",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Define custom formatter commands with file extensions in config",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set {highlight}\"lsp\": true{/highlight} to enable built-in LSP code analysis",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Create {highlight}.ts{/highlight} files in {highlight}.opencode/tools/{/highlight} to define new LLM tools",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Tool definitions can invoke scripts written in Python, Go, etc",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Add {highlight}.ts{/highlight} files to {highlight}.opencode/plugins/{/highlight} for event hooks",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use plugins to send OS notifications when sessions complete",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Create a plugin to prevent OpenCode from reading sensitive files",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}opencode run{/highlight} for non-interactive scripting",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}opencode --continue{/highlight} to resume the last session",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}opencode run -f file.ts{/highlight} to attach files via CLI",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}--format json{/highlight} for machine-readable output in scripts",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}opencode serve{/highlight} for headless API access to OpenCode",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}opencode run --attach{/highlight} to connect to a running server",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}opencode upgrade{/highlight} to update to the latest version",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}opencode auth list{/highlight} to see all configured providers",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}opencode agent create{/highlight} for guided agent creation",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}/opencode{/highlight} in GitHub issues/PRs to trigger AI actions",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}opencode github install{/highlight} to set up the GitHub workflow",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Comment {highlight}/opencode fix this{/highlight} on issues to auto-create PRs",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Comment {highlight}/oc{/highlight} on PR code lines for targeted code reviews",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}\"theme\": \"system\"{/highlight} to match your terminal\\'s colors",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Create JSON theme files in {highlight}.opencode/themes/{/highlight} directory",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Themes support dark/light variants for both modes",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use numeric xterm color codes 0-255 in custom theme JSON",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}{env:VAR_NAME}{/highlight} for environment variables in config",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}{file:path}{/highlight} to include file contents in config values",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}instructions{/highlight} in config to load additional rules files",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set agent {highlight}temperature{/highlight} from 0.0 (focused) to 1.0 (creative)",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Configure {highlight}steps{/highlight} to limit agentic iterations per request",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set {highlight}\"tools\": {\"bash\": false}{/highlight} to disable specific tools",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set {highlight}\"mcp_*\": false{/highlight} to disable all tools from an MCP server",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Override global tool settings per agent configuration",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set {highlight}\"share\": \"auto\"{/highlight} to automatically share all sessions",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Set {highlight}\"share\": \"disabled\"{/highlight} to prevent any session sharing",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}/unshare{/highlight} to remove a session from public access",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Permission {highlight}doom_loop{/highlight} prevents infinite tool call loops",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Permission {highlight}external_directory{/highlight} protects files outside project",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}opencode debug config{/highlight} to troubleshoot configuration",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}--print-logs{/highlight} flag to see detailed logs in stderr",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`Use ${commandText(\"/timeline\", shortcuts.sessionTimeline())} to jump to specific messages`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.messagesToggleConceal(), \"to toggle code block visibility in messages\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`Use ${commandText(\"/status\", shortcuts.statusView())} to see system status info`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Enable {highlight}scroll_acceleration{/highlight} in {highlight}tui.json{/highlight} for smooth scrolling",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Toggle username display in chat via the command palette",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Run {highlight}docker run -it --rm ghcr.io/anomalyco/opencode{/highlight} in a container",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}/connect{/highlight} with OpenCode Zen for curated, tested models",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Commit your project's {highlight}AGENTS.md{/highlight} file to Git for team sharing",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}/review{/highlight} to review uncommitted changes, branches, or PRs",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "`Use ${commandText(\"/help\", shortcuts.helpShow())} to show the help dialog`",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "Use {highlight}/rename{/highlight} to rename the current session",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/component-tips.json",
+        "key": "press(shortcuts.terminalSuspend(), \"to suspend the terminal and return to your shell\")",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips-view.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Preparing write…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Finding files…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Reading file…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Searching content…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Fetching from the web…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Searching web…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Delegating…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Asking questions…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Loading skill…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "<text fg={theme.textMuted}>{expanded() ? \"Click to collapse\" : \"Click to expand\"}</text>",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Writing command…\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Preparing edit…\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Preparing patch…\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/tui/test/cli/tui/inline-tool-wrap-snapshot.test.tsx"
+        ]
+      },
+      {
+        "rule": "components/inline-tools.json",
+        "key": "pending=\"Updating todos…\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/sidebar-lsp.json",
+        "key": "LSPs are disabled",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/sidebar/lsp.tsx",
+        "to": "packages/tui/src/feature-plugins/sidebar/lsp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "components/sidebar-lsp.json",
+        "key": "LSPs will activate as files are read",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/sidebar/lsp.tsx",
+        "to": "packages/tui/src/feature-plugins/sidebar/lsp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-error.json",
+        "key": "Model not found",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/error.ts",
+        "to": "packages/tui/src/util/error.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-error.json",
+        "key": "Did you mean",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/error.ts",
+        "to": "packages/tui/src/util/error.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-error.json",
+        "key": "Or check your config (opencode.json) provider/model names",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/error.ts",
+        "to": "packages/tui/src/util/error.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-error.json",
+        "key": "Failed to initialize provider",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/error.ts",
+        "to": "packages/tui/src/util/error.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-error.json",
+        "key": "Check credentials and configuration.",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/error.ts",
+        "to": "packages/tui/src/util/error.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-error.json",
+        "key": "is not valid JSON(C)",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/error.ts",
+        "to": "packages/tui/src/util/error.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-error.json",
+        "key": "is not valid. Rename the directory to",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/error.ts",
+        "to": "packages/tui/src/util/error.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-error.json",
+        "key": "or remove it. This is a common typo.",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/error.ts",
+        "to": "packages/tui/src/util/error.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-error.json",
+        "key": "Try: \\`opencode models\\` to list available models",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/error.ts",
+        "to": "packages/opencode/src/cli/error.ts",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "No results found",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=0,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "No subagents found",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "No skills found",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/component/dialog-skill.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Models loading",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Default",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=3,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Free",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=5,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "done",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=6,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "return \"cancelled\"",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=7,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "return \"error\"",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "return \"running\"",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Session",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=10,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Agent",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=11,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Prompt",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=12,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "System",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=13,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Open editor",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=14,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "View subagents",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=15,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "New session",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=16,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Switch model",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=17,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Manage queued prompts",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/config/keybind.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Variant cycle",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=18,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Switch model variant",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=19,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Exit",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=20,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Commands",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=21,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Search",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/tui/src/mini/footer.command.tsx",
+        "basis": "consensus=22,cluster=23,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Skills loading",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "current",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "basis": "identifier-collision",
+        "hits": [
+          "packages/cli/src/acp/event.ts",
+          "packages/cli/src/acp/service.ts",
+          "packages/cli/src/commands/commands.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "MCP Commands",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Project Commands",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-footer-command.json",
+        "key": "Skills",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
+        "basis": "identifier-collision",
+        "hits": [
+          "packages/tui/src/component/dialog-skill.tsx",
+          "packages/tui/src/component/prompt/index.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "again to interrupt",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "consensus=0,cluster=5,sim=2"
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "Shell mode",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "basis": "consensus=2,cluster=5,sim=2"
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "Open command palette",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/tui/src/mini/footer.view.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "Cycle model variant",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/tui/src/mini/footer.view.tsx",
+        "basis": "consensus=1,cluster=8,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "Background subagents",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/tui/src/mini/footer.view.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "View subagents",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/tui/src/mini/footer.view.tsx",
+        "basis": "consensus=3,cluster=8,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "Manage queued prompts",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/tui/src/config/keybind.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "normal",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/tui/src/mini/footer.view.tsx",
+        "basis": "consensus=4,cluster=8,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "EXIT",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/core/test/shell-scan/generated.test.ts",
+          "packages/desktop/src/main/remote/cli.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "SHELL",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "basis": "no-consensus",
+        "hits": [
+          "packages/cli/src/commands/handlers/uninstall.ts",
+          "packages/tui/src/prompt/traits.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "BUILD",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/tui/test/mini/footer.view.test.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "interrupt",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "basis": "identifier-collision",
+        "hits": [
+          "packages/cli/src/acp/event.ts",
+          "packages/cli/src/acp/service.ts",
+          "packages/cli/src/run/noninteractive.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "background",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "basis": "identifier-collision",
+        "hits": [
+          "packages/cli/src/acp/event.ts",
+          "packages/cli/src/acp/service.ts",
+          "packages/cli/src/commands/commands.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "subagents",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "basis": "identifier-collision",
+        "hits": [
+          "packages/cli/src/commands/handlers/stats.ts",
+          "packages/tui/src/feature-plugins/prompt/footer.tsx",
+          "packages/tui/src/mini/footer.command.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-footer-view.json",
+        "key": "cmd",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
+        "basis": "ambiguous",
+        "hits": [
+          "packages/cli/src/acp/tool.ts",
+          "packages/cli/src/commands/handlers/session/list.ts",
+          "packages/tui/src/context/keymap.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-permission-ui.json",
+        "key": "Always allow",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
+        "to": "packages/tui/src/mini/footer.permission.tsx",
+        "basis": "consensus=0,cluster=5,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-permission-ui.json",
+        "key": "Reject permission",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
+        "to": "packages/tui/src/mini/footer.permission.tsx",
+        "basis": "consensus=1,cluster=5,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-permission-ui.json",
+        "key": "Permission required",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
+        "to": "packages/tui/src/mini/footer.permission.tsx",
+        "basis": "consensus=2,cluster=5,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-permission-ui.json",
+        "key": "Tell OpenCode what to do differently",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
+        "to": "packages/tui/src/mini/footer.permission.tsx",
+        "basis": "consensus=3,cluster=5,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-permission-ui.json",
+        "key": "No diff provided",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
+        "to": "packages/tui/src/mini/footer.permission.tsx",
+        "basis": "consensus=4,cluster=5,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-permission-ui.json",
+        "key": "Waiting for permission event...",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-permission.json",
+        "key": "Allow once",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "consensus=0,cluster=6,sim=2"
+      },
+      {
+        "rule": "dialogs/cli-permission.json",
+        "key": "Reject",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "consensus=1,cluster=6,sim=2"
+      },
+      {
+        "rule": "dialogs/cli-permission.json",
+        "key": "Confirm",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "consensus=2,cluster=6,sim=2"
+      },
+      {
+        "rule": "dialogs/cli-permission.json",
+        "key": "Cancel",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "consensus=3,cluster=6,sim=2"
+      },
+      {
+        "rule": "dialogs/cli-permission.json",
+        "key": "Continue after repeated failures",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-permission.json",
+        "key": "This keeps the session running despite repeated failures.",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-permission.json",
+        "key": "Allow always",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
+        "to": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/ui/src/i18n/en.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "compose in your external editor",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "start a new session",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "close OpenCode",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "failed to open editor",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "waiting for current response",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "empty prompt ignored",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "loading commands",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Clear prompt or exit",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Interrupt session",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=8,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Open editor",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=9,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Previous prompt history",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=10,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Next prompt history",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=11,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Previous autocomplete item",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=12,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Next autocomplete item",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=13,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Hide autocomplete",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=14,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Select autocomplete item",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=15,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Complete autocomplete item",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=16,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Autocomplete",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/tui/src/mini/footer.prompt.tsx",
+        "basis": "consensus=17,cluster=18,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Run a command... \"git status\"",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "Ask anything... \"Fix a TODO in the codebase\"",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-prompt.json",
+        "key": "browse available skills",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-question.json",
+        "key": "(select all that apply)",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
+        "to": "packages/tui/src/mini/footer.form.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/cli-question.json",
+        "key": "Type your own answer",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
+        "to": "packages/tui/src/mini/footer.form.tsx",
+        "basis": "consensus=1,cluster=4,sim=2"
+      },
+      {
+        "rule": "dialogs/cli-question.json",
+        "key": "Review",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
+        "to": "packages/tui/src/mini/footer.form.tsx",
+        "basis": "consensus=2,cluster=4,sim=2"
+      },
+      {
+        "rule": "dialogs/cli-question.json",
+        "key": "(not answered)",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
+        "to": "packages/tui/src/mini/footer.form.tsx",
+        "basis": "consensus=3,cluster=4,sim=2"
+      },
+      {
+        "rule": "dialogs/cli-question.json",
+        "key": "Confirm",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
+        "basis": "no-consensus",
+        "hits": [
+          "packages/tui/src/component/dialog-update.tsx",
+          "packages/tui/src/component/prompt/autocomplete.tsx",
+          "packages/tui/src/routes/session/form.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/cli-question.json",
+        "key": "Waiting for question event...",
+        "status": "deferred",
+        "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
+        "to": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/cli-splash.json",
+        "key": "Untitled session",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/splash.ts",
+        "to": "packages/tui/src/mini/splash.ts",
+        "basis": "consensus=0,cluster=3,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-splash.json",
+        "key": "Session",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/splash.ts",
+        "to": "packages/tui/src/mini/splash.ts",
+        "basis": "consensus=1,cluster=3,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-splash.json",
+        "key": "Continue",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/splash.ts",
+        "to": "packages/tui/src/mini/splash.ts",
+        "basis": "consensus=2,cluster=3,sim=6"
+      },
+      {
+        "rule": "dialogs/cli-subagent.json",
+        "key": "No subagent activity yet",
+        "status": "moved",
+        "from": "packages/opencode/src/cli/cmd/run/footer.subagent.tsx",
+        "to": "packages/tui/src/mini/footer.subagent.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/dialog-agent.json",
+        "key": "title=\"Select agent\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-agent.tsx",
+        "to": "packages/tui/src/component/dialog-agent.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-agent.json",
+        "key": "native",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-agent.tsx",
+        "to": "packages/tui/src/component/dialog-agent.tsx",
+        "basis": "ambiguous",
+        "hits": [
+          "packages/cli/src/framework/spec.ts",
+          "packages/tui/src/app.tsx",
+          "packages/tui/src/component/prompt/index.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-alert.json",
+        "key": "<text fg={theme.selectedListItemText}>ok</text>",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-alert.tsx",
+        "to": "packages/tui/src/ui/dialog-alert.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-command.json",
+        "key": "category: \"Suggested\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/command-palette.tsx",
+        "to": "packages/tui/src/component/command-palette.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-command.json",
+        "key": "title=\"Commands\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/command-palette.tsx",
+        "to": "packages/tui/src/component/command-palette.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-export.json",
+        "key": "Include thinking",
+        "status": "kept",
+        "from": "packages/tui/src/ui/dialog-export-options.tsx",
+        "to": "packages/tui/src/ui/dialog-export-options.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-export.json",
+        "key": "placeholder=\"Enter filename\"",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-export-options.tsx",
+        "to": "packages/tui/src/ui/dialog-export-options.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-export.json",
+        "key": "Export Options",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-export-options.tsx",
+        "to": "packages/tui/src/ui/dialog-export-options.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-export.json",
+        "key": ">Filename:<",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-export-options.tsx",
+        "to": "packages/tui/src/ui/dialog-export-options.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-export.json",
+        "key": "Include tool details",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-export-options.tsx",
+        "to": "packages/tui/src/ui/dialog-export-options.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-export.json",
+        "key": "Include assistant metadata",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-export-options.tsx",
+        "to": "packages/tui/src/ui/dialog-export-options.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-export.json",
+        "key": "Open without saving",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-export-options.tsx",
+        "to": "packages/tui/src/ui/dialog-export-options.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-export.json",
+        "key": "to confirm",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-export-options.tsx",
+        "to": "packages/tui/src/ui/dialog-export-options.tsx",
+        "basis": "ambiguous",
+        "hits": [
+          "packages/tui/src/component/dialog-integration.tsx",
+          "packages/tui/src/component/dialog-session-list.tsx",
+          "packages/tui/src/component/dialog-stash.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-export.json",
+        "key": "for options",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-export-options.tsx",
+        "to": "packages/tui/src/ui/dialog-export-options.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-fork.json",
+        "key": "title=\"Fork session\"",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/dialog-fork-from-timeline.tsx",
+        "to": "packages/tui/src/routes/session/dialog-fork.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/dialog-help.json",
+        "key": "Press {commandShortcut()} to see all available actions and commands in any context.",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-help.tsx",
+        "to": "packages/tui/src/ui/dialog-help.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-help.json",
+        "key": "<text fg={theme.selectedListItemText}>ok</text>",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-help.tsx",
+        "to": "packages/tui/src/ui/dialog-help.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-mcp.json",
+        "key": "title=\"MCPs\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-mcp.tsx",
+        "to": "packages/tui/src/component/dialog-mcp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-mcp.json",
+        "key": ">⋯ Loading</span>",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-mcp.tsx",
+        "to": "packages/tui/src/component/dialog-mcp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-mcp.json",
+        "key": ">✓ Enabled</span>",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-mcp.tsx",
+        "to": "packages/tui/src/component/dialog-mcp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-mcp.json",
+        "key": ">○ Disabled</span>",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-mcp.tsx",
+        "to": "packages/tui/src/component/dialog-mcp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-mcp.json",
+        "key": "title: \"toggle\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-mcp.tsx",
+        "to": "packages/tui/src/component/dialog-mcp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-mcp.json",
+        "key": "console.error(\"Failed to refresh MCP status: no data returned\")",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-mcp.tsx",
+        "to": "packages/tui/src/component/dialog-mcp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-mcp.json",
+        "key": "console.error(\"Failed to toggle MCP:\", error)",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-mcp.tsx",
+        "to": "packages/tui/src/component/dialog-mcp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-message.json",
+        "key": "title=\"Message Actions\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/dialog-message.tsx",
+        "to": "packages/tui/src/routes/session/dialog-message.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-message.json",
+        "key": "title: \"Copy\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/dialog-message.tsx",
+        "to": "packages/tui/src/routes/session/dialog-message.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-message.json",
+        "key": "title: \"Revert\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/dialog-message.tsx",
+        "to": "packages/tui/src/routes/session/dialog-message.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-message.json",
+        "key": "title: \"Fork\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/dialog-message.tsx",
+        "to": "packages/tui/src/routes/session/dialog-message.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-message.json",
+        "key": "create a new session",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/dialog-message.tsx",
+        "to": "packages/tui/src/routes/session/dialog-message.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-message.json",
+        "key": "undo messages and file changes",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/dialog-message.tsx",
+        "to": "packages/tui/src/routes/session/dialog-message.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-message.json",
+        "key": "message text to clipboard",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/dialog-message.tsx",
+        "to": "packages/tui/src/routes/session/dialog-message.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-model.json",
+        "key": "return \"Select model\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-model.tsx",
+        "to": "packages/tui/src/component/dialog-model.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-model.json",
+        "key": "\"Favorites\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-model.tsx",
+        "to": "packages/tui/src/component/dialog-model.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-model.json",
+        "key": "\"Free\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-model.tsx",
+        "to": "packages/tui/src/component/dialog-model.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-model.json",
+        "key": "(Favorite)",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-model.tsx",
+        "to": "packages/tui/src/component/dialog-model.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-model.json",
+        "key": "\"Recent\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-model.tsx",
+        "to": "packages/tui/src/component/dialog-model.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-model.json",
+        "key": "title: \"Favorite\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-model.tsx",
+        "to": "packages/tui/src/component/dialog-model.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-model.json",
+        "key": "category: \"Popular providers\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-model.tsx",
+        "to": "packages/tui/src/component/dialog-model.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-model.json",
+        "key": "title: connected() ? \"Connect provider\" : \"View all providers\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-model.tsx",
+        "to": "packages/tui/src/component/dialog-model.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-prompt.json",
+        "key": "placeholder={props.placeholder ?? \"Enter text\"}",
+        "status": "kept",
+        "from": "packages/tui/src/ui/dialog-prompt.tsx",
+        "to": "packages/tui/src/ui/dialog-prompt.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-prompt.json",
+        "key": "<span style={{ fg: theme.textMuted }}>submit</span>",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-prompt.tsx",
+        "to": "packages/tui/src/ui/dialog-prompt.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "placeholder=\"Authorization code\"",
+        "status": "moved",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-integration.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "placeholder=\"API key\"",
+        "status": "moved",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-integration.tsx",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "Copied to clipboard",
+        "status": "moved",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-integration.tsx",
+        "basis": "consensus=2,cluster=3,sim=6"
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "title=\"Select auth method\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "<DialogSelect title=\"Connect a provider\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "? \"Popular\" : \"Providers\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "label: \"API key\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/app/e2e/utils/mock-server.ts",
+          "packages/app/src/providers/connect/dialog.stories.tsx",
+          "packages/core/src/plugin/provider/azure.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "(Recommended)",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/core/src/tool/plugin/question.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "(API key)",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "(ChatGPT Plus/Pro or API key)",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "<text fg={theme.error}>Invalid code</text>",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "c <span style={{ fg: theme.textMuted }}>copy</span>",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "Low cost subscription for everyone",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/app/src/runtime/i18n/en.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "OpenCode Zen gives you access to all the best coding models at the cheapest prices with a single API",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "Go to ",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "weak-evidence",
+        "hits": [
+          "packages/tui/src/config/keybind.ts",
+          "packages/tui/src/config/v1/keybind.ts",
+          "packages/tui/src/feature-plugins/system/diff-viewer.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "to get a key",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "Custom provider",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/app/src/runtime/i18n/en.ts",
+          "packages/core/src/v1/config/config.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "This only stores a credential. Configure the provider in opencode.json to use it.",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-provider.json",
+        "key": "<text fg={theme.textMuted}>Waiting for authorization…</text>",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-provider.tsx",
+        "to": "packages/tui/src/component/dialog-provider.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-rename.json",
+        "key": "title=\"Rename Session\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-session-rename.tsx",
+        "to": "packages/tui/src/component/dialog-session-rename.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/tui/test/cli/tui/dialog-prompt.test.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-select.json",
+        "key": "placeholder={props.placeholder ?? \"Search\"}",
+        "status": "kept",
+        "from": "packages/tui/src/ui/dialog-select.tsx",
+        "to": "packages/tui/src/ui/dialog-select.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-select.json",
+        "key": "<text fg={theme.textMuted}>No results found</text>",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog-select.tsx",
+        "to": "packages/tui/src/ui/dialog-select.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-session.json",
+        "key": "title=\"Sessions\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-session-list.tsx",
+        "to": "packages/tui/src/component/dialog-session-list.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-session.json",
+        "key": "title: \"delete\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-session-list.tsx",
+        "to": "packages/tui/src/component/dialog-session-list.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-session.json",
+        "key": "title: \"rename\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-session-list.tsx",
+        "to": "packages/tui/src/component/dialog-session-list.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-session.json",
+        "key": "\"Today\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-session-list.tsx",
+        "to": "packages/tui/src/component/dialog-session-list.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-session.json",
+        "key": "`Press ${deleteHint()} again to confirm`",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-session-list.tsx",
+        "to": "packages/tui/src/component/dialog-session-list.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-skill.json",
+        "key": "title=\"Skills\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-skill.tsx",
+        "to": "packages/tui/src/component/dialog-skill.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-skill.json",
+        "key": "category: \"Skills\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-skill.tsx",
+        "to": "packages/tui/src/component/dialog-skill.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-skill.json",
+        "key": "placeholder=\"Search skills…\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-skill.tsx",
+        "to": "packages/tui/src/component/dialog-skill.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-stash.json",
+        "key": "title=\"Stash\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-stash.tsx",
+        "to": "packages/tui/src/component/dialog-stash.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-stash.json",
+        "key": "delete",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-stash.tsx",
+        "to": "packages/tui/src/component/dialog-stash.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-stash.json",
+        "key": "`~${lineCount} lines`",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-stash.tsx",
+        "to": "packages/tui/src/component/dialog-stash.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-stash.json",
+        "key": "just now",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-stash.tsx",
+        "to": "packages/tui/src/component/dialog-stash.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-stash.json",
+        "key": "`${minutes}m ago`",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-stash.tsx",
+        "to": "packages/tui/src/component/dialog-stash.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-stash.json",
+        "key": "`${hours}h ago`",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-stash.tsx",
+        "to": "packages/tui/src/component/dialog-stash.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-stash.json",
+        "key": "`${days}d ago`",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-stash.tsx",
+        "to": "packages/tui/src/component/dialog-stash.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-stash.json",
+        "key": "`Press ${deleteHint()} again to confirm`",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-stash.tsx",
+        "to": "packages/tui/src/component/dialog-stash.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
+        "key": "Connected</Match>",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
+        "key": "Disabled in configuration</Match>",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
+        "key": "Needs authentication",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
+        "key": "Status",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "identifier-collision",
+        "hits": [
+          "packages/tui/src/component/dialog-status.tsx"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
+        "key": "No MCP Servers",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
+        "key": "MCP Servers",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
+        "key": "LSP Servers",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
+        "key": "No Formatters",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
+        "key": "Formatters",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-subagent.json",
+        "key": "title=\"Subagent Actions\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/dialog-subagent.tsx",
+        "to": "packages/tui/src/routes/session/dialog-subagent.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-subagent.json",
+        "key": "title: \"Open\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/dialog-subagent.tsx",
+        "to": "packages/tui/src/routes/session/dialog-subagent.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/app/src/shell/commands/command.test.ts"
+        ]
+      },
+      {
+        "rule": "dialogs/dialog-subagent.json",
+        "key": "the subagent's session",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/dialog-subagent.tsx",
+        "to": "packages/tui/src/routes/session/dialog-subagent.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-tag.json",
+        "key": "title=\"Autocomplete\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-tag.tsx",
+        "to": "packages/tui/src/component/dialog-tag.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-theme.json",
+        "key": "title=\"Themes\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-theme-list.tsx",
+        "to": "packages/tui/src/component/dialog-theme-list.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-timeline.json",
+        "key": "title=\"Timeline\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/dialog-timeline.tsx",
+        "to": "packages/tui/src/routes/session/dialog-timeline.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-toast.json",
+        "key": "message: \"Copied to clipboard\"",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/dialog.tsx",
+        "to": "packages/tui/src/ui/dialog.tsx",
+        "basis": "ambiguous",
+        "hits": [
+          "packages/tui/src/app.tsx",
+          "packages/tui/src/component/dialog-integration.tsx",
+          "packages/tui/src/routes/session/index.tsx"
+        ]
+      },
+      {
+        "rule": "routes/route-footer.json",
+        "key": "Get started",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/footer.tsx",
+        "to": "packages/tui/src/routes/session/footer.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/app/src/runtime/i18n/en.ts",
+          "packages/console/app/src/i18n/en.ts"
+        ]
+      },
+      {
+        "rule": "routes/route-footer.json",
+        "key": "Permission",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/footer.tsx",
+        "to": "packages/tui/src/routes/session/footer.tsx",
+        "basis": "no-consensus",
+        "hits": [
+          "packages/tui/src/component/session-frame.tsx",
+          "packages/tui/src/context/permission.tsx",
+          "packages/tui/src/feature-plugins/system/notifications.ts"
+        ]
+      },
+      {
+        "rule": "routes/route-header.json",
+        "key": "label: \"Subagent\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/subagent-footer.tsx",
+        "to": "packages/tui/src/routes/session/subagent-footer.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/tui/src/mini/demo.ts"
+        ]
+      },
+      {
+        "rule": "routes/route-header.json",
+        "key": "Parent",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/subagent-footer.tsx",
+        "to": "packages/tui/src/routes/session/subagent-footer.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/app/e2e/regression/session-message-revert.spec.ts",
+          "packages/app/e2e/regression/session-timeline-hydration.spec.ts",
+          "packages/app/e2e/regression/subagent-child-navigation.spec.ts"
+        ]
+      },
+      {
+        "rule": "routes/route-header.json",
+        "key": "Prev",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/subagent-footer.tsx",
+        "to": "packages/tui/src/routes/session/subagent-footer.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/ui/src/components/text-reveal.stories.tsx",
+          "packages/ui/src/components/thinking-heading.stories.tsx"
+        ]
+      },
+      {
+        "rule": "routes/route-header.json",
+        "key": "Next",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/subagent-footer.tsx",
+        "to": "packages/tui/src/routes/session/subagent-footer.tsx",
+        "basis": "ambiguous",
+        "hits": [
+          "packages/tui/src/app.tsx",
+          "packages/tui/src/component/dialog-config.tsx",
+          "packages/tui/src/component/dialog-experiments.tsx"
+        ]
+      },
+      {
+        "rule": "routes/route-home-page.json",
+        "key": "Fix a TODO in the codebase",
+        "status": "kept",
+        "from": "packages/tui/src/routes/home.tsx",
+        "to": "packages/tui/src/routes/home.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-home-page.json",
+        "key": "What is the tech stack of this project?",
+        "status": "kept",
+        "from": "packages/tui/src/routes/home.tsx",
+        "to": "packages/tui/src/routes/home.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-home-page.json",
+        "key": "Fix broken tests",
+        "status": "kept",
+        "from": "packages/tui/src/routes/home.tsx",
+        "to": "packages/tui/src/routes/home.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-home.json",
+        "key": "title: props.hidden ? \"Show tips\" : \"Hide tips\"",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-home.json",
+        "key": "category: \"System\"",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/home/tips.tsx",
+        "to": "packages/tui/src/feature-plugins/home/tips.tsx",
+        "basis": "ambiguous",
+        "hits": [
+          "packages/tui/src/app.tsx",
+          "packages/tui/src/mini/footer.command.tsx"
+        ]
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title=\"Permission required\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "No diff provided",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: \"Continue after repeated failures\"",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: `WebFetch ${url}`",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "Shell command",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "This keeps the session running despite repeated failures.",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "Path: ",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "consensus=4,cluster=6,sim=3"
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "Pattern: ",
+        "status": "moved",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/util/permission.ts",
+        "basis": "unique-hit"
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title=\"Always allow\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "options={{ once: \"Allow once\", always: \"Allow always\", reject: \"Reject\" }}",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "\"Unknown\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "ambiguous",
+        "hits": [
+          "packages/tui/src/component/devtools-bar.tsx",
+          "packages/tui/src/mini/tool.ts"
+        ]
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "\"This will allow \" + props.request.permission + \" until OpenCode is restarted.\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "This will allow the following patterns until OpenCode is restarted",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "options={{ confirm: \"Confirm\", cancel: \"Cancel\" }}",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "<text fg={theme.text}>Reject permission</text>",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "<text fg={theme.textMuted}>Tell OpenCode what to do differently</text>",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: `Read ${pathFormatter.format(filePath)}`",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: `Glob \"${pattern}\"`",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: `Grep \"${pattern}\"`",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: `List ${pathFormatter.format(dir)}`",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: `Edit ${pathFormatter.format(filepath)}`",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: `Call tool ${permission}`",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: `${Locale.titlecase(type)} Task`",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-permission.json",
+        "key": "title: `Access external directory ${dir}`",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/permission.tsx",
+        "to": "packages/tui/src/routes/session/permission.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "\"Share session\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Rename session\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Jump to message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Fork session\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Compact session\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Unshare session\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Undo previous message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "\"Collapse thinking\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "\"Expand thinking\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Page down\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Half page up\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Half page down\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"First message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Last message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Jump to last user message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Next message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Previous message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Copy last assistant message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Copy session transcript\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Export session transcript\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Go to parent session\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"No assistant messages found\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"No text parts found in last assistant message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"No text content found in last assistant message\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"Message copied to clipboard!\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"Failed to copy to clipboard\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"Session transcript copied to clipboard!\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"Failed to copy session transcript\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"Failed to export session\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Redo\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title=\"# Questions\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Page up\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Line up\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Line down\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "\"match\" : \"matches\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "Fetching from the web…",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "pending=\"Loading skill…\"",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: sidebarVisible() ? \"Hide sidebar\" : \"Show sidebar\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: conceal() ? \"Disable code concealment\" : \"Enable code concealment\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: showTimestamps() ? \"Hide timestamps\" : \"Show timestamps\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: showDetails() ? \"Hide tool details\" : \"Show tool details\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Next child session\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title: \"Previous child session\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"Connect a provider to summarize this session\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"Share URL copied to clipboard!\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "\"Failed to share session\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"Session unshared successfully\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "\"Failed to unshare session\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "outside-universe",
+        "hits": [
+          "packages/app/src/runtime/i18n/en.ts"
+        ]
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: `Session exported to ${filename}`",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "\"Confirm Redo\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "\"Are you sure you want to restore the reverted messages?\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "interrupted",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "identifier-collision",
+        "hits": [
+          "packages/tui/src/routes/session/index.tsx"
+        ]
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title=\" Compaction \"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "title=\"# Todos\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "message: \"Failed to copy URL to clipboard\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "{revert()!.reverted.length} message reverted",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "Skill \"{stringValue(props.input.name)}\"",
+        "status": "deferred",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-sidebar.json",
+        "key": ">Connected</Match>",
+        "status": "kept",
+        "from": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "to": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-sidebar.json",
+        "key": ">Disabled</Match>",
+        "status": "kept",
+        "from": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "to": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-sidebar.json",
+        "key": "} active",
+        "status": "kept",
+        "from": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "to": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-sidebar.json",
+        "key": "} error",
+        "status": "kept",
+        "from": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "to": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "routes/route-sidebar.json",
+        "key": ">Needs auth</Match>",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "to": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "routes/route-sidebar.json",
+        "key": "Needs client ID",
+        "status": "deferred",
+        "from": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "to": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+        "basis": "no-hit",
+        "hits": []
+      }
+    ],
+    "conflicts": [
+      {
+        "anchor": "packages/tui/src/util/permission.ts",
+        "key": "This keeps the session running despite repeated failures.",
+        "rule": "routes/route-permission.json",
+        "kept": "即使连续失败也保持会话运行。",
+        "dropped": "这使会话在重复失败后继续运行。"
+      }
+    ]
+  }
+}
