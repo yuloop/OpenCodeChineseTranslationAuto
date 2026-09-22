@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/footer.ts",
+  "replacements": {
+    "string": "string"
+  }
+}

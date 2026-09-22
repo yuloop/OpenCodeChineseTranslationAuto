@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/error-component.tsx",
+  "replacements": {
+    "failed": "failed"
+  }
+}

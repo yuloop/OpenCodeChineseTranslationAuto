@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/dialog-variant.tsx",
+  "replacements": {
+    "default": "default"
+  }
+}

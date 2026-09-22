@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/routes/session/dialog-execute.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        ",
+    "esc back": "esc back"
+  }
+}

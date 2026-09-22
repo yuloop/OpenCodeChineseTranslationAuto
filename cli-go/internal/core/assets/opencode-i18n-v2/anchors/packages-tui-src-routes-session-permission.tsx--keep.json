@@ -1,0 +1,28 @@
+{
+  "file": "packages/tui/src/routes/session/permission.tsx",
+  "replacements": {
+    "\n              enter ": "\n              enter ",
+    "\n              esc ": "\n              esc ",
+    "\n            enter ": "\n            enter ",
+    "${id()}.action.${String(option)}": "${id()}.action.${String(option)}",
+    "${id()}.actions": "${id()}.actions",
+    "Cancel rejection": "Cancel rejection",
+    "Confirm rejection": "Confirm rejection",
+    "Permission choices": "Permission choices",
+    "REJECT": "REJECT",
+    "Reject permission: ${props.action}": "Reject permission: ${props.action}",
+    "Rejection actions": "Rejection actions",
+    "Rejection reason": "Rejection reason",
+    "always": "always",
+    "center": "center",
+    "column": "column",
+    "flex-start": "flex-start",
+    "function": "function",
+    "left": "left",
+    "row": "row",
+    "shell": "shell",
+    "space-between": "space-between",
+    "subagent": "subagent",
+    "task": "task"
+  }
+}

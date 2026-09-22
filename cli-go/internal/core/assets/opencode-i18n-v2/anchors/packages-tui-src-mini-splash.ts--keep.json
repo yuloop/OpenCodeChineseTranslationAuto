@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/splash.ts",
+  "replacements": {
+    "${input.mono ? \"[O]\" : \"▪\"} oc mini": "${input.mono ? \"[O]\" : \"▪\"} oc mini"
+  }
+}

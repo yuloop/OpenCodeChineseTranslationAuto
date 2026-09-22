@@ -1,0 +1,14 @@
+{
+  "file": "packages/tui/src/mini/footer.form.tsx",
+  "replacements": {
+    "\n              esc dismiss\n            ": "\n              esc dismiss\n            ",
+    "${Math.min(state().field + 1, props.request.fields.length)}/${props.request.fields.length}": "${Math.min(state().field + 1, props.request.fields.length)}/${props.request.fields.length}",
+    "${rows().length + 1}.": "${rows().length + 1}.",
+    "${state().selected === rows().length ? \">\" : \" \"}${rows().length + 1}.": "${state().selected === rows().length ? \">\" : \" \"}${rows().length + 1}.",
+    "[${picked() ? \"x\" : \" \"}] ": "[${picked() ? \"x\" : \" \"}] ",
+    "column": "column",
+    "external": "external",
+    "row": "row",
+    "transparent": "transparent"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "file": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
+  "replacements": {
+    "MCP": "MCP",
+    "connected": "connected",
+    "disabled": "disabled",
+    "failed": "failed",
+    "needs_auth": "needs_auth",
+    "pending": "pending"
+  }
+}

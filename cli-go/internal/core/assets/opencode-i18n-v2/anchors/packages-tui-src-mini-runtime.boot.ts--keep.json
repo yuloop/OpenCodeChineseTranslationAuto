@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/runtime.boot.ts",
+  "replacements": {
+    "show": "show"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "file": "packages/tui/src/mini/footer.command.tsx",
+  "replacements": {
+    "${header().hint} ${props.mono ? \"-\" : \"·\"} ": "${header().hint} ${props.mono ? \"-\" : \"·\"} ",
+    "FILTER": "FILTER",
+    "bottom": "bottom",
+    "enter queue": "enter queue",
+    "enter steer": "enter steer",
+    "esc\n        ": "esc\n        ",
+    "inactive": "inactive",
+    "left/right change": "left/right change",
+    "mono": "mono",
+    "shell_output": "shell_output",
+    "splash": "splash",
+    "tab show ${active() ? \"inactive\" : \"active\"}": "tab show ${active() ? \"inactive\" : \"active\"}",
+    "thinking": "thinking",
+    "tools": "tools",
+    "transparent": "transparent",
+    "turn_summary": "turn_summary",
+    "verbosity": "verbosity",
+    "work_spinner": "work_spinner"
+  }
+}

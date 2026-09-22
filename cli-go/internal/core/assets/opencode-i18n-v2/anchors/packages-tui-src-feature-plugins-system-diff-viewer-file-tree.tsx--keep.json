@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/diff-viewer-file-tree.tsx",
+  "replacements": {
+    " · ${props.sourceDetail}": " · ${props.sourceDetail}",
+    "diff-file-row-${row.fileIndex}": "diff-file-row-${row.fileIndex}",
+    "diff-folder-row-${row.id}": "diff-folder-row-${row.id}"
+  }
+}

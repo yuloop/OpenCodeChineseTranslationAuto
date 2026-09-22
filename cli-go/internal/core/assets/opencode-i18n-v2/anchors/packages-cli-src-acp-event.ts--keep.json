@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/acp/event.ts",
+  "replacements": {
+    "${child.title}: ${projected.title}": "${child.title}: ${projected.title}"
+  }
+}

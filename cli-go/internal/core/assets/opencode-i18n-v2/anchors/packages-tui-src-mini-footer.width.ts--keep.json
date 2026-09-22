@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/footer.width.ts",
+  "replacements": {
+    " ${expanded ? (value.expanded ?? value.label) : value.label}": " ${expanded ? (value.expanded ?? value.label) : value.label}"
+  }
+}

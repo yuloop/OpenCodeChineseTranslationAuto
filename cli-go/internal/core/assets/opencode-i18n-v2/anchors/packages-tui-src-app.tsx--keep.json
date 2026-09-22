@@ -1,0 +1,19 @@
+{
+  "file": "packages/tui/src/app.tsx",
+  "replacements": {
+    "compact": "compact",
+    "dummy": "dummy",
+    "full": "full",
+    "home": "home",
+    "opencode.storybook": "opencode.storybook",
+    "plugin": "plugin",
+    "screen": "screen",
+    "storybook": "storybook",
+    "tmux": "tmux",
+    "username: \"opencode\"": "username: \"opencode\"",
+    "wayland": "wayland",
+    "win32": "win32",
+    "word": "word",
+    "x11": "x11"
+  }
+}

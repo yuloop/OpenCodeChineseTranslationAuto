@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/patch-diff.tsx",
+  "replacements": {
+    " ${hunk.header ?? \"\"}": " ${hunk.header ?? \"\"}"
+  }
+}

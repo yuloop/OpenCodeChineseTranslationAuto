@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/diff-viewer-image.tsx",
+  "replacements": {
+    "base64": "base64",
+    "data:application/octet-stream;base64,${Buffer.from(bytes).toString(\"base64\")}": "data:application/octet-stream;base64,${Buffer.from(bytes).toString(\"base64\")}",
+    "diff-image-${props.file}": "diff-image-${props.file}"
+  }
+}

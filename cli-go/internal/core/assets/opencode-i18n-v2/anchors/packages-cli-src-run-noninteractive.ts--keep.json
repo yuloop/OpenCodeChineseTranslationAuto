@@ -1,0 +1,8 @@
+{
+  "file": "packages/cli/src/run/noninteractive.ts",
+  "replacements": {
+    "<file name=\"${file.filename}\">\\n${content}\\n</file>": "<file name=\"${file.filename}\">\\n${content}\\n</file>",
+    "> ${event.data.agent} · ${event.data.model.id}": "> ${event.data.agent} · ${event.data.model.id}",
+    "The provider response ended unexpectedly.": "The provider response ended unexpectedly."
+  }
+}

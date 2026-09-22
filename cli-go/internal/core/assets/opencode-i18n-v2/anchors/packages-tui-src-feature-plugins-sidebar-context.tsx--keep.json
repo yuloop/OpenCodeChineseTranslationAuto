@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/feature-plugins/sidebar/context.tsx",
+  "replacements": {
+    " tokens": " tokens"
+  }
+}

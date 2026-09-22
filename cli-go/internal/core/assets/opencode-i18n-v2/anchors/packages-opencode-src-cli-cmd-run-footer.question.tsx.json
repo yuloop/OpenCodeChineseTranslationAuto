@@ -1,7 +1,0 @@
-{
-  "file": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
-  "replacements": {
-    "Confirm": "确认",
-    "Waiting for question event...": "等待问题事件..."
-  }
-}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/routes/session/dialog-fork.tsx",
+  "replacements": {
+    "user": "user"
+  }
+}

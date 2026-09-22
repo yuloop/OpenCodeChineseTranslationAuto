@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/component/dialog-debug.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        ",
+    "OS": "OS",
+    "enter": "enter"
+  }
+}

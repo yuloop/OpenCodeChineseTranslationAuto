@@ -1,0 +1,13 @@
+{
+  "file": "packages/tui/src/component/devtools-bar.tsx",
+  "replacements": {
+    "[x]": "[x]",
+    "connected": "connected",
+    "disconnected": "disconnected",
+    "high": "high",
+    "server": "server",
+    "theme": "theme",
+    "tools": "tools",
+    "ui": "ui"
+  }
+}

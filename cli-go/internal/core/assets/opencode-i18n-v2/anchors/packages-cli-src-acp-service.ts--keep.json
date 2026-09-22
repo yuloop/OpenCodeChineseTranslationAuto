@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/acp/service.ts",
+  "replacements": {
+    "prompt": "prompt"
+  }
+}

@@ -1,6 +1,0 @@
-{
-  "file": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
-  "replacements": {
-    "Waiting for permission event...": "等待权限事件..."
-  }
-}

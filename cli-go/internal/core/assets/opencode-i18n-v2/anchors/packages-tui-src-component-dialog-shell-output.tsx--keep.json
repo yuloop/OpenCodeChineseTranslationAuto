@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/dialog-shell-output.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        "
+  }
+}

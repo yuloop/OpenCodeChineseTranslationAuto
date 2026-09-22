@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/component/dialog-session-list.tsx",
+  "replacements": {
+    "ctrl+a": "ctrl+a",
+    "right": "right",
+    "session.pin.toggle": "session.pin.toggle",
+    "session.rename": "session.rename"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/feature-plugins/home/footer.tsx",
+  "replacements": {
+    " MCP\n            ": " MCP\n            "
+  }
+}

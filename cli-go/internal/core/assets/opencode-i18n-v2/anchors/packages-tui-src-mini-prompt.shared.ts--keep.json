@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/prompt.shared.ts",
+  "replacements": {
+    ":q": ":q"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/variant.shared.ts",
+  "replacements": {
+    " · ${variant}": " · ${variant}"
+  }
+}

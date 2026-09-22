@@ -1,0 +1,11 @@
+{
+  "file": "packages/tui/src/routes/session/dialog-message.tsx",
+  "replacements": {
+    "assistant": "assistant",
+    "message.copy": "message.copy",
+    "message.jump": "message.jump",
+    "session.fork": "session.fork",
+    "session.revert": "session.revert",
+    "user": "user"
+  }
+}

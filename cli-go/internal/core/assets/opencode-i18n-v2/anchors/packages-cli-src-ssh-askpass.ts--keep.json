@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/ssh-askpass.ts",
+  "replacements": {
+    "confirm": "confirm"
+  }
+}

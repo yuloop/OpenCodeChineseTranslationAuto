@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/ui/working-directory-actions.tsx",
+  "replacements": {
+    "location.copy": "location.copy",
+    "location.open": "location.open",
+    "session.move": "session.move"
+  }
+}

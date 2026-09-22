@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/prompt/metadata.tsx",
+  "replacements": {
+    "normal": "normal"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/stats.tsx",
+  "replacements": {
+    "TOKENS": "TOKENS",
+    "\\u00b7 ": "\\u00b7 ",
+    "\\u25a0 ": "\\u25a0 ",
+    "center": "center",
+    "column": "column",
+    "opencode.ai": "opencode.ai",
+    "row": "row"
+  }
+}

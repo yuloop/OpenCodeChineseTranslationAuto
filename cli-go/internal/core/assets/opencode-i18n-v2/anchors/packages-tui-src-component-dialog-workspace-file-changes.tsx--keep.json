@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/dialog-workspace-file-changes.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        "
+  }
+}
