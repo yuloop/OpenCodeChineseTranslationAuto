@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/one-cell-spinner.tsx",
+  "replacements": {
+    "\\u25aa": "\\u25aa"
+  }
+}

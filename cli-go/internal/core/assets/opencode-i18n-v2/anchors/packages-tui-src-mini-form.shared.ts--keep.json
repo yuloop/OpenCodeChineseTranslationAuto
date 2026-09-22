@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/mini/form.shared.ts",
+  "replacements": {
+    "message": "message",
+    "string": "string"
+  }
+}

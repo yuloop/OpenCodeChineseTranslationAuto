@@ -1,6 +1,0 @@
-{
-  "file": "packages/opencode/src/session/system.ts",
-  "replacements": {
-    "return (yield* (yield* Reference.Service).list()).filter((reference) => reference.description !== undefined)": "return (yield* (yield* Reference.Service).list()).filter(\n            (reference) => reference !== undefined && reference.description !== undefined,\n          )"
-  }
-}

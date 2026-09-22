@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/component/prompt/autocomplete.tsx",
+  "replacements": {
+    " ${reference.source.type === \"git\" ? reference.source.repository : reference.source.path}": " ${reference.source.type === \"git\" ? reference.source.repository : reference.source.path}",
+    "@${referenceMatchValue.name}": "@${referenceMatchValue.name}"
+  }
+}

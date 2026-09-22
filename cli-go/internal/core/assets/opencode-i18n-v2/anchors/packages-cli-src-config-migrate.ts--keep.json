@@ -1,0 +1,7 @@
+{
+  "file": "packages/cli/src/config/migrate.ts",
+  "replacements": {
+    "copy_on_select": "copy_on_select",
+    "terminal": "terminal"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "file": "packages/cli/src/services/update-preflight.tsx",
+  "replacements": {
+    "running": "running",
+    "success": "success"
+  }
+}

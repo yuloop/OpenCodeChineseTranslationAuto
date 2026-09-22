@@ -1,0 +1,11 @@
+{
+  "file": "packages/tui/src/mini/footer.view.tsx",
+  "replacements": {
+    "composer": "composer",
+    "form": "form",
+    "left": "left",
+    "permission": "permission",
+    "show": "show",
+    "transparent": "transparent"
+  }
+}

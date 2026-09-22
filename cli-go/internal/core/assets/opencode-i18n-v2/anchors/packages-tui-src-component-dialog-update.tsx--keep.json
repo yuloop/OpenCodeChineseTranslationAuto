@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/component/dialog-update.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        ",
+    "checking": "checking",
+    "left": "left",
+    "shift+tab": "shift+tab"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/ui/dialog-alert.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        "
+  }
+}

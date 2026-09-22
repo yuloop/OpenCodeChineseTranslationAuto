@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/util/error.ts",
+  "replacements": {
+    "string": "string"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/footer.menu.tsx",
+  "replacements": {
+    "muted": "muted"
+  }
+}

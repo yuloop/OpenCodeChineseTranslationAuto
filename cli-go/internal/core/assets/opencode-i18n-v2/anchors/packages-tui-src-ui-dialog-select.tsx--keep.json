@@ -1,0 +1,18 @@
+{
+  "file": "packages/tui/src/ui/dialog-select.tsx",
+  "replacements": {
+    "\n            esc\n          ": "\n            esc\n          ",
+    "FILTER": "FILTER",
+    "column": "column",
+    "dialog.select.end": "dialog.select.end",
+    "dialog.select.home": "dialog.select.home",
+    "dialog.select.next": "dialog.select.next",
+    "dialog.select.page_down": "dialog.select.page_down",
+    "dialog.select.page_up": "dialog.select.page_up",
+    "dialog.select.prev": "dialog.select.prev",
+    "dialog.select.submit": "dialog.select.submit",
+    "left": "left",
+    "row": "row",
+    "word": "word"
+  }
+}

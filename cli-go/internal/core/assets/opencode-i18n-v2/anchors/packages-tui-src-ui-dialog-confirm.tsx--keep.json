@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/ui/dialog-confirm.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        "
+  }
+}

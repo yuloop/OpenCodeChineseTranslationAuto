@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/mini/tool.ts",
+  "replacements": {
+    "${ctx.name} ${title}": "${ctx.name} ${title}",
+    "${suffix}${suffix ? \" · \" : \"\"}${count(matches, \"match\")}": "${suffix}${suffix ? \" · \" : \"\"}${count(matches, \"match\")}",
+    "${title} \"${p.input.query}\"": "${title} \"${p.input.query}\""
+  }
+}

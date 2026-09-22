@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/component/dialog-config.tsx",
+  "replacements": {
+    "Markdown": "Markdown",
+    "TPS": "TPS",
+    "left": "left",
+    "right": "right"
+  }
+}

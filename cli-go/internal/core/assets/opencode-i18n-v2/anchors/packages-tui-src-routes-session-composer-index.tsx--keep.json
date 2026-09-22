@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/routes/session/composer/index.tsx",
+  "replacements": {
+    "\n                esc\n              ": "\n                esc\n              ",
+    "left": "left"
+  }
+}

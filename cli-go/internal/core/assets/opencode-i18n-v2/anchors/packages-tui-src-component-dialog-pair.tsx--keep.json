@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/component/dialog-pair.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        ",
+    "URLs": "URLs",
+    "center": "center",
+    "column": "column",
+    "flex-end": "flex-end",
+    "flex-start": "flex-start",
+    "row": "row"
+  }
+}

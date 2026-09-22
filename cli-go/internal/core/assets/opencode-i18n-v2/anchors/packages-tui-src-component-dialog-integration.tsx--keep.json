@@ -1,0 +1,13 @@
+{
+  "file": "packages/tui/src/component/dialog-integration.tsx",
+  "replacements": {
+    "\n            c ": "\n            c ",
+    "\n            o ": "\n            o ",
+    "\n          esc\n        ": "\n          esc\n        ",
+    "$${connection.name}": "$${connection.name}",
+    "MCP": "MCP",
+    "[${selected.includes(option.value) ? \"x\" : \" \"}] ${option.label}": "[${selected.includes(option.value) ? \"x\" : \" \"}] ${option.label}",
+    "dialog.integration.rename": "dialog.integration.rename",
+    "string": "string"
+  }
+}

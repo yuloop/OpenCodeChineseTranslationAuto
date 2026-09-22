@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/mini/footer.subagent.tsx",
+  "replacements": {
+    "\n                tab next ": "\n                tab next ",
+    "\n              pgup/pgdn scroll\n            ": "\n              pgup/pgdn scroll\n            ",
+    "\n            esc back\n          ": "\n            esc back\n          ",
+    "running": "running"
+  }
+}

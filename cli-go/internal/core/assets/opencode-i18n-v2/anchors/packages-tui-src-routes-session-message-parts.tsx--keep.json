@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/routes/session/message-parts.tsx",
+  "replacements": {
+    "grid": "grid",
+    "left": "left",
+    "rendered": "rendered"
+  }
+}

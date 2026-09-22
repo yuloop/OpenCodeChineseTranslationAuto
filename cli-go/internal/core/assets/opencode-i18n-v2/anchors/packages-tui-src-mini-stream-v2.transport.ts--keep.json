@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/mini/stream-v2.transport.ts",
+  "replacements": {
+    "<file name=\"${file.filename}\">\\n${content}\\n</file>": "<file name=\"${file.filename}\">\\n${content}\\n</file>",
+    "message": "message",
+    "reasoning": "reasoning",
+    "string": "string"
+  }
+}

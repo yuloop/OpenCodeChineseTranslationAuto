@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/ui/pane-resize-handle.tsx",
+  "replacements": {
+    "right": "right"
+  }
+}

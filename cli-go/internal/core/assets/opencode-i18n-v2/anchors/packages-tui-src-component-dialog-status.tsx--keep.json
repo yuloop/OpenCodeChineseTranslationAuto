@@ -1,0 +1,10 @@
+{
+  "file": "packages/tui/src/component/dialog-status.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        ",
+    "connected": "connected",
+    "disabled": "disabled",
+    "failed": "failed",
+    "needs_auth": "needs_auth"
+  }
+}

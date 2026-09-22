@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/ui/toast.tsx",
+  "replacements": {
+    "left": "left",
+    "right": "right",
+    "useToast must be used within a ToastProvider": "useToast must be used within a ToastProvider",
+    "› ${props.toast.action.label}": "› ${props.toast.action.label}"
+  }
+}

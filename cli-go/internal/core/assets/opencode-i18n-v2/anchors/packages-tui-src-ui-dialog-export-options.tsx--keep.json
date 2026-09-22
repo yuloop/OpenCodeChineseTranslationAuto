@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/ui/dialog-export-options.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        ",
+    "JSON": "JSON",
+    "Markdown": "Markdown",
+    "[x]": "[x]",
+    "json": "json",
+    "markdown": "markdown",
+    "sanitize": "sanitize"
+  }
+}

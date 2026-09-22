@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/commands/handlers/session/export.ts",
+  "replacements": {
+    "${new Date(session.time.updated).toLocaleString()} - ${session.id.slice(-8)}": "${new Date(session.time.updated).toLocaleString()} - ${session.id.slice(-8)}"
+  }
+}

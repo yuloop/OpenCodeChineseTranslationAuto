@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/dialog-mcp.tsx",
+  "replacements": {
+    "dialog.mcp.toggle": "dialog.mcp.toggle"
+  }
+}

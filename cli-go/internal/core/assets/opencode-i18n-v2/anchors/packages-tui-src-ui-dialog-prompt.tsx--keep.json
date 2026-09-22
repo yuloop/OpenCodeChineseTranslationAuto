@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/ui/dialog-prompt.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        ",
+    "dialog.prompt.submit": "dialog.prompt.submit"
+  }
+}

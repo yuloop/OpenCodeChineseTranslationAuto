@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/acp/config-option.ts",
+  "replacements": {
+    "thought_level": "thought_level"
+  }
+}

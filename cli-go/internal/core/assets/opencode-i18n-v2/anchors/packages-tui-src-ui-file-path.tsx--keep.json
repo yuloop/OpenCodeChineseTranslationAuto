@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/ui/file-path.tsx",
+  "replacements": {
+    "${root}…${separator}": "${root}…${separator}"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/editor-zed.ts",
+  "replacements": {
+    "contents": "contents"
+  }
+}

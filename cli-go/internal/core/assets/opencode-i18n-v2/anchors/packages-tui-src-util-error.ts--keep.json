@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/util/error.ts",
+  "replacements": {
+    "string": "string"
+  }
+}

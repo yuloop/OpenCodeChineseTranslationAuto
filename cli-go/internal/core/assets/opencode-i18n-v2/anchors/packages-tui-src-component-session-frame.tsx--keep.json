@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/component/session-frame.tsx",
+  "replacements": {
+    "absolute": "absolute",
+    "panel": "panel",
+    "relative": "relative",
+    "right": "right",
+    "session": "session",
+    "sidebar": "sidebar",
+    "terminal": "terminal"
+  }
+}

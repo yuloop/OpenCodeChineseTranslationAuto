@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/mini/stream-v2.subagent.ts",
+  "replacements": {
+    "form": "form",
+    "permission": "permission",
+    "running": "running"
+  }
+}

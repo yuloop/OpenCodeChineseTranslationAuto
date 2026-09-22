@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/routes/session/form.tsx",
+  "replacements": {
+    "\n              c ": "\n              c ",
+    "\n            enter ": "\n            enter ",
+    "\n            esc ": "\n            esc ",
+    "${i() + 1}.": "${i() + 1}.",
+    "${rows().length + 1}.": "${rows().length + 1}.",
+    "ANSWER": "ANSWER",
+    "left": "left"
+  }
+}

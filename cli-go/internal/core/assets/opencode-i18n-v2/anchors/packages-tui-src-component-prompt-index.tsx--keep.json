@@ -1,0 +1,13 @@
+{
+  "file": "packages/tui/src/component/prompt/index.tsx",
+  "replacements": {
+    "\n      esc": "\n      esc",
+    "@${skill}": "@${skill}",
+    "autoaccept": "autoaccept",
+    "bottom": "bottom",
+    "left": "left",
+    "pending": "pending",
+    "prompt-image-preview-${index()}": "prompt-image-preview-${index()}",
+    "running": "running"
+  }
+}

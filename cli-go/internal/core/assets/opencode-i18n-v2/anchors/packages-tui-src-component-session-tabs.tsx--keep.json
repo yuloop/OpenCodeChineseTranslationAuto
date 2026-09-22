@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/component/session-tabs.tsx",
+  "replacements": {
+    "absolute": "absolute",
+    "center": "center",
+    "flex-end": "flex-end",
+    "flex-start": "flex-start",
+    "numbers": "numbers",
+    "small-dot": "small-dot",
+    "vertical": "vertical"
+  }
+}

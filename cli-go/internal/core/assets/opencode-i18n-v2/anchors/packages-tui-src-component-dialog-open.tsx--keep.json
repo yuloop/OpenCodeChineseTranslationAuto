@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/component/dialog-open.tsx",
+  "replacements": {
+    "${label ? `${Locale.truncate(label, 30)} · ` : \"\"}${timeAgo(session.time.updated)}": "${label ? `${Locale.truncate(label, 30)} · ` : \"\"}${timeAgo(session.time.updated)}",
+    "${truncateFilePath(footer, width)}${git ? \" →\" : \"\"}": "${truncateFilePath(footer, width)}${git ? \" →\" : \"\"}",
+    "ctrl+n": "ctrl+n"
+  }
+}

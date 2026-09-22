@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/component/dialog-model.tsx",
+  "replacements": {
+    "model.dialog.favorite": "model.dialog.favorite",
+    "model.dialog.provider": "model.dialog.provider"
+  }
+}

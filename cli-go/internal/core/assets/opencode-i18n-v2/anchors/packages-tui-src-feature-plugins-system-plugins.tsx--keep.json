@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/plugins.tsx",
+  "replacements": {
+    "ctrl+a": "ctrl+a",
+    "dialog.plugins.check": "dialog.plugins.check",
+    "dialog.plugins.error": "dialog.plugins.error",
+    "dialog.plugins.update": "dialog.plugins.update",
+    "enter": "enter",
+    "plugins.toggle": "plugins.toggle",
+    "right": "right"
+  }
+}

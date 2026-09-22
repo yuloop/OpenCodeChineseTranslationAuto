@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/routes/home.tsx",
+  "replacements": {
+    "git status": "git status",
+    "installed": "installed",
+    "ls -la": "ls -la",
+    "pwd": "pwd"
+  }
+}

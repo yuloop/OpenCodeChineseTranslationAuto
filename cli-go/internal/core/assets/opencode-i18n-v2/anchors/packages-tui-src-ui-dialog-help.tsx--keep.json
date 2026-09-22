@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/ui/dialog-help.tsx",
+  "replacements": {
+    "\n          esc/enter\n        ": "\n          esc/enter\n        "
+  }
+}

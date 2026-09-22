@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/routes/session/sidebar.tsx",
+  "replacements": {
+    "absolute": "absolute",
+    "relative": "relative"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/turn-summary.ts",
+  "replacements": {
+    "${input.agent} · ${input.model} · ${input.duration}": "${input.agent} · ${input.model} · ${input.duration}"
+  }
+}

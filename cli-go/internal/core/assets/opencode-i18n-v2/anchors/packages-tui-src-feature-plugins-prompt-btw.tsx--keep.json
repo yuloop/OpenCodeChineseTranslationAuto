@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/feature-plugins/prompt/btw.tsx",
+  "replacements": {
+    "\n          esc\n        ": "\n          esc\n        ",
+    "grid": "grid",
+    "j/k ↑/↓ scroll": "j/k ↑/↓ scroll"
+  }
+}

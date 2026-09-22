@@ -1,8 +1,0 @@
-{
-  "file": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
-  "replacements": {
-    "Ask anything... \"Fix a TODO in the codebase\"": "随意提问... \"修复代码中的 TODO\"",
-    "Run a command... \"git status\"": "执行命令... \"git status\"",
-    "browse available skills": "浏览可用技能"
-  }
-}

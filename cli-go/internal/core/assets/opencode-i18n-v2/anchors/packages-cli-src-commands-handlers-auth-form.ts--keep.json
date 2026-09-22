@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/commands/handlers/auth/form.ts",
+  "replacements": {
+    "string": "string"
+  }
+}

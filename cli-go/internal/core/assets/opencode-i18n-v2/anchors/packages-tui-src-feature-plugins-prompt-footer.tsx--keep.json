@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/feature-plugins/prompt/footer.tsx",
+  "replacements": {
+    "\n          esc": "\n          esc",
+    "normal": "normal",
+    "span style=": "span style="
+  }
+}

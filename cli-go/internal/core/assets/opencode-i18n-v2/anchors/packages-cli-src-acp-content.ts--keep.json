@@ -1,0 +1,7 @@
+{
+  "file": "packages/cli/src/acp/content.ts",
+  "replacements": {
+    "[${block.resource.uri}]\\n${block.resource.text}": "[${block.resource.uri}]\\n${block.resource.text}",
+    "[${filepath}${line ? `:${line}` : \"\"}]\\n${block.resource.text}": "[${filepath}${line ? `:${line}` : \"\"}]\\n${block.resource.text}"
+  }
+}

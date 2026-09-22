@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/util/permission.ts",
+  "replacements": {
+    "${title} \"${pattern}\"": "${title} \"${pattern}\"",
+    "${title} \"${query}\"": "${title} \"${query}\"",
+    "${title} ${formatPath(value)}": "${title} ${formatPath(value)}",
+    "LSP ${operation}${file ? ` ${formatPath(file)}${position ? `:${position}` : \"\"}` : \"\"}": "LSP ${operation}${file ? ` ${formatPath(file)}${position ? `:${position}` : \"\"}` : \"\"}"
+  }
+}

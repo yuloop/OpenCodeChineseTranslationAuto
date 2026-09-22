@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/diff-viewer-file-menu.tsx",
+  "replacements": {
+    "absolute": "absolute"
+  }
+}

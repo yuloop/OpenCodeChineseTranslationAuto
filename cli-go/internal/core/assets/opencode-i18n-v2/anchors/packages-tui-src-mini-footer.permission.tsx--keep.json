@@ -1,0 +1,14 @@
+{
+  "file": "packages/tui/src/mini/footer.permission.tsx",
+  "replacements": {
+    "\n                    enter ": "\n                    enter ",
+    "\n                    esc ": "\n                    esc ",
+    "\n                pgup/pgdn": "\n                pgup/pgdn",
+    "center": "center",
+    "column": "column",
+    "left/right": "left/right",
+    "row": "row",
+    "span style=": "span style=",
+    "stretch": "stretch"
+  }
+}

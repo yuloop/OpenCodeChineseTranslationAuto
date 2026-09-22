@@ -1,7 +1,0 @@
-{
-  "file": "packages/tui/src/routes/session/question.tsx",
-  "replacements": {
-    ">Confirm</": ">确认</",
-    ">Review</": ">审查</"
-  }
-}

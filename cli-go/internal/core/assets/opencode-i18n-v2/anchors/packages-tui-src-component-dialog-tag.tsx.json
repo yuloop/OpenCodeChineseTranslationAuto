@@ -1,6 +1,0 @@
-{
-  "file": "packages/tui/src/component/dialog-tag.tsx",
-  "replacements": {
-    "title=\"Autocomplete\"": "title=\"自动完成\""
-  }
-}

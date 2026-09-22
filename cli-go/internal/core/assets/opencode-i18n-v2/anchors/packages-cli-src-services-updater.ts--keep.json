@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/services/updater.ts",
+  "replacements": {
+    "…${tail.slice(-1_999)}": "…${tail.slice(-1_999)}"
+  }
+}
