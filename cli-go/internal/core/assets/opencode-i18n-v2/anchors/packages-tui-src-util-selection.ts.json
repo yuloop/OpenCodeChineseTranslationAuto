@@ -1,5 +1,5 @@
 {
-  "file": "packages/tui/src/ui/dialog.tsx",
+  "file": "packages/tui/src/util/selection.ts",
   "replacements": {
     "message: \"Copied to clipboard\"": "message: \"已复制到剪贴板\""
   }

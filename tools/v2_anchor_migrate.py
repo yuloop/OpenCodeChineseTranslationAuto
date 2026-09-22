@@ -79,6 +79,249 @@ NON_ANCHOR_SEGMENTS = {
 }
 NON_ANCHOR_BASENAME_MARKERS = (".test.", ".spec.", ".stories.", ".bench.", ".fixture.", "demo")
 
+# ---------------------------------------------------------------------------
+# 人工逐条复核结论（第二轮：17 宇宙外 + 12 并列/无共识/弱证据 + 7 标识符碰撞）
+#
+# 只收录「在 V2 源码找到确切位置且角色/语义等价」的重新锚定；判据写进 evidence,
+# 原样进入 manifest 与报告，便于人工复核。机械消歧并列的条目一律不猜。
+# ---------------------------------------------------------------------------
+
+# (规则, 条目原文) -> (V2 锚点列表, 人工判据)
+MANUAL_ANCHOR_OVERRIDES: dict[tuple[str, str], tuple[list[str], str]] = {
+    (
+        "components/command-panel.json",
+        '"Manage workspaces"',
+    ): (
+        [
+            "packages/tui/src/component/prompt/index.tsx",
+            "packages/tui/src/config/keybind.ts",
+        ],
+        "V1 锚点 app.tsx 是命令面板定义处；V2 该命令仍存在且同名同 id："
+        "prompt/index.tsx:618 title/619 desc（palette:true, name=session.move），"
+        "keybind.ts:108 是同一命令 id 的键位标签。两处均为用户可见字符串。",
+    ),
+    (
+        "routes/route-home.json",
+        'category: "System"',
+    ): (
+        [
+            "packages/tui/src/app.tsx",
+            "packages/tui/src/mini/footer.command.tsx",
+        ],
+        "V1 首页 tips 分类标签（tips 功能随 V2 消失）；同串在 V2 命令面板仍是 "
+        "category 标签：app.tsx 22 处、mini/footer.command.tsx 3 处，"
+        "与 V2 资产已译的 category:\"Suggested\"/\"Prompt\" 同角色。",
+    ),
+    (
+        "dialogs/dialog-toast.json",
+        'message: "Copied to clipboard"',
+    ): (
+        [
+            "packages/tui/src/component/dialog-integration.tsx",
+            "packages/tui/src/routes/session/index.tsx",
+            "packages/tui/src/util/selection.ts",
+        ],
+        "V1 锚点 ui/dialog.tsx:192 的 toast 调用；V2 全宇宙 4 处均为同一 "
+        "toast.show({ message: \"Copied to clipboard\", ... }) 调用，字符串与角色完全一致。"
+        "app.tsx:582 那处已由 common/error-messages.json 的同名 kept 条目覆盖，此处不重复锚定。",
+    ),
+}
+
+# (规则, 条目原文) -> 理由：护栏误报（JSX 文本不是标识符），保留原锚点
+MANUAL_KEEP_NOTES: dict[tuple[str, str], str] = {
+    (
+        "dialogs/dialog-status.json",
+        "Status",
+    ): (
+        "护栏误报：code_skeleton 只抹引号字符串，JSX 文本节点不在其列。"
+        "V2 packages/tui/src/component/dialog-status.tsx:23 全文件唯一一处 "
+        "\\bStatus\\b 即 <text attributes={BOLD}>Status</text> 标签，"
+        "与 V1 同文件:47 同一处 UI 文本，替换安全。"
+    ),
+}
+
+# (规则, 条目原文) -> 理由：不得应用（替换会伤及代码），保留在分母里计未匹配
+MANUAL_SUPPRESSED: dict[tuple[str, str], str] = {
+    (
+        "routes/route-session.json",
+        "interrupted",
+    ): (
+        "V2 packages/tui/src/routes/session/index.tsx:1954 起新增 "
+        "`const interrupted = createMemo(...)` 及 1957/1963/1977 的 interrupted() 调用；"
+        "\\b 替换会把 const 声明与调用点一起改成中文而直接构建失败。"
+        "真正的 UI 串在 1978 行 ` · interrupted`（与 V1 index.tsx:1568 同），"
+        "需人工改用精确键，本轮不动。"
+    ),
+}
+
+# 被 suppress 的条目锚点：V2 源码树中不存在的隔离路径，使 apply 判「目标文件不存在」
+# 而继续计为未匹配（分母不变，缺口可见），且绝不落入任何真实源码文件。
+QUARANTINE_ANCHOR_PREFIX = "packages/__no_v2_location__/"
+
+
+def quarantine_anchor(v1_rel: str) -> str:
+    return QUARANTINE_ANCHOR_PREFIX + v1_rel
+
+
+# 待人工确认条目的事实说明（逐条人工核对 V2 v2.0.12 源码后填写）。
+# 只记录看到的事实（V2 的确切位置/改名/角色差异），不做猜测性改写。
+PENDING_NOTES: dict[tuple[str, str], str] = {
+    ("components/command-panel.json", '"Connect provider"'): (
+        "V2 app.tsx:934 同一命令 id `provider.connect` 的标题已改名为 "
+        "\"Connect an integration\"（keybind.ts:168 为 \"Connect integration\"）；"
+        "V1 原文在 V2 tui/cli 产品源码 0 命中，唯一命中在 "
+        "packages/app/src/runtime/i18n/en.ts:89（桌面端英文词典，另一产品面）。"
+    ),
+    ("components/command-panel.json", '"Toggle MCPs"'): (
+        "V2 app.tsx:882 同一命令 id `mcp.list` 标题改为 \"MCP servers\"，"
+        "keybind.ts:167 为 \"List MCP servers\"；产品源码 0 命中，"
+        "唯一命中 packages/app/src/runtime/i18n/en.ts:132。"
+    ),
+    ("components/inline-tools.json", 'pending="Preparing patch…"'): (
+        "V2 routes/session/index.tsx:3072 仅余 \"Preparing write…\"、3379 "
+        "\"# Preparing edit…\"，补丁工具的 pending 文案已不在该文件；"
+        "唯一命中是测试快照 packages/tui/test/cli/tui/inline-tool-wrap-snapshot.test.tsx:77"
+        "（断言旧行为）。"
+    ),
+    ("dialogs/cli-footer-command.json", "current"): (
+        "V2 宇宙内 105 个文件命中，但全是更长标签内的词"
+        "（\"Close current session tab\"/\"Share current session\"…）或注释；"
+        "V1 侧 footer.command.tsx 本身就把 current 同时用作接口字段 "
+        "`current: boolean`（第 30/35/44 行），V2 不新引入该类破损。"
+    ),
+    ("dialogs/cli-footer-command.json", "Skills"): (
+        "V2 两处 UI 面均已被更精确的键覆盖：prompt/index.tsx:580 `title: \"Skills\"` "
+        "由 components/component-prompt.json 译，dialog-skill.tsx:58 `title=\"Skills\"` "
+        "由 dialogs/dialog-skill.json 译；裸 \\bSkills\\b 还会命中 "
+        "dialog-skill.tsx:76 \"Close and reopen Skills to try again.\"，"
+        "替换后成 \"Close and reopen 技能 to try again.\"（中英混杂）。"
+    ),
+    ("dialogs/cli-footer-view.json", "EXIT"): (
+        "V1 footer.view.tsx:388 `if (exiting()) return \"EXIT\"`；V2 mini/footer.view.tsx "
+        "已无 EXIT 徽标（改用 \"Shell\"/\"normal\"/\"Running\"）。唯一命中是 bash trap 串 "
+        "packages/desktop/src/main/remote/cli.ts:90 与 shell 扫描测试 generated.test.ts:90。"
+    ),
+    ("dialogs/cli-footer-view.json", "SHELL"): (
+        "V2 mini/footer.view.tsx:412/417 用 title case 的 \"Shell\"，\\bSHELL\\b 不再命中；"
+        "宇宙内两处命中分别是 uninstall.ts:151 `process.env.SHELL`（环境变量，替换即破坏）"
+        "与 prompt/traits.ts:25 的 @opentui/core EditorTraits 协议值。"
+    ),
+    ("dialogs/cli-footer-view.json", "BUILD"): (
+        "V1 footer.view.tsx:391 `shell() ? \"SHELL\" : \"BUILD\"`；V2 已无 BUILD 徽标，"
+        "唯一命中是 packages/tui/test/mini/footer.view.test.tsx:517 的 "
+        "`expect(frame).not.toContain(\"BUILD\")`（负向断言）。"
+    ),
+    ("dialogs/cli-footer-view.json", "interrupt"): (
+        "V2 每个候选文件里 interrupt 都同时是代码标识符：mini/footer.view.tsx:203 "
+        "`const interrupt = ...`、209 `props.state().interrupt`、1018 `interrupt={...}`；"
+        "footer.prompt.tsx:1193 是命令 id \"session.interrupt\"（替换会断开键位绑定）。"
+    ),
+    ("dialogs/cli-footer-view.json", "background"): (
+        "V2 background 在候选文件中大量是属性/标识符：footer.view.tsx:699/723/753/963 "
+        "`backgroundColor=`、762 `runTheme().background`、187 `!item.background`；"
+        "dialog-update.tsx:148 `backgroundColor=`；footer.width.ts:17/32/72 是联合类型字面量。"
+    ),
+    ("dialogs/cli-footer-view.json", "subagents"): (
+        "V2 footer 已无 \"subagents\" 标签；宇宙内命中是 import 路径 "
+        "composer/index.tsx:7 `./subagents-tab`、composer tab id index.tsx:1174/1359 "
+        "`tab: \"subagents\"`、prop `subagents={tabs}`（index.tsx:809）以及 footer.width.ts 的联合类型字面量。"
+    ),
+    ("dialogs/cli-footer-view.json", "cmd"): (
+        "V1 footer.view.tsx:487 `label: \"cmd\"`；V2 mini/footer.view.tsx:473 同一处已改名 "
+        "`label: \"menu\"`，V1 原文在 V2 产品源码 0 命中。"
+    ),
+    ("dialogs/cli-permission.json", "Allow always"): (
+        "V2 util/permission.ts:164 同分支返回 \"Always allow\"（语序被上游调整），"
+        "V1 原文在产品源码 0 命中；唯一命中 packages/ui/src/i18n/en.ts:231（UI 库英文词典）。"
+    ),
+    ("dialogs/cli-question.json", "Confirm"): (
+        "V2 问题表单脚 footer.form.tsx（承接了本规则另外 4 条）已无独立 \"Confirm\" 标签"
+        "（改用 formConfirm 逻辑与 \"Review\"）；宇宙内唯一独立 \"Confirm\" 是 "
+        "util/permission.ts:166 的权限选项标签，已由 dialogs/cli-permission.json 锚定，再锚只会重复计数。"
+    ),
+    ("dialogs/dialog-agent.json", "native"): (
+        "V1 dialog-agent.tsx:15 `description: item.native ? \"native\" : item.description`；"
+        "V2 该文件已重写为 698 字节的 DialogSelect 薄封装，无 \"native\" 串；"
+        "其余宇宙内命中全部是注释。"
+    ),
+    ("dialogs/dialog-export.json", "to confirm"): (
+        "V1 锚点 dialog-export-options.tsx:177/182 的提示语在 V2 被键位标题取代"
+        "（61 \"Next export option\"/73 \"Select export option\"），V1 原文不在该文件；"
+        "宇宙内其余命中分散在 6 个无关对话框，按子串替换会得到 \"Press X again 确认\" 式中英混杂串。"
+    ),
+    ("dialogs/dialog-provider.json", 'label: "API key"'): (
+        "V2 dialog-integration.tsx 已有 `placeholder=\"API key\"`（本规则已迁），"
+        "`label: \"API key\"` 在产品源码 0 命中；宇宙外命中是 app 的 mock-server/stories "
+        "与 core 的 azure 插件提示词。"
+    ),
+    ("dialogs/dialog-provider.json", "(Recommended)"): (
+        "V1 锚点 dialog-provider.tsx 在 V2 已被 dialog-integration.tsx 取代且无该串；"
+        "唯一命中 packages/core/src/tool/plugin/question.ts:21 是给模型的提示词模板。"
+    ),
+    ("dialogs/dialog-provider.json", "Low cost subscription for everyone"): (
+        "产品源码 0 命中；唯一命中 packages/app/src/runtime/i18n/en.ts:173（桌面端英文词典）。"
+    ),
+    ("dialogs/dialog-provider.json", "Go to "): (
+        "V1 dialog-provider.tsx:378/389 `Go to <span>https://opencode.ai/zen</span> to get a key`；"
+        "V2 dialog-integration.tsx 无 \"Go to\"；宇宙内命中全是无关导航标签"
+        "（\"Go to the start of the diff\"/\"Go to parent session\"），"
+        "子串替换会得到 \"前往 the start of the diff\"。"
+    ),
+    ("dialogs/dialog-provider.json", "Custom provider"): (
+        "产品源码 0 命中；命中在 packages/app/src/runtime/i18n/en.ts:231 与 "
+        "packages/core/src/v1/config/config.ts（桌面端词典/配置注释）。"
+    ),
+    ("dialogs/dialog-rename.json", 'title="Rename Session"'): (
+        "V1 锚点文件在 V2 仍在，但 dialog-session-rename.tsx:15 已改为 "
+        "`title=\"Rename session\"`（s 小写）；V1 原文唯一命中是 "
+        "packages/tui/test/cli/tui/dialog-prompt.test.tsx:47 的测试渲染。"
+    ),
+    ("dialogs/dialog-subagent.json", 'title: "Open"'): (
+        "V1 锚点 routes/session/dialog-subagent.tsx 在 V2 不存在；产品源码 0 命中，"
+        "命中在 packages/app/src/shell/commands/command.test.ts:14（桌面端命令目录解码单测）。"
+    ),
+    ("routes/route-footer.json", "Get started"): (
+        "V1 footer.tsx:59 `Get started <span>/connect</span>`；V2 该文件不存在，"
+        "产品源码 0 命中；命中在 packages/app 与 packages/console 的英文词典。"
+    ),
+    ("routes/route-footer.json", "Permission"): (
+        "V1 footer.tsx:65 是 `{permissions().length} Permission(s)` 计数徽标，V2 该文件不存在。"
+        "宇宙内唯一独立 \"Permission\" 是 mini/footer.permission.tsx:185 "
+        "`width() < 24 ? \"Permission\" : \"Permission required\"`，只替换前半会得到 "
+        "`? \"权限\" : \"Permission required\"` 的中英混杂三元式。"
+    ),
+    ("routes/route-header.json", 'label: "Subagent"'): (
+        "V1 锚点 subagent-footer.tsx 在 V2 不存在；产品源码 0 命中，"
+        "唯一宇宙内命中是开发 playground packages/tui/src/mini/demo.ts:748/776（按 demo 规则排除）。"
+    ),
+    ("routes/route-header.json", "Parent"): (
+        "V1 subagent-footer.tsx:104 导航标签；该文件在 V2 不存在，产品源码 0 命中；"
+        "宇宙外命中全是 packages/app/e2e 回归用例。"
+    ),
+    ("routes/route-header.json", "Prev"): (
+        "V1 subagent-footer.tsx:114 导航标签；V2 无该导航标签，宇宙内 0 命中，"
+        "命中在 packages/ui/src/components/*.stories.tsx。"
+    ),
+    ("routes/route-header.json", "Next"): (
+        "V1 subagent-footer.tsx:124 独立导航标签；V2 该文件不存在，宇宙内 23 处 \\bNext\\b "
+        "全是复合键位标题（\"Next item\"/\"Next export option\"…），"
+        "子串替换会得到 \"上一个 item\" 式中英混杂。"
+    ),
+    ("routes/route-permission.json", '"Unknown"'): (
+        "V1 permission.tsx:287 `typeof data.subagent_type === \"string\" ? data.subagent_type : \"Unknown\"`；"
+        "V2 该文件仍在但已无此回退；宇宙内命中是 devtools-bar.tsx:60 的地址回退与 "
+        "mini/tool.ts:335 的工具入参回退（角色不同）。"
+    ),
+    ("routes/route-session.json", '"Failed to unshare session"'): (
+        "V1 锚点 index.tsx 在 V2 仍在但该串已不在；产品源码 0 命中，"
+        "唯一命中 packages/app/src/runtime/i18n/en.ts:644。"
+    ),
+}
+
+
+# 人工复核判据汇总：(规则, 条目原文) -> 判据文本（由 classify_rule 填充，main 使用前清空）
+MANUAL_NOTES: dict[tuple[str, str], str] = {}
+
 
 def in_anchor_universe(rel: str) -> bool:
     if not rel.startswith(ANCHOR_UNIVERSE_PREFIXES):
@@ -228,6 +471,7 @@ def classify_rule(rule: dict, per_file: dict[str, str], source_dir: Path) -> dic
 
     moved: list[dict] = []
     deferred: list[dict] = []
+    suppressed: list[dict] = []
     # 共识：同规则已锚定条目在各文件的落数（每轮迭代更新，收敛前持续用于消歧）
     consensus: dict[str, int] = defaultdict(int)
     unresolved: list[str] = []
@@ -308,6 +552,55 @@ def classify_rule(rule: dict, per_file: dict[str, str], source_dir: Path) -> dic
     moved = guarded_moved
     deferred.sort(key=lambda item: order[item["key"]])
 
+    # ---- 人工逐条复核结论（见文件头部 MANUAL_* 常量）----
+    # 1) 护栏误报：简单词落在 JSX 文本节点而非标识符 → 恢复 kept（锚点不变）
+    revived: list[dict] = []
+    still_deferred: list[dict] = []
+    for item in deferred:
+        note = MANUAL_KEEP_NOTES.get((rule["rule"], item["key"]))
+        if note and item["reason"] == "identifier-collision":
+            revived.append({"key": item["key"], "reason": item["reason"]})
+            MANUAL_NOTES[(rule["rule"], item["key"])] = note
+        else:
+            still_deferred.append(item)
+    deferred = still_deferred
+    kept = sorted({*kept, *(item["key"] for item in revived)}, key=lambda key: order[key])
+
+    # 2) 有确凿证据的重新锚定（deferred → moved，basis 记 manual-verified）
+    remaining_deferred: list[dict] = []
+    for item in deferred:
+        override = MANUAL_ANCHOR_OVERRIDES.get((rule["rule"], item["key"]))
+        if override:
+            anchors, evidence = override
+            moved.append(
+                {
+                    "key": item["key"],
+                    "anchor": anchors[0],
+                    "anchors": list(anchors),
+                    "basis": "manual-verified",
+                    "evidence": evidence,
+                    "hits": anchors,
+                    "original_reason": item["reason"],
+                }
+            )
+            MANUAL_NOTES[(rule["rule"], item["key"])] = evidence
+        else:
+            remaining_deferred.append(item)
+    deferred = remaining_deferred
+
+    # 3) 判定不得应用：替换会伤及代码 → 隔离到 V2 不存在的路径，继续计未匹配
+    final_deferred: list[dict] = []
+    for item in deferred:
+        reason_note = MANUAL_SUPPRESSED.get((rule["rule"], item["key"]))
+        if reason_note:
+            suppressed.append({"key": item["key"], "reason": reason_note, "hits": item["hits"], "original_reason": item["reason"]})
+            MANUAL_NOTES[(rule["rule"], item["key"])] = reason_note
+        else:
+            final_deferred.append(item)
+    deferred = final_deferred
+    deferred.sort(key=lambda item: order[item["key"]])
+    suppressed.sort(key=lambda item: order[item["key"]])
+
     return {
         "rule": rule["rule"],
         "v1_file": rule["file"],
@@ -315,8 +608,10 @@ def classify_rule(rule: dict, per_file: dict[str, str], source_dir: Path) -> dic
         "v1_exists": bool(v1_content),
         "total": len(keys),
         "kept": kept,
+        "kept_manual": [item["key"] for item in revived],
         "moved": moved,
         "deferred": deferred,
+        "suppressed": suppressed,
         "replacements": rule["replacements"],
     }
 
@@ -324,19 +619,25 @@ def classify_rule(rule: dict, per_file: dict[str, str], source_dir: Path) -> dic
 def build_overlay(results: list[dict]) -> tuple[dict[str, list[tuple[str, str, str]]], dict]:
     """汇总为 {V2 锚点路径: [(key, 译文, 来源规则), ...]}。
 
-    保留全部条目（含 deferred 保留旧锚点），同键多译不合并——同锚点同键分块到
-    额外规则文件，复刻 V1 对共享目标的语义（同键各计一次，应用时先到者胜），
-    保证门禁分母与 V1 一致（497）。
+    保留全部条目（含 deferred 保留旧锚点、suppressed 隔离到 V2 不存在的路径），
+    同键多译不合并——同锚点同键分块到额外规则文件，复刻 V1 对共享目标的语义
+    （同键各计一次，应用时先到者胜）。V1 条目一条不丢；同一 UI 串在 V2 多处
+    等价位置出现时逐处锚定，门禁键数会略多于 V1 条目数。
     """
     per_anchor: dict[str, list[tuple[str, str, str]]] = defaultdict(list)
     conflicts: list[dict] = []
     seen: dict[tuple[str, str], str] = {}
     for result in results:
         v1_rel = result["v1_rel"]
-        moved_anchor = {item["key"]: item["anchor"] for item in result["moved"]}
         pairs = [(key, result["replacements"][key], v1_rel) for key in result["kept"]]
-        pairs += [(item["key"], result["replacements"][item["key"]], item["anchor"]) for item in result["moved"]]
+        for item in result["moved"]:
+            # 人工复核的多锚点：同一 UI 串在 V2 多处等价位置出现，逐处锚定
+            for anchor in item.get("anchors") or [item["anchor"]]:
+                pairs.append((item["key"], result["replacements"][item["key"]], anchor))
         pairs += [(item["key"], result["replacements"][item["key"]], v1_rel) for item in result["deferred"]]
+        # suppressed：锚到 V2 不存在的隔离路径 → apply 判「目标文件不存在」而计未匹配
+        for item in result.get("suppressed", []):
+            pairs.append((item["key"], result["replacements"][item["key"]], quarantine_anchor(v1_rel)))
         for key, translation, anchor in pairs:
             identity = (anchor, key)
             if identity in seen and seen[identity] != translation:
@@ -350,6 +651,9 @@ def build_overlay(results: list[dict]) -> tuple[dict[str, list[tuple[str, str, s
 def write_overlay(out_dir: Path, per_anchor: dict[str, list[tuple[str, str, str]]], manifest: dict, meta: dict) -> list[str]:
     anchors_dir = out_dir / "anchors"
     anchors_dir.mkdir(parents=True, exist_ok=True)
+    # 先清掉上一轮生成的锚点文件：否则重生成不幂等（旧锚点会残留并被继续加载）
+    for stale in sorted(anchors_dir.glob("*.json")):
+        stale.unlink()
     written: list[str] = []
     used_names: dict[str, str] = {}
     for anchor in sorted(per_anchor):
@@ -390,6 +694,7 @@ def write_report(
     before: dict[str, str] | None,
     after: dict[str, str] | None,
     v1_check: list[str] | None = None,
+    manual_notes: dict[tuple[str, str], str] | None = None,
 ) -> None:
     lines: list[str] = []
     lines.append("# opencode V2 汉化 · 锚点别名迁移报告")
@@ -415,8 +720,12 @@ def write_report(
     else:
         lines.append("| 替换匹配 | (未提供 --before/--after) | (未提供) |")
     lines.append("")
-    lines.append("> 分母不变:V2 资产保留全部 "
-                 f"{totals['total']} 条条目(迁移不动的保留旧锚点,继续计未匹配),因此前后匹配率可直接对比;")
+    lines.append("> 条目不丢:V2 资产保留全部 "
+                 f"{totals['total']} 条 V1 条目(迁移不动的保留旧锚点或隔离锚点,继续计未匹配);")
+    lines.append("> 但同一 UI 串在 V2 多处等价位置出现时会逐处锚定(见 ④-b re-anchored 行),")
+    lines.append("> 门禁分母因此可能略高于 "
+                 f"{totals['total']}——上表「替换匹配」列已同时给出分子/分母,可自行折算;")
+    lines.append("> 按 V1 条目去重计的匹配条目数见 PR 描述。")
     lines.append("> V2 门禁阈值策略(阶梯/双轨)不在本单范围,本单只交付锚点迁移与度量。")
     lines.append("")
     if v1_check:
@@ -432,8 +741,9 @@ def write_report(
     lines.append("|---|---|---|---|")
     total = totals["total"]
     lines.append(f"| kept(锚点不变) | {totals['kept']} | {totals['kept'] / total:.1%} | V1 目标路径在 V2 仍在且条目命中 |")
-    lines.append(f"| moved(重新锚定) | {totals['moved']} | {totals['moved'] / total:.1%} | 唯一命中 {totals['moved_unique']} 条;聚类/路径消歧 {totals['moved_disambiguated']} 条 |")
+    lines.append(f"| moved(重新锚定) | {totals['moved']} | {totals['moved'] / total:.1%} | 唯一命中 {totals['moved_unique']} 条;聚类/路径消歧 {totals['moved_disambiguated']} 条;人工复核逐条定位 {totals['moved_manual']} 条 |")
     lines.append(f"| deferred(待人工确认) | {totals['deferred']} | {totals['deferred'] / total:.1%} | V2 全树 0 命中 {totals['deferred_no_hit']} 条;仅宇宙外命中 {totals['deferred_outside_universe']} 条;多候选并列 {totals['deferred_ambiguous']} 条;简单词无同规则共识 {totals['deferred_no_consensus']} 条;弱证据 {totals['deferred_weak_evidence']} 条;标识符碰撞 {totals['deferred_identifier_collision']} 条 |")
+    lines.append(f"| suppressed(判定不得应用) | {totals['suppressed']} | {totals['suppressed'] / total:.1%} | 替换会伤及代码;锚点隔离到 V2 不存在的路径,继续计未匹配(该 V1 条目仍在分母里) |")
     lines.append(f"| **合计** | **{total}** | 100% | |")
     lines.append("")
     lines.append("## ③ 逐规则迁移表(旧位置 → 新位置 → 匹配依据)")
@@ -470,6 +780,10 @@ def write_report(
             hits = ", ".join(f"`{hit}`" for hit in item["hits"][:3]) or "-"
             lines.append(f"| `{result['rule']}` | {_escape(item['key'][:MAX_KEY_preview])} | {item['reason']} | {hits} |")
     lines.append("")
+    lines.extend(
+        _manual_review_section(results, manual_notes or {})
+    )
+    lines.append("")
     lines.append("## ⑤ 复现与审计")
     lines.append("")
     lines.append("```bash")
@@ -493,6 +807,86 @@ def write_report(
 
 def _escape(text: str) -> str:
     return text.replace("|", "\\|").replace("\n", "\\n")
+
+
+# 第二轮人工复核的目标归因集合（17 宇宙外 + 12 并列/无共识/弱证据 + 7 标识符碰撞）
+MANUAL_REVIEW_REASONS = (
+    "outside-universe",
+    "ambiguous",
+    "no-consensus",
+    "weak-evidence",
+    "identifier-collision",
+)
+
+
+def _manual_review_section(results: list[dict], manual_notes: dict[tuple[str, str], str]) -> list[str]:
+    """④-b:36 条待确认条目逐条复核结论表。
+
+    结论分四类:
+      re-anchored  在 V2 找到确切位置且角色/语义等价 → 已补进 V2 锚点映射
+      keep-as-is   护栏误报(JSX 文本被当成标识符)→ 保留原锚点,替换安全
+      suppressed   唯一残留位置同时是代码标识符 → 不得应用,隔离锚点
+      pending      给不出确凿证据 → 待人工确认,附所见事实
+    """
+    rows: list[tuple[str, str, str, str, str]] = []
+    for result in sorted(results, key=lambda item: item["rule"]):
+        rule = result["rule"]
+        kept_manual = set(result.get("kept_manual", []))
+        moved_manual = {item["key"]: item for item in result["moved"] if item["basis"] == "manual-verified"}
+        suppressed = {item["key"]: item for item in result.get("suppressed", [])}
+        deferred = {item["key"]: item for item in result["deferred"]}
+        reviewed = (
+            set(kept_manual)
+            | set(moved_manual)
+            | set(suppressed)
+            | {key for key, item in deferred.items() if item["reason"] in MANUAL_REVIEW_REASONS}
+        )
+        for key in [k for k in result["replacements"] if k in reviewed]:
+            if key in moved_manual:
+                item = moved_manual[key]
+                anchors = item.get("anchors") or [item["anchor"]]
+                conclusion = "re-anchored(已补锚点)"
+                basis = "; ".join(f"`{a}`" for a in anchors)
+                note = item.get("evidence") or manual_notes.get((rule, key), "")
+            elif key in suppressed:
+                conclusion = "suppressed(不得应用)"
+                basis = "隔离到 V2 不存在的路径,继续计未匹配"
+                note = suppressed[key].get("reason") or manual_notes.get((rule, key), "")
+            elif key in kept_manual:
+                conclusion = "keep-as-is(护栏误报)"
+                basis = f"`{result['v1_rel']}`(锚点不变)"
+                note = manual_notes.get((rule, key), "")
+            else:
+                item = deferred[key]
+                conclusion = "pending(待人工确认)"
+                hits = ", ".join(f"`{h}`" for h in item["hits"][:3]) or "-"
+                basis = f"原锚点 `{result['v1_rel']}`;宇宙内/外命中:{hits}"
+                note = _pending_note(rule, key, item["reason"])
+            rows.append((rule, key, conclusion, basis, note))
+    lines = [
+        "### ④-b 第二轮人工逐条复核结论(36 条:17 宇宙外 + 12 并列/无共识/弱证据 + 7 标识符碰撞)",
+        "",
+        "逐条在 V2 源码定位后的处置。只对「找到确切位置且角色/语义等价」的条目补锚点;",
+        "其余保留旧锚点并在此列明所见事实,不做猜测性改写。",
+        "",
+        "| 规则 | 条目 | 结论 | 锚点/命中 | 依据 |",
+        "|---|---|---|---|---|",
+    ]
+    for rule, key, conclusion, basis, note in rows:
+        lines.append(
+            f"| `{rule}` | {_escape(key[:MAX_KEY_preview])} | {conclusion} | {_escape(basis)} | {_escape(note)} |"
+        )
+    lines.append("")
+    counts: dict[str, int] = defaultdict(int)
+    for _rule, _key, conclusion, _basis, _note in rows:
+        counts[conclusion] += 1
+    lines.append("小计:" + ";".join(f"{name} {count} 条" for name, count in sorted(counts.items())))
+    return lines
+
+
+def _pending_note(rule: str, key: str, reason: str) -> str:
+    """待人工确认条目的事实说明(逐条人工核对 V2 源码后填写)。"""
+    return PENDING_NOTES.get((rule, key), f"原归因 {reason};V2 源码无等价 UI 位置")
 
 
 def parse_rate_args(values: list[str] | None) -> dict[str, str] | None:
@@ -524,6 +918,7 @@ def main() -> int:
     rules = load_rules(assets_dir)
     _, per_file = build_tree_index(source_dir)
 
+    MANUAL_NOTES.clear()
     results = [classify_rule(rule, per_file, source_dir) for rule in rules]
     per_anchor, extra = build_overlay(results)
 
@@ -533,6 +928,7 @@ def main() -> int:
         "moved": sum(len(result["moved"]) for result in results),
         "moved_unique": sum(1 for result in results for item in result["moved"] if item["basis"] == "unique-hit"),
         "moved_disambiguated": sum(1 for result in results for item in result["moved"] if item["basis"] != "unique-hit"),
+        "moved_manual": sum(1 for result in results for item in result["moved"] if item["basis"] == "manual-verified"),
         "deferred": sum(len(result["deferred"]) for result in results),
         "deferred_no_hit": sum(1 for result in results for item in result["deferred"] if item["reason"] == "no-hit"),
         "deferred_outside_universe": sum(1 for result in results for item in result["deferred"] if item["reason"] == "outside-universe"),
@@ -540,6 +936,7 @@ def main() -> int:
         "deferred_no_consensus": sum(1 for result in results for item in result["deferred"] if item["reason"] == "no-consensus"),
         "deferred_weak_evidence": sum(1 for result in results for item in result["deferred"] if item["reason"] == "weak-evidence"),
         "deferred_identifier_collision": sum(1 for result in results for item in result["deferred"] if item["reason"] == "identifier-collision"),
+        "suppressed": sum(len(result.get("suppressed", [])) for result in results),
     }
 
     manifest_entries = []
@@ -550,13 +947,34 @@ def main() -> int:
             )
         for item in result["moved"]:
             manifest_entries.append(
-                {"rule": result["rule"], "key": item["key"], "status": "moved", "from": result["v1_rel"], "to": item["anchor"], "basis": item["basis"]}
+                {
+                    "rule": result["rule"],
+                    "key": item["key"],
+                    "status": "moved",
+                    "from": result["v1_rel"],
+                    "to": item["anchor"],
+                    "anchors": item.get("anchors") or [item["anchor"]],
+                    "basis": item["basis"],
+                    "evidence": item.get("evidence", ""),
+                }
             )
         for item in result["deferred"]:
             manifest_entries.append(
                 {"rule": result["rule"], "key": item["key"], "status": "deferred", "from": result["v1_rel"], "to": result["v1_rel"], "basis": item["reason"], "hits": item["hits"][:3]}
             )
-    manifest = {"totals": totals, "entries": manifest_entries, "conflicts": extra["conflicts"]}
+        for item in result.get("suppressed", []):
+            manifest_entries.append(
+                {
+                    "rule": result["rule"],
+                    "key": item["key"],
+                    "status": "suppressed",
+                    "from": result["v1_rel"],
+                    "to": quarantine_anchor(result["v1_rel"]),
+                    "basis": "unsafe-identifier-collision",
+                    "reason": item["reason"],
+                }
+            )
+    manifest = {"totals": totals, "entries": manifest_entries, "conflicts": extra["conflicts"], "manualNotes": {f"{r}|{k}": v for (r, k), v in sorted(MANUAL_NOTES.items())}}
 
     v1_config_path = assets_dir / "config.json"
     v1_version = ""
@@ -620,6 +1038,7 @@ def main() -> int:
             parse_rate_args(args.before),
             parse_rate_args(args.after),
             args.v1_check,
+            MANUAL_NOTES,
         )
         print(f"迁移报告已写入: {Path(args.report).resolve()}")
 

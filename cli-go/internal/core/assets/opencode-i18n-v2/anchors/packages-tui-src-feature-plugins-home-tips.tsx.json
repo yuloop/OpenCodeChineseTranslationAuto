@@ -1,7 +1,6 @@
 {
   "file": "packages/tui/src/feature-plugins/home/tips.tsx",
   "replacements": {
-    "category: \"System\"": "category: \"系统\"",
     "title: props.hidden ? \"Show tips\" : \"Hide tips\"": "title: props.hidden ? \"显示提示\" : \"隐藏提示\""
   }
 }

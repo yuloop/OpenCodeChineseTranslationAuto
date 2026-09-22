@@ -11,32 +11,36 @@
   "v1AssetsVersion": "6.2",
   "totals": {
     "total": 497,
-    "kept": 152,
-    "moved": 92,
+    "kept": 153,
+    "moved": 95,
     "moved_unique": 39,
-    "moved_disambiguated": 53,
-    "deferred": 253,
+    "moved_disambiguated": 56,
+    "moved_manual": 3,
+    "deferred": 248,
     "deferred_no_hit": 217,
     "deferred_outside_universe": 17,
-    "deferred_ambiguous": 8,
+    "deferred_ambiguous": 5,
     "deferred_no_consensus": 3,
     "deferred_weak_evidence": 1,
-    "deferred_identifier_collision": 7
+    "deferred_identifier_collision": 5,
+    "suppressed": 1
   },
   "manifest": {
     "totals": {
       "total": 497,
-      "kept": 152,
-      "moved": 92,
+      "kept": 153,
+      "moved": 95,
       "moved_unique": 39,
-      "moved_disambiguated": 53,
-      "deferred": 253,
+      "moved_disambiguated": 56,
+      "moved_manual": 3,
+      "deferred": 248,
       "deferred_no_hit": 217,
       "deferred_outside_universe": 17,
-      "deferred_ambiguous": 8,
+      "deferred_ambiguous": 5,
       "deferred_no_consensus": 3,
       "deferred_weak_evidence": 1,
-      "deferred_identifier_collision": 7
+      "deferred_identifier_collision": 5,
+      "suppressed": 1
     },
     "entries": [
       {
@@ -571,7 +575,24 @@
         "status": "moved",
         "from": "packages/tui/src/app.tsx",
         "to": "packages/tui/src/config/v1/keybind.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/config/v1/keybind.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
+      },
+      {
+        "rule": "components/command-panel.json",
+        "key": "\"Manage workspaces\"",
+        "status": "moved",
+        "from": "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/component/prompt/index.tsx",
+        "anchors": [
+          "packages/tui/src/component/prompt/index.tsx",
+          "packages/tui/src/config/keybind.ts"
+        ],
+        "basis": "manual-verified",
+        "evidence": "V1 锚点 app.tsx 是命令面板定义处；V2 该命令仍存在且同名同 id：prompt/index.tsx:618 title/619 desc（palette:true, name=session.move），keybind.ts:108 是同一命令 id 的键位标签。两处均为用户可见字符串。"
       },
       {
         "rule": "components/command-panel.json",
@@ -603,18 +624,6 @@
         "to": "packages/tui/src/app.tsx",
         "basis": "no-hit",
         "hits": []
-      },
-      {
-        "rule": "components/command-panel.json",
-        "key": "\"Manage workspaces\"",
-        "status": "deferred",
-        "from": "packages/tui/src/app.tsx",
-        "to": "packages/tui/src/app.tsx",
-        "basis": "ambiguous",
-        "hits": [
-          "packages/tui/src/component/prompt/index.tsx",
-          "packages/tui/src/config/keybind.ts"
-        ]
       },
       {
         "rule": "components/command-panel.json",
@@ -764,7 +773,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/question.tsx",
         "to": "packages/tui/src/routes/session/form.tsx",
-        "basis": "consensus=0,cluster=3,sim=7"
+        "anchors": [
+          "packages/tui/src/routes/session/form.tsx"
+        ],
+        "basis": "consensus=0,cluster=3,sim=7",
+        "evidence": ""
       },
       {
         "rule": "components/component-question.json",
@@ -772,7 +785,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/question.tsx",
         "to": "packages/tui/src/mini/footer.form.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.form.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "components/component-question.json",
@@ -780,7 +797,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/question.tsx",
         "to": "packages/tui/src/routes/session/form.tsx",
-        "basis": "consensus=1,cluster=3,sim=7"
+        "anchors": [
+          "packages/tui/src/routes/session/form.tsx"
+        ],
+        "basis": "consensus=1,cluster=3,sim=7",
+        "evidence": ""
       },
       {
         "rule": "components/component-question.json",
@@ -788,7 +809,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/question.tsx",
         "to": "packages/tui/src/routes/session/form.tsx",
-        "basis": "consensus=2,cluster=3,sim=7"
+        "anchors": [
+          "packages/tui/src/routes/session/form.tsx"
+        ],
+        "basis": "consensus=2,cluster=3,sim=7",
+        "evidence": ""
       },
       {
         "rule": "components/component-question.json",
@@ -1842,7 +1867,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/error.ts",
         "to": "packages/tui/src/util/error.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/error.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-error.json",
@@ -1850,7 +1879,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/error.ts",
         "to": "packages/tui/src/util/error.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/error.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-error.json",
@@ -1858,7 +1891,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/error.ts",
         "to": "packages/tui/src/util/error.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/error.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-error.json",
@@ -1866,7 +1903,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/error.ts",
         "to": "packages/tui/src/util/error.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/error.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-error.json",
@@ -1874,7 +1915,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/error.ts",
         "to": "packages/tui/src/util/error.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/error.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-error.json",
@@ -1882,7 +1927,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/error.ts",
         "to": "packages/tui/src/util/error.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/error.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-error.json",
@@ -1890,7 +1939,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/error.ts",
         "to": "packages/tui/src/util/error.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/error.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-error.json",
@@ -1898,7 +1951,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/error.ts",
         "to": "packages/tui/src/util/error.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/error.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-error.json",
@@ -1915,7 +1972,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=0,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=0,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1923,7 +1984,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1931,7 +1996,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/component/dialog-skill.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/component/dialog-skill.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1939,7 +2008,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1947,7 +2020,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=3,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=3,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1955,7 +2032,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=5,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=5,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1963,7 +2044,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=6,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=6,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1971,7 +2056,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=7,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=7,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1979,7 +2068,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1987,7 +2080,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -1995,7 +2092,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=10,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=10,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2003,7 +2104,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=11,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=11,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2011,7 +2116,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=12,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=12,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2019,7 +2128,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=13,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=13,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2027,7 +2140,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=14,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=14,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2035,7 +2152,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=15,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=15,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2043,7 +2164,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=16,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=16,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2051,7 +2176,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=17,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=17,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2059,7 +2188,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/config/keybind.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/config/keybind.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2067,7 +2200,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=18,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=18,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2075,7 +2212,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=19,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=19,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2083,7 +2224,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=20,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=20,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2091,7 +2236,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=21,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=21,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2099,7 +2248,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.command.tsx",
         "to": "packages/tui/src/mini/footer.command.tsx",
-        "basis": "consensus=22,cluster=23,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "consensus=22,cluster=23,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-command.json",
@@ -2159,7 +2312,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
         "to": "packages/tui/src/component/prompt/index.tsx",
-        "basis": "consensus=0,cluster=5,sim=2"
+        "anchors": [
+          "packages/tui/src/component/prompt/index.tsx"
+        ],
+        "basis": "consensus=0,cluster=5,sim=2",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-view.json",
@@ -2167,7 +2324,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
         "to": "packages/tui/src/component/prompt/index.tsx",
-        "basis": "consensus=2,cluster=5,sim=2"
+        "anchors": [
+          "packages/tui/src/component/prompt/index.tsx"
+        ],
+        "basis": "consensus=2,cluster=5,sim=2",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-view.json",
@@ -2175,7 +2336,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
         "to": "packages/tui/src/mini/footer.view.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.view.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-view.json",
@@ -2183,7 +2348,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
         "to": "packages/tui/src/mini/footer.view.tsx",
-        "basis": "consensus=1,cluster=8,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.view.tsx"
+        ],
+        "basis": "consensus=1,cluster=8,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-view.json",
@@ -2191,7 +2360,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
         "to": "packages/tui/src/mini/footer.view.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.view.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-view.json",
@@ -2199,7 +2372,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
         "to": "packages/tui/src/mini/footer.view.tsx",
-        "basis": "consensus=3,cluster=8,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.view.tsx"
+        ],
+        "basis": "consensus=3,cluster=8,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-view.json",
@@ -2207,7 +2384,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
         "to": "packages/tui/src/config/keybind.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/config/keybind.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-view.json",
@@ -2215,7 +2396,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.view.tsx",
         "to": "packages/tui/src/mini/footer.view.tsx",
-        "basis": "consensus=4,cluster=8,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.view.tsx"
+        ],
+        "basis": "consensus=4,cluster=8,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-footer-view.json",
@@ -2310,7 +2495,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
         "to": "packages/tui/src/mini/footer.permission.tsx",
-        "basis": "consensus=0,cluster=5,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.permission.tsx"
+        ],
+        "basis": "consensus=0,cluster=5,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission-ui.json",
@@ -2318,7 +2507,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
         "to": "packages/tui/src/mini/footer.permission.tsx",
-        "basis": "consensus=1,cluster=5,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.permission.tsx"
+        ],
+        "basis": "consensus=1,cluster=5,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission-ui.json",
@@ -2326,7 +2519,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
         "to": "packages/tui/src/mini/footer.permission.tsx",
-        "basis": "consensus=2,cluster=5,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.permission.tsx"
+        ],
+        "basis": "consensus=2,cluster=5,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission-ui.json",
@@ -2334,7 +2531,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
         "to": "packages/tui/src/mini/footer.permission.tsx",
-        "basis": "consensus=3,cluster=5,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.permission.tsx"
+        ],
+        "basis": "consensus=3,cluster=5,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission-ui.json",
@@ -2342,7 +2543,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.permission.tsx",
         "to": "packages/tui/src/mini/footer.permission.tsx",
-        "basis": "consensus=4,cluster=5,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.permission.tsx"
+        ],
+        "basis": "consensus=4,cluster=5,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission-ui.json",
@@ -2359,7 +2564,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "consensus=0,cluster=6,sim=2"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "consensus=0,cluster=6,sim=2",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission.json",
@@ -2367,7 +2576,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "consensus=1,cluster=6,sim=2"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "consensus=1,cluster=6,sim=2",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission.json",
@@ -2375,7 +2588,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "consensus=2,cluster=6,sim=2"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "consensus=2,cluster=6,sim=2",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission.json",
@@ -2383,7 +2600,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "consensus=3,cluster=6,sim=2"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "consensus=3,cluster=6,sim=2",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission.json",
@@ -2391,7 +2612,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission.json",
@@ -2399,7 +2624,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/permission.shared.ts",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-permission.json",
@@ -2418,7 +2647,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2426,7 +2659,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2434,7 +2671,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2442,7 +2683,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2450,7 +2695,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2458,7 +2707,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2466,7 +2719,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2474,7 +2731,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2482,7 +2743,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=8,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=8,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2490,7 +2755,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=9,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=9,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2498,7 +2767,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=10,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=10,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2506,7 +2779,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=11,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=11,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2514,7 +2791,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=12,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=12,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2522,7 +2803,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=13,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=13,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2530,7 +2815,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=14,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=14,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2538,7 +2827,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=15,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=15,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2546,7 +2839,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=16,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=16,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2554,7 +2851,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.prompt.tsx",
         "to": "packages/tui/src/mini/footer.prompt.tsx",
-        "basis": "consensus=17,cluster=18,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/footer.prompt.tsx"
+        ],
+        "basis": "consensus=17,cluster=18,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-prompt.json",
@@ -2589,7 +2890,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
         "to": "packages/tui/src/mini/footer.form.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.form.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-question.json",
@@ -2597,7 +2902,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
         "to": "packages/tui/src/mini/footer.form.tsx",
-        "basis": "consensus=1,cluster=4,sim=2"
+        "anchors": [
+          "packages/tui/src/mini/footer.form.tsx"
+        ],
+        "basis": "consensus=1,cluster=4,sim=2",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-question.json",
@@ -2605,7 +2914,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
         "to": "packages/tui/src/mini/footer.form.tsx",
-        "basis": "consensus=2,cluster=4,sim=2"
+        "anchors": [
+          "packages/tui/src/mini/footer.form.tsx"
+        ],
+        "basis": "consensus=2,cluster=4,sim=2",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-question.json",
@@ -2613,7 +2926,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.question.tsx",
         "to": "packages/tui/src/mini/footer.form.tsx",
-        "basis": "consensus=3,cluster=4,sim=2"
+        "anchors": [
+          "packages/tui/src/mini/footer.form.tsx"
+        ],
+        "basis": "consensus=3,cluster=4,sim=2",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-question.json",
@@ -2643,7 +2960,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/splash.ts",
         "to": "packages/tui/src/mini/splash.ts",
-        "basis": "consensus=0,cluster=3,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/splash.ts"
+        ],
+        "basis": "consensus=0,cluster=3,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-splash.json",
@@ -2651,7 +2972,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/splash.ts",
         "to": "packages/tui/src/mini/splash.ts",
-        "basis": "consensus=1,cluster=3,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/splash.ts"
+        ],
+        "basis": "consensus=1,cluster=3,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-splash.json",
@@ -2659,7 +2984,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/splash.ts",
         "to": "packages/tui/src/mini/splash.ts",
-        "basis": "consensus=2,cluster=3,sim=6"
+        "anchors": [
+          "packages/tui/src/mini/splash.ts"
+        ],
+        "basis": "consensus=2,cluster=3,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/cli-subagent.json",
@@ -2667,7 +2996,11 @@
         "status": "moved",
         "from": "packages/opencode/src/cli/cmd/run/footer.subagent.tsx",
         "to": "packages/tui/src/mini/footer.subagent.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/mini/footer.subagent.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/dialog-agent.json",
@@ -2805,7 +3138,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/dialog-fork-from-timeline.tsx",
         "to": "packages/tui/src/routes/session/dialog-fork.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/routes/session/dialog-fork.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/dialog-help.json",
@@ -3033,7 +3370,11 @@
         "status": "moved",
         "from": "packages/tui/src/component/dialog-provider.tsx",
         "to": "packages/tui/src/component/dialog-integration.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/component/dialog-integration.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/dialog-provider.json",
@@ -3041,7 +3382,11 @@
         "status": "moved",
         "from": "packages/tui/src/component/dialog-provider.tsx",
         "to": "packages/tui/src/component/dialog-integration.tsx",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/component/dialog-integration.tsx"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "dialogs/dialog-provider.json",
@@ -3049,7 +3394,11 @@
         "status": "moved",
         "from": "packages/tui/src/component/dialog-provider.tsx",
         "to": "packages/tui/src/component/dialog-integration.tsx",
-        "basis": "consensus=2,cluster=3,sim=6"
+        "anchors": [
+          "packages/tui/src/component/dialog-integration.tsx"
+        ],
+        "basis": "consensus=2,cluster=3,sim=6",
+        "evidence": ""
       },
       {
         "rule": "dialogs/dialog-provider.json",
@@ -3372,6 +3721,14 @@
       },
       {
         "rule": "dialogs/dialog-status.json",
+        "key": "Status",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-status.tsx",
+        "to": "packages/tui/src/component/dialog-status.tsx",
+        "basis": "in-place-match"
+      },
+      {
+        "rule": "dialogs/dialog-status.json",
         "key": "Connected</Match>",
         "status": "kept",
         "from": "packages/tui/src/component/dialog-status.tsx",
@@ -3393,17 +3750,6 @@
         "from": "packages/tui/src/component/dialog-status.tsx",
         "to": "packages/tui/src/component/dialog-status.tsx",
         "basis": "in-place-match"
-      },
-      {
-        "rule": "dialogs/dialog-status.json",
-        "key": "Status",
-        "status": "deferred",
-        "from": "packages/tui/src/component/dialog-status.tsx",
-        "to": "packages/tui/src/component/dialog-status.tsx",
-        "basis": "identifier-collision",
-        "hits": [
-          "packages/tui/src/component/dialog-status.tsx"
-        ]
       },
       {
         "rule": "dialogs/dialog-status.json",
@@ -3507,15 +3853,16 @@
       {
         "rule": "dialogs/dialog-toast.json",
         "key": "message: \"Copied to clipboard\"",
-        "status": "deferred",
+        "status": "moved",
         "from": "packages/tui/src/ui/dialog.tsx",
-        "to": "packages/tui/src/ui/dialog.tsx",
-        "basis": "ambiguous",
-        "hits": [
-          "packages/tui/src/app.tsx",
+        "to": "packages/tui/src/component/dialog-integration.tsx",
+        "anchors": [
           "packages/tui/src/component/dialog-integration.tsx",
-          "packages/tui/src/routes/session/index.tsx"
-        ]
+          "packages/tui/src/routes/session/index.tsx",
+          "packages/tui/src/util/selection.ts"
+        ],
+        "basis": "manual-verified",
+        "evidence": "V1 锚点 ui/dialog.tsx:192 的 toast 调用；V2 全宇宙 4 处均为同一 toast.show({ message: \"Copied to clipboard\", ... }) 调用，字符串与角色完全一致。app.tsx:582 那处已由 common/error-messages.json 的同名 kept 条目覆盖，此处不重复锚定。"
       },
       {
         "rule": "routes/route-footer.json",
@@ -3617,24 +3964,25 @@
       },
       {
         "rule": "routes/route-home.json",
+        "key": "category: \"System\"",
+        "status": "moved",
+        "from": "packages/tui/src/feature-plugins/home/tips.tsx",
+        "to": "packages/tui/src/app.tsx",
+        "anchors": [
+          "packages/tui/src/app.tsx",
+          "packages/tui/src/mini/footer.command.tsx"
+        ],
+        "basis": "manual-verified",
+        "evidence": "V1 首页 tips 分类标签（tips 功能随 V2 消失）；同串在 V2 命令面板仍是 category 标签：app.tsx 22 处、mini/footer.command.tsx 3 处，与 V2 资产已译的 category:\"Suggested\"/\"Prompt\" 同角色。"
+      },
+      {
+        "rule": "routes/route-home.json",
         "key": "title: props.hidden ? \"Show tips\" : \"Hide tips\"",
         "status": "deferred",
         "from": "packages/tui/src/feature-plugins/home/tips.tsx",
         "to": "packages/tui/src/feature-plugins/home/tips.tsx",
         "basis": "no-hit",
         "hits": []
-      },
-      {
-        "rule": "routes/route-home.json",
-        "key": "category: \"System\"",
-        "status": "deferred",
-        "from": "packages/tui/src/feature-plugins/home/tips.tsx",
-        "to": "packages/tui/src/feature-plugins/home/tips.tsx",
-        "basis": "ambiguous",
-        "hits": [
-          "packages/tui/src/app.tsx",
-          "packages/tui/src/mini/footer.command.tsx"
-        ]
       },
       {
         "rule": "routes/route-permission.json",
@@ -3658,7 +4006,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/permission.tsx",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "routes/route-permission.json",
@@ -3666,7 +4018,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/permission.tsx",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "routes/route-permission.json",
@@ -3674,7 +4030,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/permission.tsx",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "routes/route-permission.json",
@@ -3682,7 +4042,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/permission.tsx",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "routes/route-permission.json",
@@ -3690,7 +4054,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/permission.tsx",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "consensus=4,cluster=6,sim=3"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "consensus=4,cluster=6,sim=3",
+        "evidence": ""
       },
       {
         "rule": "routes/route-permission.json",
@@ -3698,7 +4066,11 @@
         "status": "moved",
         "from": "packages/tui/src/routes/session/permission.tsx",
         "to": "packages/tui/src/util/permission.ts",
-        "basis": "unique-hit"
+        "anchors": [
+          "packages/tui/src/util/permission.ts"
+        ],
+        "basis": "unique-hit",
+        "evidence": ""
       },
       {
         "rule": "routes/route-permission.json",
@@ -4273,17 +4645,6 @@
       },
       {
         "rule": "routes/route-session.json",
-        "key": "interrupted",
-        "status": "deferred",
-        "from": "packages/tui/src/routes/session/index.tsx",
-        "to": "packages/tui/src/routes/session/index.tsx",
-        "basis": "identifier-collision",
-        "hits": [
-          "packages/tui/src/routes/session/index.tsx"
-        ]
-      },
-      {
-        "rule": "routes/route-session.json",
         "key": "title=\" Compaction \"",
         "status": "deferred",
         "from": "packages/tui/src/routes/session/index.tsx",
@@ -4326,6 +4687,15 @@
         "to": "packages/tui/src/routes/session/index.tsx",
         "basis": "no-hit",
         "hits": []
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "interrupted",
+        "status": "suppressed",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/__no_v2_location__/packages/tui/src/routes/session/index.tsx",
+        "basis": "unsafe-identifier-collision",
+        "reason": "V2 packages/tui/src/routes/session/index.tsx:1954 起新增 `const interrupted = createMemo(...)` 及 1957/1963/1977 的 interrupted() 调用；\\b 替换会把 const 声明与调用点一起改成中文而直接构建失败。真正的 UI 串在 1978 行 ` · interrupted`（与 V1 index.tsx:1568 同），需人工改用精确键，本轮不动。"
       },
       {
         "rule": "routes/route-sidebar.json",
@@ -4386,6 +4756,13 @@
         "kept": "即使连续失败也保持会话运行。",
         "dropped": "这使会话在重复失败后继续运行。"
       }
-    ]
+    ],
+    "manualNotes": {
+      "components/command-panel.json|\"Manage workspaces\"": "V1 锚点 app.tsx 是命令面板定义处；V2 该命令仍存在且同名同 id：prompt/index.tsx:618 title/619 desc（palette:true, name=session.move），keybind.ts:108 是同一命令 id 的键位标签。两处均为用户可见字符串。",
+      "dialogs/dialog-status.json|Status": "护栏误报：code_skeleton 只抹引号字符串，JSX 文本节点不在其列。V2 packages/tui/src/component/dialog-status.tsx:23 全文件唯一一处 \\bStatus\\b 即 <text attributes={BOLD}>Status</text> 标签，与 V1 同文件:47 同一处 UI 文本，替换安全。",
+      "dialogs/dialog-toast.json|message: \"Copied to clipboard\"": "V1 锚点 ui/dialog.tsx:192 的 toast 调用；V2 全宇宙 4 处均为同一 toast.show({ message: \"Copied to clipboard\", ... }) 调用，字符串与角色完全一致。app.tsx:582 那处已由 common/error-messages.json 的同名 kept 条目覆盖，此处不重复锚定。",
+      "routes/route-home.json|category: \"System\"": "V1 首页 tips 分类标签（tips 功能随 V2 消失）；同串在 V2 命令面板仍是 category 标签：app.tsx 22 处、mini/footer.command.tsx 3 处，与 V2 资产已译的 category:\"Suggested\"/\"Prompt\" 同角色。",
+      "routes/route-session.json|interrupted": "V2 packages/tui/src/routes/session/index.tsx:1954 起新增 `const interrupted = createMemo(...)` 及 1957/1963/1977 的 interrupted() 调用；\\b 替换会把 const 声明与调用点一起改成中文而直接构建失败。真正的 UI 串在 1978 行 ` · interrupted`（与 V1 index.tsx:1568 同），需人工改用精确键，本轮不动。"
+    }
   }
 }

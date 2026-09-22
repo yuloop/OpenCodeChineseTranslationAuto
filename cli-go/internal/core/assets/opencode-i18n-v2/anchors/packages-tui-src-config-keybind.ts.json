@@ -1,6 +1,7 @@
 {
   "file": "packages/tui/src/config/keybind.ts",
   "replacements": {
+    "\"Manage workspaces\"": "\"管理工作空间\"",
     "Manage queued prompts": "管理队列提示"
   }
 }
