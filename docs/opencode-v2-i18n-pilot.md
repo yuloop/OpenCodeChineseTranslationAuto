@@ -3,7 +3,7 @@
 - 日期:2026-09-22
 - 性质:**小切片真翻译试点**。只新增/修改 `cli-go/internal/core/assets/opencode-i18n-v2/` 资产;未改 V1 任何文件(词表/注入脚本/门禁/workflow)、未改 `.github/`、未改产品代码、未推 upstream、未触碰 `/root/xiangmudata_sync/opencode-v2-cn/`。
 - 测量基准:上游 `anomalyco/opencode` tag **`v2.0.13`**(commit `3180aab16e050128678e590afcbd2dc85c259cb7`,与覆盖账本 `docs/opencode-v2-i18n-coverage.md` 同一基准);工具 `tools/v2_i18n_coverage.py`(复用 `tools/v2spike_probe.py` 的判定,与 `cli-go/internal/core/i18n.go` 门禁同语义)。
-- 分支:`feat/v2-i18n-pilot`;PR:见文末。
+- 分支:`feat/v2-i18n-pilot`;PR:[yuloop/OpenCodeChineseTranslationAuto#7](https://github.com/yuloop/OpenCodeChineseTranslationAuto/pull/7)(merge commit `fed5de2d`)。
 
 ## ① 结论摘要(TL;DR)
 
