@@ -1,0 +1,14 @@
+{
+  "file": "packages/tui/src/routes/session/composer/shell-tab.tsx",
+  "replacements": {
+    "title: \"Previous shell\"": "title: \"上一个 Shell 命令\"",
+    "title: \"Next shell\"": "title: \"下一个 Shell 命令\"",
+    "title: \"View shell output\"": "title: \"查看 Shell 输出\"",
+    "title: \"Kill shell command\"": "title: \"终止 Shell 命令\"",
+    "group: \"Composer\"": "group: \"组合面板\"",
+    "label: \"Shell\"": "label: \"命令行\"",
+    "{ label: \"output\", shortcut:": "{ label: \"输出\", shortcut:",
+    "{ label: \"kill\", shortcut:": "{ label: \"终止\", shortcut:",
+    "<text fg={theme.text.muted}> No shell commands</text>": "<text fg={theme.text.muted}> 暂无 Shell 命令</text>"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "file": "packages/tui/src/routes/session/dialog-execute.tsx",
+  "replacements": {
+    "title: \"Scroll up\"": "title: \"向上滚动\"",
+    "title: \"Scroll down\"": "title: \"向下滚动\"",
+    "title: \"Previous page\"": "title: \"上一页\"",
+    "title: \"Next page\"": "title: \"下一页\"",
+    "title: \"Scroll left\"": "title: \"向左滚动\"",
+    "title: \"Scroll right\"": "title: \"向右滚动\"",
+    "title: \"Scroll to code\"": "title: \"滚动到代码\"",
+    "title: \"Scroll to output\"": "title: \"滚动到输出\"",
+    "title: \"Copy code\"": "title: \"复制代码\"",
+    "title: \"Copy output\"": "title: \"复制输出\"",
+    "group: \"Execute\"": "group: \"执行\"",
+    "flexGrow={1}>\n          execute\n": "flexGrow={1}>\n          执行\n",
+    "fg={theme.text.muted} attributes={TextAttributes.BOLD}>\n              Code\n": "fg={theme.text.muted} attributes={TextAttributes.BOLD}>\n              代码\n",
+    "<text fg={theme.text.muted}>Waiting for code…</text>": "<text fg={theme.text.muted}>正在等待代码...</text>",
+    "fg={theme.text.muted} attributes={TextAttributes.BOLD}>\n              Output\n": "fg={theme.text.muted} attributes={TextAttributes.BOLD}>\n              输出\n",
+    "<text fg={theme.text.muted}>↑/↓ ←/→ scroll</text>": "<text fg={theme.text.muted}>↑/↓ ←/→ 滚动</text>",
+    "{copied() === \"code\" ? \"✓ copied\" : \"c\"}": "{copied() === \"code\" ? \"✓ 已复制\" : \"c\"}",
+    "{copied() === \"output\" ? \"✓ copied\" : \"o\"}": "{copied() === \"output\" ? \"✓ 已复制\" : \"o\"}",
+    "{copied() === \"code\" ? \"\" : \" copy code\"}": "{copied() === \"code\" ? \"\" : \" 复制代码\"}",
+    "{copied() === \"output\" ? \"\" : \" copy output\"}": "{copied() === \"output\" ? \"\" : \" 复制输出\"}"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "file": "packages/tui/src/routes/session/composer/index.tsx",
+  "replacements": {
+    "title: \"Previous tab\"": "title: \"上一个标签页\"",
+    "title: \"Next tab\"": "title: \"下一个标签页\"",
+    "title: \"Close composer\"": "title: \"关闭组合面板\"",
+    "group: \"Composer\"": "group: \"组合面板\"",
+    "<b>tabs</b>": "<b>标签页</b>"
+  }
+}

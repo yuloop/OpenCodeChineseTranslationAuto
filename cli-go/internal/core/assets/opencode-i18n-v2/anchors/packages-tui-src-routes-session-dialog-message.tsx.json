@@ -5,8 +5,10 @@
     "message text to clipboard": "复制消息文本到剪贴板",
     "title: \"Copy\"": "title: \"复制\"",
     "title: \"Fork\"": "title: \"分支\"",
+    "title: \"Jump to\"": "title: \"跳转到\"",
     "title: \"Revert\"": "title: \"撤销\"",
     "title=\"Message Actions\"": "title=\"消息操作\"",
+    "description: \"view message in session\"": "description: \"在会话中查看消息\"",
     "undo messages and file changes": "撤销消息和文件更改"
   }
 }

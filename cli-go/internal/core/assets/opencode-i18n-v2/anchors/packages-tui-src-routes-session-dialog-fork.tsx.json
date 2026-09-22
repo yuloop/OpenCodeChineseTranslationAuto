@@ -1,6 +1,9 @@
 {
   "file": "packages/tui/src/routes/session/dialog-fork.tsx",
   "replacements": {
-    "title=\"Fork session\"": "title=\"从消息分支\""
+    "title=\"Fork session\"": "title=\"从消息分支\"",
+    "message: \"Forked session\"": "message: \"已创建分支会话\"",
+    "title: \"Full session\"": "title: \"完整会话\"",
+    "<Spinner>Forking session…</Spinner>": "<Spinner>正在创建分支会话...</Spinner>"
   }
 }

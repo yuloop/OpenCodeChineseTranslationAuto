@@ -1,0 +1,15 @@
+{
+  "file": "packages/tui/src/routes/session/composer/subagents-tab.tsx",
+  "replacements": {
+    "title: \"Previous subagent\"": "title: \"上一个子智能体\"",
+    "title: \"Next subagent\"": "title: \"下一个子智能体\"",
+    "title: \"Navigate to subagent\"": "title: \"跳转到子智能体\"",
+    "title: \"Interrupt subagent\"": "title: \"中断子智能体\"",
+    "title: \"Toggle active subagents\"": "title: \"切换活跃子智能体\"",
+    "group: \"Composer\"": "group: \"组合面板\"",
+    "label: \"Subagents\"": "label: \"子智能体\"",
+    "{ label: \"interrupt\", shortcut:": "{ label: \"中断\", shortcut:",
+    "label: `show ${store.active ? \"inactive\" : \"active\"}`": "label: `显示${store.active ? \"非活跃\" : \"活跃\"}`",
+    "fallback={<text fg={theme.text.muted}> No {store.active ? \"active\" : \"inactive\"} subagents</text>}": "fallback={<text fg={theme.text.muted}> 暂无{store.active ? \"活跃\" : \"非活跃\"}子智能体</text>}"
+  }
+}

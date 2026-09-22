@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/routes/session/location-missing.tsx",
+  "replacements": {
+    "group=\"Session recovery\"": "group=\"会话恢复\"",
+    "title=\"Session location unavailable\"": "title=\"会话位置不可用\"",
+    ">Choose another directory to continue this session.<": ">选择另一个目录以继续此会话。<",
+    "\"Choose directory\"": "\"选择目录\""
+  }
+}

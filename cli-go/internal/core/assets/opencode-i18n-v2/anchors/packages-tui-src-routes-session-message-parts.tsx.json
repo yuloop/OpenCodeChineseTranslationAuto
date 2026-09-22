@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/routes/session/message-parts.tsx",
+  "replacements": {
+    "{props.title ? \"Thinking: \" + props.title : \"Thinking\"}": "{props.title ? \"思考中: \" + props.title : \"思考中\"}",
+    "<span>Thought</span>": "<span>思考</span>"
+  }
+}

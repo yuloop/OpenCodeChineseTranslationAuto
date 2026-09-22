@@ -3,6 +3,9 @@
   "replacements": {
     "Fix a TODO in the codebase": "修复代码中的 TODO",
     "Fix broken tests": "修复失败的测试",
-    "What is the tech stack of this project?": "这个项目的技术栈是什么？"
+    "What is the tech stack of this project?": "这个项目的技术栈是什么？",
+    "\"remote server update available\"": "\"远程服务器有可用更新\"",
+    "` restart to use v${state.version}`": "` 重启以使用 v${state.version}`",
+    "` to install v${state.version}`": "` 以安装 v${state.version}`"
   }
 }
