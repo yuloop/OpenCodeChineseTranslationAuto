@@ -1,6 +1,8 @@
 {
   "file": "packages/tui/src/component/dialog-session-rename.tsx",
   "replacements": {
-    "title=\"Rename Session\"": "title=\"重命名会话\""
+    "message: `Failed to rename session: ${errorMessage(error)}`": "message: `重命名会话失败: ${errorMessage(error)}`",
+    "placeholder=\"Session title\"": "placeholder=\"会话标题\"",
+    "title=\"Rename session\"": "title=\"重命名会话\""
   }
 }

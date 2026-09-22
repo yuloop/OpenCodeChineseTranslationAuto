@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/component/prompt/metadata.tsx",
+  "replacements": {
+    ">auto</text>": ">自动</text>",
+    "props.agent ?? \"Shell\"": "props.agent ?? \"命令行\""
+  }
+}

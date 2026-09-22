@@ -1,0 +1,16 @@
+{
+  "file": "packages/tui/src/component/dialog-debug.tsx",
+  "replacements": {
+    "        <text fg={theme.text.base} attributes={TextAttributes.BOLD}>\n          Debug\n        </text>": "        <text fg={theme.text.base} attributes={TextAttributes.BOLD}>\n          调试\n        </text>",
+    "? \"✓ copied\" : \"copy\"": "? \"✓ 已复制\" : \"复制\"",
+    "Share this when reporting an issue.": "报告问题时请分享此信息。",
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "label: \"Date\"": "label: \"日期\"",
+    "label: \"Model\"": "label: \"模型\"",
+    "label: \"Session ID\"": "label: \"会话 ID\"",
+    "label: \"Terminal\"": "label: \"终端\"",
+    "label: \"Version\"": "label: \"版本\"",
+    "message: \"Debug info copied to clipboard\"": "message: \"调试信息已复制到剪贴板\"",
+    "title: \"Copy debug info\"": "title: \"复制调试信息\""
+  }
+}

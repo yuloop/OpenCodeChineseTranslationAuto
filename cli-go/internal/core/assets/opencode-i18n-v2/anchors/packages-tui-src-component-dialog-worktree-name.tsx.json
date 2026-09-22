@@ -1,0 +1,11 @@
+{
+  "file": "packages/tui/src/component/dialog-worktree-name.tsx",
+  "replacements": {
+    "<span style={{ fg: theme.text.muted }}>submit</span>": "<span style={{ fg: theme.text.muted }}>提交</span>",
+    ">generate one</span>": ">生成一个</span>",
+    "Name worktree": "命名工作树",
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "placeholder=\"Worktree name\"": "placeholder=\"工作树名称\"",
+    "title: \"Generate worktree name\"": "title: \"生成工作树名称\""
+  }
+}

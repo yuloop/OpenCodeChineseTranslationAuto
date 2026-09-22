@@ -1,7 +1,6 @@
 {
   "file": "packages/tui/src/component/dialog-agent.tsx",
   "replacements": {
-    "native": "原生",
     "title=\"Select agent\"": "title=\"选择智能体\""
   }
 }

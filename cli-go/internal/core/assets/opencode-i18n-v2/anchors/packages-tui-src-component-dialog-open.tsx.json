@@ -1,0 +1,32 @@
+{
+  "file": "packages/tui/src/component/dialog-open.tsx",
+  "replacements": {
+    ": \"Open\"}": ": \"打开\"}",
+    "? \"sessions and projects\" : \"sessions\") : \"projects\"}.": "? \"会话和项目\" : \"会话\") : \"项目\"}.",
+    "?? \"Project\"} / New worktree": "?? \"项目\"} / 新建工作树",
+    "?? \"Project\"} / Worktrees": "?? \"项目\"} / 工作树",
+    "Could not refresh": "无法刷新",
+    "Creating worktree…": "正在创建工作树...",
+    "Leave blank for a random name.": "留空则随机生成名称。",
+    "Loading worktrees…": "正在加载工作树...",
+    "No matches": "未找到匹配项",
+    "No matches · search all sessions with ${shortcuts.get(\"session.list\")}": "未找到匹配项 · 使用 ${shortcuts.get(\"session.list\")} 搜索所有会话",
+    "No matching worktrees": "未找到匹配的工作树",
+    "No recent sessions or projects": "没有最近的会话或项目",
+    "Refreshing sessions and projects…": "正在刷新会话和项目...",
+    "Search sessions and projects…": "搜索会话和项目...",
+    "Search worktrees…": "搜索工作树...",
+    "Searching sessions and projects…": "正在搜索会话和项目...",
+    "category: \"Projects\"": "category: \"项目\"",
+    "category: \"Sessions\"": "category: \"会话\"",
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "placeholder=\"Worktree name (optional)\"": "placeholder=\"工作树名称(可选)\"",
+    "return \"now\"": "return \"刚刚\"",
+    "title: \"Creating worktree failed\"": "title: \"创建工作树失败\"",
+    "title: \"Loading worktrees failed\"": "title: \"加载工作树失败\"",
+    "title: \"New worktree\"": "title: \"新建工作树\"",
+    "title: \"Return to projects\"": "title: \"返回项目列表\"",
+    "title: \"Show project worktrees\"": "title: \"显示项目工作树\"",
+    "title: \"new worktree\"": "title: \"新建工作树\""
+  }
+}

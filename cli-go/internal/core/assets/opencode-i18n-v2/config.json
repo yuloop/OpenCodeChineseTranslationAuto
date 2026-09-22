@@ -4762,7 +4762,25 @@
       "dialogs/dialog-status.json|Status": "护栏误报：code_skeleton 只抹引号字符串，JSX 文本节点不在其列。V2 packages/tui/src/component/dialog-status.tsx:23 全文件唯一一处 \\bStatus\\b 即 <text attributes={BOLD}>Status</text> 标签，与 V1 同文件:47 同一处 UI 文本，替换安全。",
       "dialogs/dialog-toast.json|message: \"Copied to clipboard\"": "V1 锚点 ui/dialog.tsx:192 的 toast 调用；V2 全宇宙 4 处均为同一 toast.show({ message: \"Copied to clipboard\", ... }) 调用，字符串与角色完全一致。app.tsx:582 那处已由 common/error-messages.json 的同名 kept 条目覆盖，此处不重复锚定。",
       "routes/route-home.json|category: \"System\"": "V1 首页 tips 分类标签（tips 功能随 V2 消失）；同串在 V2 命令面板仍是 category 标签：app.tsx 22 处、mini/footer.command.tsx 3 处，与 V2 资产已译的 category:\"Suggested\"/\"Prompt\" 同角色。",
-      "routes/route-session.json|interrupted": "V2 packages/tui/src/routes/session/index.tsx:1954 起新增 `const interrupted = createMemo(...)` 及 1957/1963/1977 的 interrupted() 调用；\\b 替换会把 const 声明与调用点一起改成中文而直接构建失败。真正的 UI 串在 1978 行 ` · interrupted`（与 V1 index.tsx:1568 同），需人工改用精确键，本轮不动。"
+      "routes/route-session.json|interrupted": "V2 packages/tui/src/routes/session/index.tsx:1954 起新增 `const interrupted = createMemo(...)` 及 1957/1963/1977 的 interrupted() 调用；\\b 替换会把 const 声明与调用点一起改成中文而直接构建失败。真正的 UI 串在 1978 行 ` · interrupted`（与 V1 index.tsx:1568 同），需人工改用精确键，本轮不动。",
+      "batch-component|dialog-agent.tsx|删除 \"native\"": "死键:v2.0.13 dialog-agent.tsx 无裸 native 文本节点(提取器曾误报);保留 title=\"Select agent\"→选择智能体。",
+      "batch-component|dialog-model.tsx|删除 5 键": "死键:category: \"Popular providers\"、title: connected() ? \"Connect provider\" : \"View all providers\" 在 v2.0.13 已被 integration 改写(现为 \"Connect an integration\"/\"View all integrations\",改由 dialog-integration 锚点承接);Favorites/Recent/return \"Select model\" 经复核为活键(代码位但 toOptions()/title 计算属性直接显示),本轮恢复并翻译。",
+      "batch-component|dialog-skill.tsx|删除 2 键": "死键:category: \"Skills\" 与 placeholder=\"Search skills…\" 在 v2.0.13 已不存在(技能列表改走 prompt/autocomplete 的 skill 源)。",
+      "batch-component|dialog-stash.tsx|删除 1 键": "死键:`Press ${deleteHint()} again to confirm` 在 v2.0.13 已改为 title: \"delete\" 单键;同时把裸 delete 精确化为 title: \"delete\"(避免误伤 shortcuts.get(\"stash.delete\"))。",
+      "batch-component|dialog-session-list.tsx|删除 1 键": "死键:`Press ${deleteHint()} again to confirm` 在 v2.0.13 已改为 title: \"delete\" 单键。",
+      "batch-component|dialog-status.tsx|删除 5 键": "死键:v2.0.13 状态弹窗改为按 formatters/mcp/lsp 资源计数动态渲染(唯一可见静态串是标题 Status 与 MCP server{mcp().length === 1 ? \"\" : \"s\"} 复数三元);Formatters/LSP Servers/MCP Servers/No Formatters/No MCP Servers 均已不存在。",
+      "batch-component|dialog-mcp.tsx|全部重写": "旧 7 键全部死键:v2.0.13 的 dialog-mcp.tsx 是完整重写版(Spinner/Connecting …/Connected ✓/Disabled ○ 等 JSX 文本节点 + toggleTitle 的 code 位返回值),按新源码 15 键重新锚定。",
+      "batch-component|dialog-session-rename.tsx|重写": "死键:title=\"Rename Session\" 在 v2.0.13 已改为 placeholder=\"Session name\";按新源码 3 键重写。",
+      "batch-component|prompt-autocomplete.tsx|删除 1 键": "死键:<text fg={theme.textMuted}>No matching items</text> 在 v2.0.13 已改为按 command/file/directory/reference 分类返回不同空态文案;按新源码 14 键重写。",
+      "batch-component|prompt-index.tsx|删除 1 键": "死键:message: \"Connect a provider to send prompts\" 在 v2.0.13 已改为 message: \"连接集成以发送提示\"(provider→integration 改名),同时新增 category: \"Session\"→会话 4 处(V1 Session→会话)。",
+      "batch-component|dialog-stash.tsx|delete 精确化": "V1 键 delete 是简单词(\b 匹配)不会误伤 stash.delete,但 v2.0.13 该按钮文字来自 title: \"delete\" 字面量,改用 title: \"delete\" 精确键更稳。",
+      "batch-component|新词裁定": "integration=集成(V2 已把 Connect provider 改名为 Connect an integration);Experiments=实验功能(分类 group 同步为实验功能);Pair=配对;This device=本机;Leader timeout=前导键超时;Tool grouping=工具分组;Transcript images=记录图片;Indicators=指示器;Window title=终端标题(V1 Disable terminal title→禁用终端标题);Large pastes=大段粘贴;Color mode=颜色模式;New session location=新会话位置;Scope=范围;Tabs(category)=页签;Alerts=提醒;Diffs=差异;Input=输入;Appearance=外观;Debug=调试;Queue prompt=提示入队;Background blocking tools=后台阻塞工具;Dismiss autocomplete=关闭自动补全;change(label)=切换;Investigate error=调查错误;Single patch=单个补丁。",
+      "batch-component|保持原文": "键位(esc/enter/ctrl+d/ctrl+n/ctrl+a/left/right/tab/shift+end/←/→)与格式名 Markdown/JSON 保留英文;TPS/OS/MCP/URL/URLs 保留;API key→API密钥(沿用现有锚点无空格写法);group: \"Shell\" 保持 Shell(与 Shell 输出/Shell 命令 一致);command id(prompt.*/session.*/dialog.*/extmark.*/model.dialog.*/worktree.updated)、mime 键、node:path/node:url、flex 值(row/center/column/flex-end/flex-start)、keywords/values 枚举、模板串(${app.version} 等)均为代码位不翻。",
+      "batch-component|dialog-config.tsx|已知限制": "10 个无 labels 设置(Sidebar/Thinking/Markdown/Tool grouping/Mode/Layout×2/Wrapping/Large pastes/Copy behavior/Color mode)footer 显示原始枚举值——上游产品设计,程序化值按试点规则不翻;settings 的 keywords 数组是搜索索引(代码位),按试点口径不翻。",
+      "batch-component|dialog-open.tsx|timeAgo": "V1 just now→刚刚;紧凑格式 5m/2h/3d 无 V1 先例(试点用分钟前/小时前/天前),保持原样。",
+      "batch-component|dialog-mcp.tsx|context 模板": "DialogErrorDetails 的 context 模板 Status:/Configuration: 与 \nIntegration: 一并译为 状态:/配置:/集成:;模板值是原始 status 码,属诊断转储。",
+      "batch-component|dialog-session-list.tsx|Location unavailable": "throw new Error(\"Location unavailable\") 不显示给用户(searchState 用通用 message 覆盖),按 Tier B 代码位不翻。",
+      "batch-component|dialog-workspace-file-changes.tsx|plus 2": "changeCountWidth 里的注释 The \"plus 2\" is for spaces 是代码注释,不翻。"
     }
   }
 }

@@ -1,0 +1,13 @@
+{
+  "file": "packages/tui/src/component/dialog-pair.tsx",
+  "replacements": {
+    "          Pair": "          配对",
+    ">Password</text>": ">密码</text>",
+    ">Username</text>": ">用户名</text>",
+    "Close and reopen Pair to try again.": "关闭并重新打开配对再试。",
+    "Could not load server information": "无法加载服务器信息",
+    "Loading server information…": "正在加载服务器信息...",
+    "Run `opencode service set hostname 0.0.0.0` to access the service remotely.": "执行 `opencode service set hostname 0.0.0.0` 以远程访问服务。",
+    "This device": "本机"
+  }
+}

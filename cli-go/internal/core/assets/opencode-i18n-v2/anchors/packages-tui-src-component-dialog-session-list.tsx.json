@@ -1,10 +1,22 @@
 {
   "file": "packages/tui/src/component/dialog-session-list.tsx",
   "replacements": {
+    "          <text fg={theme.text.base} attributes={TextAttributes.BOLD}>\n            Sessions\n          </text>": "          <text fg={theme.text.base} attributes={TextAttributes.BOLD}>\n            会话列表\n          </text>",
+    "\"Pinned\"": "\"置顶\"",
     "\"Today\"": "\"今天\"",
-    "`Press ${deleteHint()} again to confirm`": "`再次按 ${deleteHint()} 确认`",
+    "> for {currentProjectName()}</text>": "> · {currentProjectName()}</text>",
+    "? \"Could not search sessions. Change the search to try again.\" : \"Could not load sessions.\"": "? \"无法搜索会话。请更改搜索条件再试。\" : \"无法加载会话。\"",
+    "? \"No sessions found\" : \"No sessions available\"": "? \"未找到会话\" : \"暂无可用会话\"",
+    "? \"Searching sessions…\" : \"Loading sessions…\"": "? \"正在搜索会话...\" : \"正在加载会话...\"",
+    "? \"Show current directory sessions\" : \"Show all project sessions\"": "? \"显示当前目录会话\" : \"显示所有项目会话\"",
+    "? \"current directory\" : \"all projects\"": "? \"当前目录\" : \"所有项目\"",
+    "`Press ${shortcuts.get(\"session.delete\")} again to confirm`": "`再次按 ${shortcuts.get(\"session.delete\")} 确认`",
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "message: `Failed to delete session: ${errorMessage(error)}`": "message: `删除会话失败: ${errorMessage(error)}`",
     "title: \"delete\"": "title: \"删除\"",
+    "title: \"pin/unpin\"": "title: \"置顶/取消置顶\"",
     "title: \"rename\"": "title: \"重命名\"",
+    "title: \"switch\"": "title: \"切换\"",
     "title=\"Sessions\"": "title=\"会话列表\""
   }
 }

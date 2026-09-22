@@ -1,6 +1,19 @@
 {
   "file": "packages/tui/src/component/prompt/autocomplete.tsx",
   "replacements": {
-    "<text fg={theme.textMuted}>No matching items</text>": "<text fg={theme.textMuted}>未找到匹配项</text>"
+    "group: \"Autocomplete\"": "group: \"自动补全\"",
+    "return \"Could not search directories. Keep typing to try again.\"": "return \"无法搜索目录。请继续输入再试。\"",
+    "return \"Could not search files. Keep typing to try again.\"": "return \"无法搜索文件。请继续输入再试。\"",
+    "return \"No matching commands\"": "return \"没有匹配的命令\"",
+    "return \"No matching directories\"": "return \"没有匹配的目录\"",
+    "return \"No matching files, agents, or references\"": "return \"没有匹配的文件、智能体或引用\"",
+    "return \"Searching…\"": "return \"正在搜索...\"",
+    "title: \"Complete autocomplete item\"": "title: \"确认自动补全项\"",
+    "title: \"Confirm autocomplete action\"": "title: \"确认自动补全操作\"",
+    "title: \"Dismiss autocomplete\"": "title: \"关闭自动补全\"",
+    "title: \"Hide autocomplete\"": "title: \"隐藏自动补全\"",
+    "title: \"Next autocomplete item\"": "title: \"下一个自动补全项\"",
+    "title: \"Previous autocomplete item\"": "title: \"上一个自动补全项\"",
+    "title: \"Select autocomplete item\"": "title: \"选择自动补全项\""
   }
 }

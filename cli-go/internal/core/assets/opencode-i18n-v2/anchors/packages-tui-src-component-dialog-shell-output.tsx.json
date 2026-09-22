@@ -1,0 +1,25 @@
+{
+  "file": "packages/tui/src/component/dialog-shell-output.tsx",
+  "replacements": {
+    "        <text fg={theme.text.base} attributes={TextAttributes.BOLD} flexGrow={1}>\n          Shell output\n        </text>": "        <text fg={theme.text.base} attributes={TextAttributes.BOLD} flexGrow={1}>\n          Shell 输出\n        </text>",
+    "? \"Exited\" :": "? \"已退出\" :",
+    "Earlier output omitted · showing recent output": "较早的输出已省略 · 显示最近的输出",
+    "Loading output…": "正在加载输出...",
+    "No captured output. Output redirected to files is not shown here.": "无捕获的输出。重定向到文件的输出不会在此显示。",
+    "Shell output is no longer available.": "Shell 输出已不可用。",
+    "Unable to read shell output. Retrying…": "无法读取 Shell 输出。正在重试...",
+    "`Exited · code ${info().exit}`": "`已退出 · 退出码 ${info().exit}`",
+    "end follow": "end 跟随",
+    "esc back": "esc 返回",
+    "return \"Killed\"": "return \"已终止\"",
+    "return \"Running\"": "return \"运行中\"",
+    "return \"Timed out\"": "return \"已超时\"",
+    "title: \"First loaded output\"": "title: \"第一段已加载的输出\"",
+    "title: \"Follow shell output\"": "title: \"跟随 Shell 输出\"",
+    "title: \"Next output page\"": "title: \"下一页输出\"",
+    "title: \"Previous output page\"": "title: \"上一页输出\"",
+    "title: \"Scroll output down\"": "title: \"向下滚动输出\"",
+    "title: \"Scroll output up\"": "title: \"向上滚动输出\"",
+    "↑/↓ scroll": "↑/↓ 滚动"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "file": "packages/tui/src/component/dialog-workspaces.tsx",
+  "replacements": {
+    "            <text fg={theme.text.base} attributes={TextAttributes.BOLD}>\n              Worktrees\n            </text>": "            <text fg={theme.text.base} attributes={TextAttributes.BOLD}>\n              工作树\n            </text>",
+    "          <span style={{ fg: theme.text.action.destructive.base }}>\n            Press {shortcuts.get(\"dialog.move_session.delete\")} again to confirm\n          </span>": "          <span style={{ fg: theme.text.action.destructive.base }}>\n            再次按 {shortcuts.get(\"dialog.move_session.delete\")} 确认\n          </span>",
+    ">Deleting {item.location}</span>": ">正在删除 {item.location}</span>",
+    ">No worktrees available</text>": ">暂无可用工作树</text>",
+    ">No worktrees found</text>": ">未找到工作树</text>",
+    "Close and reopen Worktrees to try again.": "关闭并重新打开工作树再试。",
+    "Could not load worktrees": "无法加载工作树",
+    "Loading worktrees…": "正在加载工作树...",
+    "category: item.root.directory === current ? \"Current\" : \"Other\"": "category: item.root.directory === current ? \"当前\" : \"其他\"",
+    "message: \"This worktree has file changes. Do you want to delete it anyway?\"": "message: \"此工作树有文件更改。确定仍要删除吗?\"",
+    "title: \"Delete worktree?\"": "title: \"删除工作树?\"",
+    "title: \"Failed to delete worktree\"": "title: \"删除工作树失败\"",
+    "title: \"delete\"": "title: \"删除\"",
+    "title: \"move\"": "title: \"移动\"",
+    "title: \"new\"": "title: \"新建\"",
+    "title: \"refresh\"": "title: \"刷新\"",
+    "title=\"Worktrees\"": "title=\"工作树\""
+  }
+}

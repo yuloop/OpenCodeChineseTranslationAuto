@@ -1,0 +1,17 @@
+{
+  "file": "packages/tui/src/component/dialog-update.tsx",
+  "replacements": {
+    "                <text fg={theme.text.muted} wrapMode=\"word\">\n                  Update successful! A restart is required. Any active sessions will be resumed automatically.\n                </text>": "                <text fg={theme.text.muted} wrapMode=\"word\">\n                  更新成功!需要重新启动。活跃的会话将自动恢复。\n                </text>",
+    "                <text fg={theme.text.muted}>\n                  An update is available. After installing, you'll be prompted to restart OpenCode.\n                </text>": "                <text fg={theme.text.muted}>\n                  有可用更新。安装后将提示重新启动 OpenCode。\n                </text>",
+    "            ? \"Updating OpenCode\"\n            : state().type === \"available\" || state().type === \"failed\"\n              ? \"Update available\"\n              : \"Update\"}": "            ? \"正在更新 OpenCode\"\n            : state().type === \"available\" || state().type === \"failed\"\n              ? \"有可用更新\"\n              : \"更新\"}",
+    ">Checking for updates…</Spinner>": ">正在检查更新...</Spinner>",
+    ">OpenCode is already up to date.</text>": ">OpenCode 已是最新版本。</text>",
+    "? \"Previous update action\" : \"Next update action\"": "? \"上一个更新操作\" : \"下一个更新操作\"",
+    "`Installing OpenCode ${current.version}…`": "`正在安装 OpenCode ${current.version}...`",
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "label: \"Restart\"": "label: \"重新启动\"",
+    "label: \"Skip\"": "label: \"跳过\"",
+    "label: \"Update\"": "label: \"更新\"",
+    "title: \"Confirm update action\"": "title: \"确认更新操作\""
+  }
+}
