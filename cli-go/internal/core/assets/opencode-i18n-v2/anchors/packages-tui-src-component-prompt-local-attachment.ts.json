@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/component/prompt/local-attachment.ts",
+  "replacements": {
+    "throw new Error(\"Attachment does not exist\")": "throw new Error(\"附件不存在\")",
+    "throw new Error(\"Attachment exceeds the local file limit\")": "throw new Error(\"附件超出本地文件限制\")"
+  }
+}

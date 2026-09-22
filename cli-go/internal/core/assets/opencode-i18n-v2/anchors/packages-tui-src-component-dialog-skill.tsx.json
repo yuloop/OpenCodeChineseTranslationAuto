@@ -1,9 +1,11 @@
 {
   "file": "packages/tui/src/component/dialog-skill.tsx",
   "replacements": {
+    "Close and reopen Skills to try again.": "关闭并重新打开技能再试。",
+    "Could not load skills": "无法加载技能",
+    "Loading skills…": "正在加载技能...",
+    "No skills available": "暂无可用技能",
     "No skills found": "未找到技能",
-    "category: \"Skills\"": "category: \"技能\"",
-    "placeholder=\"Search skills…\"": "placeholder=\"搜索技能...\"",
     "title=\"Skills\"": "title=\"技能\""
   }
 }

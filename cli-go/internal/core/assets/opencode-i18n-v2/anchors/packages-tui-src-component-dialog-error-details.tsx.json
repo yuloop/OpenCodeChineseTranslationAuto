@@ -1,0 +1,14 @@
+{
+  "file": "packages/tui/src/component/dialog-error-details.tsx",
+  "replacements": {
+    "\" copy details\"": "\" 复制详情\"",
+    "\"✓ copied\"": "\"✓ 已复制\"",
+    "> investigate</span>": "> 调查</span>",
+    ">↑/↓ scroll</text>": ">↑/↓ 滚动</text>",
+    "Reference: {props.diagnosticRef}": "参考: {props.diagnosticRef}",
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "title: \"Back\"": "title: \"返回\"",
+    "title: \"Copy details\"": "title: \"复制详情\"",
+    "title: \"Investigate error\"": "title: \"调查错误\""
+  }
+}

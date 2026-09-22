@@ -5,9 +5,8 @@
     "\"Free\"": "\"免费\"",
     "\"Recent\"": "\"最近\"",
     "(Favorite)": "(收藏)",
-    "category: \"Popular providers\"": "category: \"热门提供商\"",
     "return \"Select model\"": "return \"选择模型\"",
     "title: \"Favorite\"": "title: \"收藏\"",
-    "title: connected() ? \"Connect provider\" : \"View all providers\"": "title: connected() ? \"连接提供商\" : \"查看所有提供商\""
+    "title: connected() ? \"Connect an integration\" : \"View all integrations\"": "title: connected() ? \"连接集成\" : \"查看所有集成\""
   }
 }

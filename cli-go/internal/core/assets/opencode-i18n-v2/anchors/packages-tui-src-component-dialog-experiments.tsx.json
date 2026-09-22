@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/component/dialog-experiments.tsx",
+  "replacements": {
+    "? \"on\" : \"off\"": "? \"开\" : \"关\"",
+    "No experiments available": "暂无实验功能",
+    "group: \"Experiments\"": "group: \"实验功能\"",
+    "label: \"change\"": "label: \"切换\"",
+    "title: \"Next value\"": "title: \"下一个值\"",
+    "title: \"Previous value\"": "title: \"上一个值\"",
+    "title=\"Experiments\"": "title=\"实验功能\""
+  }
+}

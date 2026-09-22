@@ -1,0 +1,13 @@
+{
+  "file": "packages/tui/src/component/prompt/move.tsx",
+  "replacements": {
+    "message: \"Unable to determine current project\"": "message: \"无法确定当前项目\"",
+    "setProgress(\"Creating session\")": "setProgress(\"正在创建会话\")",
+    "setProgress(\"Creating worktree\")": "setProgress(\"正在创建工作树\")",
+    "setProgress(\"Submitting prompt\")": "setProgress(\"正在提交提示\")",
+    "throw new Error(\"No worktree directory returned\")": "throw new Error(\"未返回工作树目录\")",
+    "throw new Error(\"Unable to determine current project\")": "throw new Error(\"无法确定当前项目\")",
+    "throw new Error(\"Unable to determine current session location\")": "throw new Error(\"无法确定当前会话位置\")",
+    "title: \"Creating workspace failed\"": "title: \"创建工作空间失败\""
+  }
+}
