@@ -1,0 +1,23 @@
+{
+  "file": "packages/tui/src/mini/tool.ts",
+  "replacements": {
+    "`Glob \"${p.input.pattern ?? \"\"}\"`": "`通配符 \"${p.input.pattern ?? \"\"}\"`",
+    "`Grep \"${p.input.pattern ?? \"\"}\"`": "`搜索 \"${p.input.pattern ?? \"\"}\"`",
+    "`List ${displayPath(p, dir)}`": "`列出 ${displayPath(p, dir)}`",
+    "title: `Read ${file}`": "title: `读取 ${file}`",
+    "title: `Write ${displayPath(p, p.input.path)}`": "title: `写入 ${displayPath(p, p.input.path)}`",
+    "title: `Edit ${displayPath(p, p.input.path)}`": "title: `编辑 ${displayPath(p, p.input.path)}`",
+    "`${kind} Subagent`": "`${kind} 子智能体`",
+    "`${kind} Agent`": "`${kind} 智能体`",
+    "title: `Skill \"${name}\"`": "title: `技能 \"${name}\"`",
+    "title: \"Patch\"": "title: \"补丁\"",
+    "title: `Patch ${files} file${files === 1 ? \"\" : \"s\"}`": "title: `补丁: ${files} 个文件`",
+    "title: `Asked ${total} question${total === 1 ? \"\" : \"s\"}`": "title: `已提问 ${total} 个问题`",
+    "title: \"Invalid Tool\"": "title: \"无效工具\"",
+    "`Batch ${calls} tool${calls === 1 ? \"\" : \"s\"}`": "`批量 ${calls} 个工具`",
+    "\"Batch\"": "\"批量\"",
+    "title: `# Wrote ${displayPath(p, file)}`": "title: `# 已写入 ${displayPath(p, file)}`",
+    "title: `# Edited ${displayPath(p, file)}`": "title: `# 已编辑 ${displayPath(p, file)}`",
+    "title: `# ${kind} Subagent`": "title: `# ${kind} 子智能体`"
+  }
+}

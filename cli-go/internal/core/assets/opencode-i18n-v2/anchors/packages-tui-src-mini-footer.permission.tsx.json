@@ -5,6 +5,17 @@
     "No diff provided": "未提供差异内容",
     "Permission required": "需要权限",
     "Reject permission": "拒绝权限",
-    "Tell OpenCode what to do differently": "告诉 OpenCode 如何调整"
+    "Tell OpenCode what to do differently": "告诉 OpenCode 如何调整",
+    "\"Waiting…\"": "\"等待中...\"",
+    "\"Waiting for permission event…\"": "\"等待权限事件...\"",
+    "\"confirm\"": "\"确认\"",
+    "\" select  \"": "\" 选择  \"",
+    "\" confirm  \"": "\" 确认  \"",
+    "{compact() ? \"reject\" : \"confirm\"}": "{compact() ? \"拒绝\" : \"确认\"}",
+    "{compact() ? \"back\" : \"cancel\"}": "{compact() ? \"返回\" : \"取消\"}",
+    "{stage() === \"always\" ? \"cancel\" : \"reject\"}": "{stage() === \"always\" ? \"取消\" : \"拒绝\"}",
+    "> scroll</span>": "> 滚动</span>",
+    "\"Reject\"": "\"拒绝\"",
+    "\"Permission\"": "\"权限\""
   }
 }

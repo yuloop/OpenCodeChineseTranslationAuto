@@ -1,0 +1,7 @@
+{
+  "file": "packages/cli/src/run/noninteractive.ts",
+  "replacements": {
+    "message: `Session interrupted: ${event.data.reason}`": "message: `会话已中断: ${event.data.reason}`",
+    "message: \"Prompt was not promoted\"": "message: \"提示未被提升\""
+  }
+}

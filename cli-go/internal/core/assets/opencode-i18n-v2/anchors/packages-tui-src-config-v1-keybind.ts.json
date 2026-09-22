@@ -1,6 +1,7 @@
 {
   "file": "packages/tui/src/config/v1/keybind.ts",
   "replacements": {
-    "\"Write heap snapshot\"": "\"写入堆快照\""
+    "\"Write heap snapshot\"": "\"写入堆快照\"",
+    "description: \"TUI keybinding overrides\"": "description: \"TUI 快捷键覆盖\""
   }
 }

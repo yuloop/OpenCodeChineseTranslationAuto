@@ -1,0 +1,8 @@
+{
+  "file": "packages/cli/src/commands/handlers/auth/account.ts",
+  "replacements": {
+    "message: \"Select integration\"": "message: \"选择集成\"",
+    "message: `Select ${integration.name} account to ${action}`": "message: `选择要 ${action} 的 ${integration.name} 账号`",
+    "`${credential.label} (active)`": "`${credential.label} (当前)`"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/util/error-details.ts",
+  "replacements": {
+    "`Error: ${input.error}`": "`错误: ${input.error}`",
+    "\"Investigate why this OpenCode component failed in the current project.\"": "\"调查此 OpenCode 组件为何在当前项目中失败\"",
+    "\"Inspect the relevant project and global OpenCode configuration, startup or loading behavior, required environment variables or credentials, dependencies, and logs. Identify the root cause and recommend a fix. Do not expose credentials.\"": "\"检查相关的项目和全局 OpenCode 配置、启动或加载行为、所需的环境变量或凭据、依赖项和日志。找出根本原因并给出修复建议。不要泄露凭据。\""
+  }
+}

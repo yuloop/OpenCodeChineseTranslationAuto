@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/session-target.ts",
+  "replacements": {
+    "\"Session target mutation failed\"": "\"会话目标变更失败\""
+  }
+}

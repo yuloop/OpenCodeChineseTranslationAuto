@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/util/form.ts",
+  "replacements": {
+    "label: \"Yes\"": "label: \"是\""
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "file": "packages/cli/src/commands/handlers/stats.ts",
+  "replacements": {
+    "label: \"all time\"": "label: \"全部时间\"",
+    "\"today\"": "\"今天\"",
+    "`last ${input.days} days`": "`最近 ${input.days} 天`",
+    "`${year} so far`": "`${year} 年迄今`"
+  }
+}

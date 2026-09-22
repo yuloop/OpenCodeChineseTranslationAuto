@@ -1,0 +1,11 @@
+{
+  "file": "packages/cli/src/commands/handlers/auth/form.ts",
+  "replacements": {
+    "\"Continue after completing this step?\"": "\"完成此步骤后继续?\"",
+    "label: \"Yes\"": "label: \"是\"",
+    "label: \"Skip\"": "label: \"跳过\"",
+    "label: \"Type another value\"": "label: \"输入其他值\"",
+    "message: \"Enter value\"": "message: \"输入值\"",
+    "\"Type your own answer\"": "\"输入自定义答案\""
+  }
+}

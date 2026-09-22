@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/commands/handlers/session/export.ts",
+  "replacements": {
+    "message: \"Select session to export\"": "message: \"选择要导出的会话\""
+  }
+}

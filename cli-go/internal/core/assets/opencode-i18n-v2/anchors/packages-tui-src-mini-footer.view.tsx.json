@@ -5,6 +5,18 @@
     "Cycle model variant": "循环切换模型变体",
     "Open command palette": "打开命令面板",
     "View subagents": "查看子代理",
-    "normal": "普通"
+    "normal": "普通",
+    "`agent ${props.currentAgent()}`": "`智能体 ${props.currentAgent()}`",
+    "label: `${queuedPrompts().length} pending`": "label: `${queuedPrompts().length} 个待处理`",
+    "label: `${activeTabs().length} sub`": "label: `${activeTabs().length} 个子智能体`",
+    "label: \"bg\"": "label: \"后台\"",
+    "label: \"menu\"": "label: \"菜单\"",
+    "title: \"Clear screen\"": "title: \"清屏\"",
+    "title: \"View pending prompts\"": "title: \"查看待处理提示\"",
+    "title: \"Interrupt subagent\"": "title: \"中断子智能体\"",
+    "busy() ? \"running\" : \"idle\"": "busy() ? \"运行中\" : \"空闲\"",
+    "\"Prompt\"": "\"提示\"",
+    "\"Session\"": "\"会话\"",
+    "\"System\"": "\"系统\""
   }
 }

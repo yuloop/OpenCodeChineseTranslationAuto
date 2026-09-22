@@ -1,0 +1,14 @@
+{
+  "file": "packages/cli/src/services/updater.ts",
+  "replacements": {
+    "title: \"Could not check for OpenCode updates\"": "title: \"无法检查 OpenCode 更新\"",
+    "detail: `The update service returned HTTP ${response.status}.`": "detail: `更新服务返回了 HTTP ${response.status}`",
+    "title: \"Could not read the OpenCode update information\"": "title: \"无法读取 OpenCode 更新信息\"",
+    "detail: \"The update service returned incomplete release information.\"": "detail: \"更新服务返回的发布信息不完整\"",
+    "`${installNames[input.method]} could not install OpenCode`": "`${installNames[input.method]} 无法安装 OpenCode`",
+    "title: \"Could not download the OpenCode installer\"": "title: \"无法下载 OpenCode 安装程序\"",
+    "title: \"The OpenCode installer failed\"": "title: \"OpenCode 安装程序运行失败\"",
+    "title: \"Could not prepare the OpenCode upgrade\"": "title: \"无法准备 OpenCode 升级\"",
+    "message: \"This build runs from a source checkout. Use an installed OpenCode release to check for updates.\"": "message: \"此构建运行于源码检出,请使用已安装的 OpenCode 发行版检查更新\""
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/context/session-terminals.tsx",
+  "replacements": {
+    "title: \"Terminal\"": "title: \"终端\""
+  }
+}

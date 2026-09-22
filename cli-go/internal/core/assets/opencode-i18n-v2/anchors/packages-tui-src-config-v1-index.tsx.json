@@ -1,0 +1,18 @@
+{
+  "file": "packages/tui/src/config/v1/index.tsx",
+  "replacements": {
+    "description: \"Leader key timeout in milliseconds\"": "description: \"前导键超时时间(毫秒)\"",
+    "description: \"Enable scroll acceleration\"": "description: \"启用滚动加速\"",
+    "description: \"Scroll acceleration settings\"": "description: \"滚动加速设置\"",
+    "description: \"Control diff rendering style: 'auto' adapts to terminal width, 'stacked' always shows single column\"": "description: \"控制差异渲染样式:'auto' 按终端宽度自适应;'stacked' 始终单列显示\"",
+    "description: \"Attention notification and sound settings\"": "description: \"提醒通知与音效设置\"",
+    "description: \"Cursor shape. Use 'default' to preserve the terminal setting\"": "description: \"光标形状;使用 'default' 保留终端设置\"",
+    "description: \"Whether the cursor blinks. Has no effect when style is 'default'\"": "description: \"光标是否闪烁;样式为 'default' 时无效\"",
+    "description: \"Terminal cursor settings\"": "description: \"终端光标设置\"",
+    "description: \"Prompt textarea max height\"": "description: \"提示文本框最大高度\"",
+    "description: \"Home prompt max width: a positive integer for a fixed cap, or 'auto' to scale with terminal width\"": "description: \"首页提示框最大宽度:固定上限用正整数;'auto' 随终端宽度自适应\"",
+    "description: \"Prompt size settings\"": "description: \"提示大小设置\"",
+    "description: \"TUI scroll speed\"": "description: \"TUI 滚动速度\"",
+    "description: \"Enable or disable mouse capture (default: true)\"": "description: \"启用或禁用鼠标捕获(默认为 true)\""
+  }
+}

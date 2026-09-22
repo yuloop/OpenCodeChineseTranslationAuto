@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/mini/runtime.ts",
+  "replacements": {
+    "text: `startup ${Math.max(0, Math.round(input.host.startup.now() - start))}ms`": "text: `启动 ${Math.max(0, Math.round(input.host.startup.now() - start))}ms`",
+    "text: `new session ${state.sessionID}`": "text: `新会话 ${state.sessionID}`"
+  }
+}

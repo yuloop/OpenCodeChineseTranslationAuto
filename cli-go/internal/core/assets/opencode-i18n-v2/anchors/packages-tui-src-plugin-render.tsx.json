@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/plugin/render.tsx",
+  "replacements": {
+    "title: \"Plugin\"": "title: \"插件\"",
+    "message: `${props.id} crashed in ${props.where}: ${errorMessage(error)}`": "message: `${props.id} 在 ${props.where} 中崩溃: ${errorMessage(error)}`",
+    "`slot ${path}`": "`插槽 ${path}`"
+  }
+}

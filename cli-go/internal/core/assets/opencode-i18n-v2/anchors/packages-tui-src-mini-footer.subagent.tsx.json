@@ -1,6 +1,8 @@
 {
   "file": "packages/tui/src/mini/footer.subagent.tsx",
   "replacements": {
-    "No subagent activity yet": "暂无子代理活动"
+    "No subagent activity yet": "暂无子代理活动",
+    "\"interrupt\"": "\"中断\"",
+    " interrupt\n                  ": " 中断\n                  "
   }
 }

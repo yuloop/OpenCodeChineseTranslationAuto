@@ -5,6 +5,19 @@
     "(not answered)": "(未回答)",
     "(select all that apply)": "(可多选)",
     "Review": "审查",
-    "Type your own answer": "输入自定义答案"
+    "Type your own answer": "输入自定义答案",
+    "\"Acknowledged\"": "\"已确认\"",
+    "\"Press enter to acknowledge completion\"": "\"按 enter 确认完成\"",
+    "\"Press enter to open the URL\"": "\"按 enter 打开 URL\"",
+    "\" (required)\"": "\" (必填)\"",
+    "\"acknowledged\"": "\"已确认\"",
+    "\"submitting…\"": "\"提交中...\"",
+    "\"enter submit   esc dismiss\"": "\"enter 提交 esc 取消\"",
+    "\"enter save   esc dismiss\"": "\"enter 保存 esc 取消\"",
+    "`enter ${action()}   esc dismiss`": "`enter ${action()} esc 取消`",
+    "\"up/down select   enter choose   tab next   esc dismiss\"": "\"up/down 选择 enter 确认 tab 下一个 esc 取消\"",
+    "\"↑↓ select   enter choose   tab next   esc dismiss\"": "\"↑↓ 选择 enter 确认 tab 下一个 esc 取消\"",
+    "\"up/down select  tab next  \"": "\"up/down 选择 tab 下一个  \"",
+    "\n                  This request remains pending until you dismiss it.\n                ": "\n                  此请求将一直保持待处理,直到你关闭它。\n                "
   }
 }

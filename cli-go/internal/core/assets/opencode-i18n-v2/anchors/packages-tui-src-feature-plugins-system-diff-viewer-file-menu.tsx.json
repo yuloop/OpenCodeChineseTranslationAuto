@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/diff-viewer-file-menu.tsx",
+  "replacements": {
+    "title: \"Close file menu\"": "title: \"关闭文件菜单\"",
+    "group: \"Diff\"": "group: \"差异\""
+  }
+}

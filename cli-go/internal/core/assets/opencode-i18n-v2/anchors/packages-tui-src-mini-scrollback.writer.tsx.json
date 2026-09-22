@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/scrollback.writer.tsx",
+  "replacements": {
+    "\n            # Questions\n          ": "\n            # 问题\n          "
+  }
+}

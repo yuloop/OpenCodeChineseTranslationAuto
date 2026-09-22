@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/plugin/context.tsx",
+  "replacements": {
+    "title: \"Plugin\"": "title: \"插件\"",
+    "message: `${id}: cleanup failed: ${errorMessage(error)}`": "message: `${id}: 清理失败: ${errorMessage(error)}`",
+    "title: `Plugin failed: ${state.target}`": "title: `插件失败: ${state.target}`",
+    "message: \"Run /plugins to view details.\"": "message: \"运行 /plugins 查看详情\"",
+    "label: \"Open plugins\"": "label: \"打开插件\"",
+    "`Plugin failed: ${serverPluginName(first)}`": "`插件失败: ${serverPluginName(first)}`",
+    "`${failed.length} plugins failed`": "`${failed.length} 个插件失败`"
+  }
+}
