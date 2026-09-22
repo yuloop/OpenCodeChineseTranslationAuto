@@ -1,6 +1,7 @@
 package core
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -8,20 +9,44 @@ import (
 	"strings"
 )
 
+// Layout 上游源码布局版本
+type Layout string
+
+const (
+	// LayoutV1 旧版布局: packages/opencode + script/build.ts + --single
+	LayoutV1 Layout = "v1"
+	// LayoutV2 新版布局: packages/cli + script/build.ts + --target=opencode-<platform> --outdir=<dist>
+	LayoutV2 Layout = "v2"
+)
+
 // Builder 构建器
 type Builder struct {
 	opencodeDir string
 	buildDir    string
 	bunPath     string
+	layout      Layout
 }
 
-// NewBuilder 创建构建器
-func NewBuilder() (*Builder, error) {
+// NewBuilder 创建构建器（自动检测布局）
+// 可选传入 "v1" 或 "v2" 强制指定布局；空字符串则自动探测。
+func NewBuilder(layout ...string) (*Builder, error) {
 	opencodeDir, err := GetOpencodeDir()
 	if err != nil {
 		return nil, err
 	}
+
+	var l Layout
+	if len(layout) > 0 && layout[0] != "" {
+		l = ParseLayout(layout[0])
+	} else {
+		l = detectLayout(opencodeDir)
+	}
+
 	buildDir := filepath.Join(opencodeDir, "packages", "opencode")
+	if l == LayoutV2 {
+		buildDir = filepath.Join(opencodeDir, "packages", "cli")
+	}
+
 	bunPath := "bun" // 假设 bun 在 PATH 中
 
 	// 简单的环境检查
@@ -33,7 +58,39 @@ func NewBuilder() (*Builder, error) {
 		opencodeDir: opencodeDir,
 		buildDir:    buildDir,
 		bunPath:     bunPath,
+		layout:      l,
 	}, nil
+}
+
+// ParseLayout 解析布局字符串
+func ParseLayout(s string) Layout {
+	switch strings.ToLower(strings.TrimSpace(s)) {
+	case "v2", "2":
+		return LayoutV2
+	default:
+		return LayoutV1
+	}
+}
+
+// detectLayout 自动检测上游源码布局
+// 优先判定为 V1（packages/opencode 存在），否则回退到 V2（packages/cli/script/build.ts 存在），再否则默认 V1。
+func detectLayout(opencodeDir string) Layout {
+	v1BuildDir := filepath.Join(opencodeDir, "packages", "opencode")
+	if Exists(v1BuildDir) {
+		return LayoutV1
+	}
+
+	v2BuildTS := filepath.Join(opencodeDir, "packages", "cli", "script", "build.ts")
+	if Exists(v2BuildTS) {
+		// 二次确认：V2 build.ts 已内建 --target= 能力
+		if data, err := os.ReadFile(v2BuildTS); err == nil {
+			if strings.Contains(string(data), "--target=") {
+				return LayoutV2
+			}
+		}
+	}
+
+	return LayoutV1
 }
 
 // CheckEnvironment 检查构建环境
@@ -48,6 +105,8 @@ func (b *Builder) CheckEnvironment() error {
 // 支持两种上游模式：
 //   - 旧版 (<=1.1.36): if (process.versions.bun !== expectedBunVersion) — 严格相等
 //   - 新版 (>=1.1.37): semver.satisfies(process.versions.bun, expectedBunVersionRange) — 语义化范围
+//
+// 该补丁作用于 monorepo 级 packages/script/src/index.ts，V1/V2 共用同一文件。
 func (b *Builder) PatchBunVersionCheck() (bool, error) {
 	scriptPath := filepath.Join(b.opencodeDir, "packages", "script", "src", "index.ts")
 
@@ -150,7 +209,7 @@ func (b *Builder) InstallDependencies(silent bool) error {
 	}
 
 	// 先在 monorepo 根目录安装（如果存在根 package.json）
-	// 上游仓库根目录 = buildDir 的祖父目录 (packages/opencode -> root)
+	// 上游仓库根目录 = buildDir 的祖父目录（V1: packages/opencode -> root；V2: packages/cli -> root）
 	repoRoot := filepath.Dir(filepath.Dir(b.buildDir))
 	rootPkgJSON := filepath.Join(repoRoot, "package.json")
 
@@ -171,7 +230,7 @@ func (b *Builder) InstallDependencies(silent bool) error {
 		}
 	}
 
-	// 再在 packages/opencode 安装（确保 workspace 本地依赖就绪）
+	// 再在构建包目录安装（确保 workspace 本地依赖就绪）
 	nodeModulesPath := filepath.Join(b.buildDir, "node_modules")
 	if Exists(nodeModulesPath) {
 		if !silent {
@@ -185,6 +244,40 @@ func (b *Builder) InstallDependencies(silent bool) error {
 	}
 
 	return ExecLive(b.bunPath, "install")
+}
+
+// BuildArgs 返回构建命令参数（不执行）
+// V1: run script/build.ts [--single]
+// V2: run script/build.ts --target=opencode-<platform> --outdir=dist
+func (b *Builder) BuildArgs(platform string) []string {
+	args := []string{"run", "script/build.ts"}
+
+	if platform != "" {
+		if b.layout == LayoutV2 {
+			args = append(args, "--target=opencode-"+platform, "--outdir=dist")
+		} else {
+			currentOs := runtime.GOOS
+			currentArch := runtime.GOARCH
+
+			targetParts := strings.Split(platform, "-")
+			if len(targetParts) == 2 {
+				targetOs := targetParts[0]
+				if targetOs == "win32" {
+					targetOs = "windows"
+				}
+				targetArch := targetParts[1]
+				if currentArch == "amd64" {
+					currentArch = "x64"
+				}
+
+				if targetOs == currentOs && targetArch == currentArch {
+					args = append(args, "--single")
+				}
+			}
+		}
+	}
+
+	return args
 }
 
 // Build 执行构建
@@ -208,36 +301,13 @@ func (b *Builder) Build(platform string, silent bool) error {
 	}
 
 	// Bun workspace hoist 修复：
-	// 上游 monorepo 中 bun install 将 @opentui/core 等包 hoist 到根 node_modules，
-	// 但构建脚本 (build.ts) 用 fs.realpathSync 在 packages/opencode/node_modules/ 下查找。
+	// 上游 monorepo 中 bun install 将关键包 hoist 到根 node_modules，
+	// 但构建脚本通过 fs.realpathSync 在构建包本地 node_modules/ 下查找。
 	// 需要确保关键包在本地 node_modules 可访问（通过 symlink 到根）。
 	repoRoot := filepath.Dir(filepath.Dir(b.buildDir))
 	b.ensureWorkspaceLinks(repoRoot, silent)
 
-	args := []string{"run", "script/build.ts"}
-
-	if platform != "" {
-		// 简单的平台匹配逻辑
-		currentOs := runtime.GOOS
-		currentArch := runtime.GOARCH
-
-		targetParts := strings.Split(platform, "-")
-		if len(targetParts) == 2 {
-			targetOs := targetParts[0]
-			if targetOs == "win32" {
-				targetOs = "windows"
-			}
-			targetArch := targetParts[1]
-			// amd64 在 Node.js 中通常称为 x64
-			if currentArch == "amd64" {
-				currentArch = "x64"
-			}
-
-			if targetOs == currentOs && targetArch == currentArch {
-				args = append(args, "--single")
-			}
-		}
-	}
+	args := b.BuildArgs(platform)
 
 	if !silent {
 		fmt.Printf("执行: %s %s\n", b.bunPath, strings.Join(args, " "))
@@ -252,6 +322,16 @@ func (b *Builder) Build(platform string, silent bool) error {
 	// 确保 OPENCODE_CHANNEL 默认设为 "latest"（避免 detached HEAD 导致 channel 为空，从而使用 opencode-.db）
 	if _, exists := os.LookupEnv("OPENCODE_CHANNEL"); !exists {
 		env = append(env, "OPENCODE_CHANNEL=latest")
+	}
+
+	// 用源码 package.json 的 version 固定嵌入版本号。
+	// 上游 packages/script/src/index.ts 在 channel=latest 且未显式设 OPENCODE_VERSION 时，
+	// 会 fetch npm @opencode/cli 的 latest 版本并 patch+1，导致从 v2.0.12 源码构建出 v2.0.13，
+	// 与 git tag 不一致。显式设 OPENCODE_VERSION=<源码版本> 可让 --version 忠实反映所构建的源码。
+	if _, exists := os.LookupEnv("OPENCODE_VERSION"); !exists {
+		if v := b.sourceVersion(); v != "" {
+			env = append(env, "OPENCODE_VERSION="+v)
+		}
 	}
 
 	if err := ExecLiveEnv(b.bunPath, args, env); err != nil {
@@ -293,7 +373,8 @@ func (b *Builder) Build(platform string, silent bool) error {
 
 // ensureWorkspaceLinks 确保 workspace hoist 的包在本地 node_modules 可访问
 // Bun workspace 将依赖 hoist 到根 node_modules，但构建脚本通过 fs.realpathSync
-// 在 packages/opencode/node_modules/ 下查找。此方法创建必要的 symlink。
+// 在构建包本地 node_modules/ 下查找。此方法创建必要的 symlink。
+// V1 对应 packages/opencode/node_modules，V2 对应 packages/cli/node_modules。
 func (b *Builder) ensureWorkspaceLinks(repoRoot string, silent bool) {
 	rootNodeModules := filepath.Join(repoRoot, "node_modules")
 	localNodeModules := filepath.Join(b.buildDir, "node_modules")
@@ -303,6 +384,7 @@ func (b *Builder) ensureWorkspaceLinks(repoRoot string, silent bool) {
 	}
 
 	// 需要确保可访问的关键包（构建脚本通过绝对路径引用）
+	// V1/V2 目前共享 @opentui/* 包名；若 V2 改名，需在此更新（待构建验证）。
 	criticalPackages := []string{"@opentui/core", "@opentui/solid"}
 
 	for _, pkg := range criticalPackages {
@@ -337,13 +419,38 @@ func (b *Builder) ensureWorkspaceLinks(repoRoot string, silent bool) {
 	}
 }
 
+// sourceVersion 读取构建包 package.json 的 version 字段
+// V1: packages/opencode/package.json；V2: packages/cli/package.json（即 buildDir/package.json）。
+// 读取失败返回空字符串（调用方据此跳过设置 OPENCODE_VERSION）。
+func (b *Builder) sourceVersion() string {
+	data, err := os.ReadFile(filepath.Join(b.buildDir, "package.json"))
+	if err != nil {
+		return ""
+	}
+	var pkg struct {
+		Version string `json:"version"`
+	}
+	if err := json.Unmarshal(data, &pkg); err != nil {
+		return ""
+	}
+	return pkg.Version
+}
+
 // GetDistPath 获取编译产物路径
+// V1 产物布局: <buildDir>/dist/opencode-<platform>/bin/opencode[.exe]
+// V2 产物布局: <buildDir>/dist/cli-<platform>/bin/opencode[.exe]
+// 依据上游 packages/cli/script/build.ts: 输出目录名 = targetName(item).replace("opencode","cli")，
+// 而 --target 仍为 opencode-<platform>，故 V2 的产物子目录是 cli-<platform> 而非 opencode-<platform>。
 func (b *Builder) GetDistPath(platform string) string {
 	ext := ""
 	if strings.HasPrefix(platform, "windows") {
 		ext = ".exe"
 	}
-	return filepath.Join(b.buildDir, "dist", "opencode-"+platform, "bin", "opencode"+ext)
+	subdir := "opencode-" + platform
+	if b.layout == LayoutV2 {
+		subdir = "cli-" + platform
+	}
+	return filepath.Join(b.buildDir, "dist", subdir, "bin", "opencode"+ext)
 }
 
 // DeployToLocal 部署到本地 bin 目录 (统一目录: ~/.opencode-i18n/build)
@@ -380,4 +487,9 @@ func (b *Builder) DeployToLocal(platform string, silent bool) error {
 		fmt.Printf("已部署到: %s\n", destPath)
 	}
 	return nil
+}
+
+// Layout 返回当前检测到的布局版本
+func (b *Builder) Layout() Layout {
+	return b.layout
 }
