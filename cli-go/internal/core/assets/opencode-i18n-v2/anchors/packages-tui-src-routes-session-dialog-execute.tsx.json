@@ -20,6 +20,11 @@
     "{copied() === \"code\" ? \"✓ copied\" : \"c\"}": "{copied() === \"code\" ? \"✓ 已复制\" : \"c\"}",
     "{copied() === \"output\" ? \"✓ copied\" : \"o\"}": "{copied() === \"output\" ? \"✓ 已复制\" : \"o\"}",
     "{copied() === \"code\" ? \"\" : \" copy code\"}": "{copied() === \"code\" ? \"\" : \" 复制代码\"}",
-    "{copied() === \"output\" ? \"\" : \" copy output\"}": "{copied() === \"output\" ? \"\" : \" 复制输出\"}"
+    "{copied() === \"output\" ? \"\" : \" copy output\"}": "{copied() === \"output\" ? \"\" : \" 复制输出\"}",
+    "return \"Receiving code…\"": "return \"正在接收代码...\"",
+    "return \"Running\"": "return \"运行中\"",
+    "return `Failed${duration}`": "return `失败${duration}`",
+    "return `Completed${duration}`": "return `已完成${duration}`",
+    "props.part.state.status === \"completed\" ? \"No output\" : \"Waiting for output…\"": "props.part.state.status === \"completed\" ? \"暂无输出\" : \"正在等待输出...\""
   }
 }

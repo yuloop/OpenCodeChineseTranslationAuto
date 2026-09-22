@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/plugin/api.tsx",
+  "replacements": {
+    "label: \"Open\"": "label: \"打开\""
+  }
+}

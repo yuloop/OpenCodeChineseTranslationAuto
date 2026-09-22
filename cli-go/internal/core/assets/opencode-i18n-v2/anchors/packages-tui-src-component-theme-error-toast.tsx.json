@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/theme-error-toast.tsx",
+  "replacements": {
+    "title: `Failed to load theme: ${name}`": "title: `加载主题失败: ${name}`"
+  }
+}

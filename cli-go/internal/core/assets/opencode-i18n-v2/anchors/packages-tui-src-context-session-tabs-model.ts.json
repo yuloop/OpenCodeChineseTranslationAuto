@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/context/session-tabs-model.ts",
+  "replacements": {
+    "= \"New session\"": "= \"新会话\""
+  }
+}

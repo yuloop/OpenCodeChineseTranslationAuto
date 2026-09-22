@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/component/migration-overlay.tsx",
+  "replacements": {
+    "title: \"Data migration failed\"": "title: \"数据迁移失败\""
+  }
+}

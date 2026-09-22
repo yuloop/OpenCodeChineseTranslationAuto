@@ -1,6 +1,8 @@
 {
   "file": "packages/tui/src/feature-plugins/prompt/footer.tsx",
   "replacements": {
-    "\"exit shell mode\"": "\"退出 Shell 模式\""
+    "\"exit shell mode\"": "\"退出 Shell 模式\"",
+    ">agents</span>": ">智能体</span>",
+    ">commands</span>": ">命令</span>"
   }
 }

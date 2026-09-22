@@ -18,6 +18,8 @@
     "\"Batch\"": "\"批量\"",
     "title: `# Wrote ${displayPath(p, file)}`": "title: `# 已写入 ${displayPath(p, file)}`",
     "title: `# Edited ${displayPath(p, file)}`": "title: `# 已编辑 ${displayPath(p, file)}`",
-    "title: `# ${kind} Subagent`": "title: `# ${kind} 子智能体`"
+    "title: `# ${kind} Subagent`": "title: `# ${kind} 子智能体`",
+    "\"Unknown\"": "\"未知\"",
+    "title: url ? `WebFetch ${url}` : \"WebFetch\"": "title: url ? `网页获取 ${url}` : \"网页获取\""
   }
 }

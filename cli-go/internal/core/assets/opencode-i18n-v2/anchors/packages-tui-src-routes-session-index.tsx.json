@@ -130,6 +130,13 @@
     "props.part.state.status === \"error\" ? \"# Patch failed\" : \"Patching\"": "props.part.state.status === \"error\" ? \"# 补丁失败\" : \"正在修补\"",
     "? `Thinking: ${latest()}` : \"Thinking\"": "? `思考中: ${latest()}` : \"思考中\"",
     "props.completed ? \"Thought\" :": "props.completed ? \"思考\" :",
-    "${continuation() ? \"Continue subagent\" : `${Locale.titlecase(stringValue(props.input.agent) ?? stringValue(props.input.subagent_type) ?? \"General\")} Subagent`} — ${description() ?? \"Subagent\"}${model() ? ` · ${model()}` : \"\"}": "${continuation() ? \"继续子智能体\" : `${Locale.titlecase(stringValue(props.input.agent) ?? stringValue(props.input.subagent_type) ?? \"通用\")} 子智能体`} — ${description() ?? \"子智能体\"}${model() ? ` · ${model()}` : \"\"}"
+    "${continuation() ? \"Continue subagent\" : `${Locale.titlecase(stringValue(props.input.agent) ?? stringValue(props.input.subagent_type) ?? \"General\")} Subagent`} — ${description() ?? \"Subagent\"}${model() ? ` · ${model()}` : \"\"}": "${continuation() ? \"继续子智能体\" : `${Locale.titlecase(stringValue(props.input.agent) ?? stringValue(props.input.subagent_type) ?? \"通用\")} 子智能体`} — ${description() ?? \"子智能体\"}${model() ? ` · ${model()}` : \"\"}",
+    "source() === \"shell\" ? \"Shell\" : Locale.titlecase(stringValue(metadata()?.agent) ?? \"Subagent\")": "source() === \"shell\" ? \"命令行\" : Locale.titlecase(stringValue(metadata()?.agent) ?? \"子智能体\")",
+    "`${Locale.number(input)} in · ${Locale.number(output)} out`": "`${Locale.number(input)} 输入 · ${Locale.number(output)} 输出`",
+    "return \"Command cancelled\"": "return \"命令已取消\"",
+    "return \"Command timed out\"": "return \"命令已超时\"",
+    "return `Command exited with code ${props.message.exit}`": "return `命令退出码 ${props.message.exit}`",
+    "file.source.type === \"uri\" ? file.source.uri : \"attachment\"": "file.source.type === \"uri\" ? file.source.uri : \"附件\"",
+    "return \"(no answer)\"": "return \"(无回答)\""
   }
 }

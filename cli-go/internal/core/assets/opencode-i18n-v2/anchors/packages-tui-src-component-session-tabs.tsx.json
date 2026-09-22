@@ -1,0 +1,13 @@
+{
+  "file": "packages/tui/src/component/session-tabs.tsx",
+  "replacements": {
+    "title: \"Close tab menu\", group: \"Tabs\"": "title: \"关闭页签菜单\", group: \"页签\"",
+    "title: \"New tab\"": "title: \"新建页签\"",
+    "title: \"Rename\"": "title: \"重命名\"",
+    "title: \"Copy session ID\"": "title: \"复制会话 ID\"",
+    "message: \"Session ID copied to clipboard\"": "message: \"会话 ID 已复制到剪贴板\"",
+    "title: \"Close\"": "title: \"关闭\"",
+    "\"Untitled session\"": "\"未命名会话\"",
+    "?? \"U\"": "?? \"未\""
+  }
+}

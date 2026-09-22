@@ -53,6 +53,12 @@
     "\"saving\"": "\"保存中\"",
     "? \"queued\" : \"steering\"": "? \"排队中\" : \"引导中\"",
     "`${activeSubagentCount()} active`": "`${activeSubagentCount()} 个活跃`",
-    "\"current\"": "\"当前\""
+    "\"current\"": "\"当前\"",
+    "display: \"Compact session\"": "display: \"精简会话\"",
+    "display: \"Switch agent\"": "display: \"切换智能体\"",
+    "title=\"Select agent\"": "title=\"选择智能体\"",
+    "title=\"Select model\"": "title=\"选择模型\"",
+    "display: \"Shell\"": "display: \"命令行\"",
+    "display: \"Settings\"": "display: \"设置\""
   }
 }

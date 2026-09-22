@@ -18,6 +18,7 @@
     "enter <span style={{ fg: theme.text.muted }}>confirm</span>": "enter <span style={{ fg: theme.text.muted }}>确认</span>",
     "esc <span style={{ fg: theme.text.muted }}>cancel</span>": "esc <span style={{ fg: theme.text.muted }}>取消</span>",
     "{\"⇆\"} <span style={{ fg: theme.text.muted }}>select</span>": "{\"⇆\"} <span style={{ fg: theme.text.muted }}>选择</span>",
-    "No diff provided": "没有提供差异"
+    "No diff provided": "没有提供差异",
+    "store.expanded ? \"minimize\" : \"fullscreen\"": "store.expanded ? \"收起\" : \"全屏\""
   }
 }
