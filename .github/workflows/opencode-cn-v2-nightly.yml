@@ -1,0 +1,171 @@
+name: OpenCode V2 Nightly Build (build-only)
+
+# ============================================================================
+# opencode V2 linux-x64 构建流水线（build-only，完全独立于 V1 生产流水线）
+# ----------------------------------------------------------------------------
+# 【本版定位】只构建、不发 Release、不注入中文翻译。
+#   * 不注入中文：中文注入 + 翻译门禁方案定稿后另开单再接（V2 翻译资产当前
+#     匹配率仅约 31%，无法直接套用 V1 的 --min-match-rate 1 门禁，见
+#     docs/opencode-v2-build-trial.md ⑨）。
+#   * 不发 Release：产物只通过 actions/upload-artifact 存成构建产物。
+#   * 不动 V1：V1 生产流水线 .github/workflows/opencode-cn-nightly.yml
+#     （每小时构建并发 Release）保持原样；本文件与其零共享——独立文件名、
+#     独立 concurrency group、独立缓存 key 前缀、独立 job。
+#
+# 【触发】每天一次（21:23 UTC，避开 V1 每小时 :37 的构建时段）+ 手动
+#   workflow_dispatch（可指定上游 tag，留空则自动取最新 v2.0.x）。
+#   无 push 触发。
+#
+# 【实测依据】docs/opencode-v2-build-trial.md（对 v2.0.12 首跑通）：
+#   * 上游 V2 源码 = anomalyco/opencode 的 tag v2.0.x；V2 没有 GitHub
+#     Release，版本号读 packages/cli/package.json（不用 gh api releases/latest）。
+#   * bun 锁 1.4.2（与上游根 packageManager 一致）；冷构建 ~9 min、
+#     热构建 ~18 s。
+#   * 缓存点（热构建的关键）：~/.bun/install/cache + monorepo 根 node_modules。
+#   * 构建命令：OPENCODE_SOURCE_DIR=<源码> opencode-cli build
+#     --platform linux-x64 --deploy=false；产物在
+#     packages/cli/dist/cli-linux-x64/bin/opencode。
+#   * 超时预算：单平台冷构建 ~9 min，job 超时设 40 min 留足余量。
+# ============================================================================
+
+on:
+  schedule:
+    # 每天 21:23 UTC 一次；V1 是每小时 :37，错开分钟避免两个 hourly 流水线
+    # 在同一时刻抢占 runner（两者 concurrency group 相互独立，不会互相取消）。
+    - cron: "23 21 * * *"
+  workflow_dispatch:
+    inputs:
+      upstream_tag:
+        description: "上游 V2 tag（留空 = 自动取最新 v2.0.x 稳定版）"
+        required: false
+        type: string
+
+concurrency:
+  group: opencode-cn-v2-nightly
+  cancel-in-progress: false
+
+permissions:
+  # build-only：只读仓库内容即可，不需要 contents:write（V1 才需要发 Release）
+  contents: read
+
+env:
+  UPSTREAM_REPO: anomalyco/opencode
+  UPSTREAM_TAG_GLOB: "v2.0.*"
+  BUN_VERSION: "1.4.2"
+
+jobs:
+  build-v2:
+    name: Build opencode V2 linux-x64 (build-only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      # 1) 本仓：提供 cli-go 工具链（已含 V2 布局支持：自动探测 / --layout v2）
+      - name: Checkout this repo (cli-go toolchain)
+        uses: actions/checkout@v6
+
+      # 2) 解析上游最新 v2.0.x tag（V2 无 GitHub Release，轮询 tag 而非 Release）
+      - name: Resolve upstream v2.0.x tag
+        id: resolve
+        env:
+          REQUESTED_TAG: ${{ github.event.inputs.upstream_tag }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$REQUESTED_TAG" ]]; then
+            tag="$REQUESTED_TAG"
+          else
+            # 只取稳定版：过滤掉 ^{} peel 行与 -rc 等预发布后缀，再按版本排序取最新
+            tag="$(git ls-remote --tags "https://github.com/${UPSTREAM_REPO}.git" "refs/tags/${UPSTREAM_TAG_GLOB}" \
+              | sed -n 's#.*refs/tags/##p' \
+              | grep -v '\^{}' \
+              | grep -E '^v2\.0\.[0-9]+$' \
+              | sort -V | tail -1)"
+          fi
+          [[ -n "$tag" ]] || { echo "未解析到上游 ${UPSTREAM_TAG_GLOB} tag" >&2; exit 1; }
+          echo "tag=$tag" >>"$GITHUB_OUTPUT"
+          echo "上游 V2 tag: ${tag}"
+
+      # 3) 浅克隆该 tag 的上游源码到临时目录（不用 gh token，公开仓库）
+      - name: Checkout upstream V2 source
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.UPSTREAM_REPO }}
+          ref: ${{ steps.resolve.outputs.tag }}
+          path: build/upstream
+          fetch-depth: 1
+
+      # 4) 工具链：Go（构建 cli-go）+ bun 1.4.2（与上游根 packageManager 一致）
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: cli-go/go.mod
+          cache: true
+          cache-dependency-path: cli-go/go.sum
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      # 5) 缓存：bun 下载缓存 + monorepo 根 node_modules（按 tag+lockfile 命中）。
+      #    这两处命中后单平台重建从 ~9 min 降到 ~18 s（见试跑报告 ⑤/⑩）。
+      - name: Cache bun downloads and monorepo node_modules
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.bun/install/cache
+            build/upstream/node_modules
+          key: ${{ runner.os }}-ocv2-${{ steps.resolve.outputs.tag }}-${{ hashFiles('build/upstream/bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-ocv2-${{ steps.resolve.outputs.tag }}-
+            ${{ runner.os }}-ocv2-
+
+      # 6) 构建 cli-go 工具
+      - name: Build cli-go tool
+        working-directory: cli-go
+        run: go build -trimpath -o ../dist/opencode-cli .
+
+      # 7) V2 linux-x64 完整构建（照试跑报告命令；cli-go 自动探测 V2 布局，
+      #    未显式设 OPENCODE_VERSION 时由工具从 packages/cli/package.json
+      #    读取并注入，保证 --version 忠实反映所构建源码）。
+      - name: Build V2 linux-x64 binary
+        env:
+          OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
+          OPENCODE_CHANNEL: latest
+        run: ./dist/opencode-cli build --platform linux-x64 --deploy=false
+
+      # 8) 校验产物：文件存在 + --version 与上游 packages/cli/package.json 一致
+      - name: Verify built binary
+        id: verify
+        run: |
+          set -euo pipefail
+          version="$(jq -r '.version' build/upstream/packages/cli/package.json)"
+          [[ -n "$version" && "$version" != "null" ]] || { echo "无法读取上游版本号" >&2; exit 1; }
+          binary="build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode"
+          [[ -f "$binary" ]] || { echo "Binary not found: $binary" >&2; exit 1; }
+          output="$("$binary" --version)"
+          echo "$binary --version -> $output"
+          [[ "$output" == *"v${version}"* ]] || {
+            echo "版本不匹配：期望 v${version}，实际 $output" >&2
+            exit 1
+          }
+          echo "version=$version" >>"$GITHUB_OUTPUT"
+
+      # 9) 打包二进制 + sha256，存成构建产物（不发 Release）
+      - name: Package binary and checksum
+        env:
+          TAG: ${{ steps.resolve.outputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          cp build/upstream/packages/cli/dist/cli-linux-x64/bin/opencode "dist/opencode-v2-${TAG}-linux-x64"
+          (
+            cd dist
+            sha256sum "opencode-v2-${TAG}-linux-x64" >SHA256SUMS
+            cat SHA256SUMS
+          )
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: opencode-v2-${{ steps.resolve.outputs.tag }}-linux-x64
+          path: |
+            dist/opencode-v2-${{ steps.resolve.outputs.tag }}-linux-x64
+            dist/SHA256SUMS
+          if-no-files-found: error
