@@ -1,0 +1,13 @@
+{
+  "file": "packages/tui/src/component/session-frame.tsx",
+  "replacements": {
+    "message: \"Unable to load terminal\"": "message: \"无法加载终端\"",
+    "title: \"Focus session pane\"": "title: \"聚焦会话窗格\"",
+    "title: \"Focus right pane\"": "title: \"聚焦右侧窗格\"",
+    "rightPane() === \"sidebar\" ? \"Hide sidebar\" : \"Show sidebar\"": "rightPane() === \"sidebar\" ? \"隐藏侧边栏\" : \"显示侧边栏\"",
+    "rightPane() === \"terminal\" ? \"Hide terminal pane\" : \"Show terminal pane\"": "rightPane() === \"terminal\" ? \"隐藏终端窗格\" : \"显示终端窗格\"",
+    "title: \"Select terminal\"": "title: \"选择终端\"",
+    "title: \"Close terminal pane\"": "title: \"关闭终端窗格\"",
+    "title: \"New terminal\"": "title: \"新建终端\""
+  }
+}

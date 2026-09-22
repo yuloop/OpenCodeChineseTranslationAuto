@@ -57,6 +57,10 @@
     "No changes to show": "暂无更改",
     "\n          Diff shortcuts\n        ": "\n          差异快捷键\n        ",
     ">Image</text>": ">图片</text>",
-    "\"Review\"": "\"审查\""
+    "\"Review\"": "\"审查\"",
+    "title: \"View\"": "title: \"查看\"",
+    "> help</span>": "> 帮助</span>",
+    "title: \"Go to the start of the diff\"": "title: \"转到差异开头\"",
+    "title: \"Go to the end of the diff\"": "title: \"转到差异结尾\""
   }
 }

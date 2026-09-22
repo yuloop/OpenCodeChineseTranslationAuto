@@ -27,6 +27,7 @@
     " more\n              ": " 更多\n              ",
     "\"Prompt\"": "\"提示\"",
     "\"Session\"": "\"会话\"",
-    "\"Shell mode\"": "\"命令行模式\""
+    "\"Shell mode\"": "\"命令行模式\"",
+    "title: \"Paste\"": "title: \"粘贴\""
   }
 }

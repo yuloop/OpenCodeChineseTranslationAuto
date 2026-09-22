@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/footer.menu.tsx",
+  "replacements": {
+    "{props.empty ?? \"No matching items\"}": "{props.empty ?? \"未找到匹配项\"}"
+  }
+}

@@ -16,6 +16,8 @@
     "title: `Access external directory ${formatPath(directory)}`": "title: `访问外部目录 ${formatPath(directory)}`",
     "title: `Call tool ${source.action}`": "title: `调用工具 ${source.action}`",
     "`Path: ${formatPath(value)}`": "`路径: ${formatPath(value)}`",
-    "`Path: ${formatPath(file)}`": "`路径: ${formatPath(file)}`"
+    "`Path: ${formatPath(file)}`": "`路径: ${formatPath(file)}`",
+    "action === \"read\" ? \"Read\" : \"List\"": "action === \"read\" ? \"读取\" : \"列出\"",
+    "action === \"glob\" ? \"Glob\" : \"Grep\"": "action === \"glob\" ? \"通配符\" : \"搜索\""
   }
 }

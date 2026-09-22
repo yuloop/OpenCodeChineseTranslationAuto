@@ -10,6 +10,9 @@
     "Quit": "退出",
     "Report copied — paste it into a new GitHub issue.": "报告已复制 — 粘贴到新的 GitHub issue。",
     "Restart": "重新启动",
-    "✓ Copied": "✓ 已复制"
+    "✓ Copied": "✓ 已复制",
+    "title=\" Error \"": "title=\" 错误 \"",
+    "title=\" Stack trace \"": "title=\" 堆栈跟踪 \"",
+    "\"Clipboard write failed. Try again or report the crash manually.\"": "\"剪贴板写入失败。请重试或手动报告崩溃。\""
   }
 }

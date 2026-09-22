@@ -7,6 +7,7 @@
     "text: \"running shell\"": "text: \"命令行运行中\"",
     "`Thinking: ${item.text}`": "`思考: ${item.text}`",
     "`Thinking: ${event.data.delta}`": "`思考: ${event.data.delta}`",
-    "`Thinking: ${event.data.text}`": "`思考: ${event.data.text}`"
+    "`Thinking: ${event.data.text}`": "`思考: ${event.data.text}`",
+    "text: \"Compaction\"": "text: \"压缩\""
   }
 }

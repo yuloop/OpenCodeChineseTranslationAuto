@@ -1,0 +1,9 @@
+{
+  "file": "packages/tui/src/component/reconnecting.tsx",
+  "replacements": {
+    "\"Restarting service…\"": "\"正在重启服务...\"",
+    "\"Connection lost…\"": "\"连接已断开...\"",
+    "\"Your session will resume automatically.\"": "\"会话将自动恢复。\"",
+    "\"Reconnecting to the server automatically.\"": "\"正在自动重新连接服务器。\""
+  }
+}

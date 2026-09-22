@@ -4,6 +4,8 @@
     "message: \"Select integration\"": "message: \"选择集成\"",
     "hint: \"recommended\"": "hint: \"推荐\"",
     "message: \"Select login method\"": "message: \"选择登录方式\"",
-    "message: \"Paste the authorization code\"": "message: \"粘贴授权码\""
+    "message: \"Paste the authorization code\"": "message: \"粘贴授权码\"",
+    "hint: \"connected\"": "hint: \"已连接\"",
+    "?? \"API key\"": "?? \"API密钥\""
   }
 }

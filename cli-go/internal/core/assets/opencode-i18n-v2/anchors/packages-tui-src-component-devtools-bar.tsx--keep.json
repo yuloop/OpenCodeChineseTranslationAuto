@@ -8,6 +8,8 @@
     "server": "server",
     "theme": "theme",
     "tools": "tools",
-    "ui": "ui"
+    "ui": "ui",
+    "CPU": "CPU",
+    "PID": "PID"
   }
 }

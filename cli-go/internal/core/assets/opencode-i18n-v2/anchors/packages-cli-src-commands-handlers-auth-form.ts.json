@@ -6,6 +6,7 @@
     "label: \"Skip\"": "label: \"跳过\"",
     "label: \"Type another value\"": "label: \"输入其他值\"",
     "message: \"Enter value\"": "message: \"输入值\"",
-    "\"Type your own answer\"": "\"输入自定义答案\""
+    "\"Type your own answer\"": "\"输入自定义答案\"",
+    "label: \"No\"": "label: \"否\""
   }
 }

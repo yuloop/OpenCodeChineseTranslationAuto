@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/component/plugin-route-missing.tsx",
+  "replacements": {
+    "Unknown plugin route: {props.id}/{props.name}": "未知插件路由: {props.id}/{props.name}",
+    ">go home</text>": ">前往首页</text>"
+  }
+}

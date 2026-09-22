@@ -3,6 +3,7 @@
   "replacements": {
     "Getting started": "开始使用",
     "OpenCode includes free models so you can start immediately.": "OpenCode 内置免费模型，可立即开始使用",
-    "\n            Connect from 75+ providers to use other models, including Claude, GPT, Gemini etc\n          ": "\n            连接 75+ 家提供商以使用其他模型，包括 Claude、GPT、Gemini 等\n          "
+    "\n            Connect from 75+ providers to use other models, including Claude, GPT, Gemini etc\n          ": "\n            连接 75+ 家提供商以使用其他模型，包括 Claude、GPT、Gemini 等\n          ",
+    ">Connect provider</text>": ">连接提供商</text>"
   }
 }

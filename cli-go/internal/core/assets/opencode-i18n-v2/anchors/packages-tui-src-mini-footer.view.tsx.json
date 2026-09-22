@@ -17,6 +17,15 @@
     "busy() ? \"running\" : \"idle\"": "busy() ? \"运行中\" : \"空闲\"",
     "\"Prompt\"": "\"提示\"",
     "\"Session\"": "\"会话\"",
-    "\"System\"": "\"系统\""
+    "\"System\"": "\"系统\"",
+    "group: \"Model\"": "group: \"模型\"",
+    "exiting() ? \"exit\" : \"stop\"": "exiting() ? \"退出\" : \"停止\"",
+    "exiting() ? \"Exit pending\" : \"Stop pending\"": "exiting() ? \"退出待确认\" : \"停止待确认\"",
+    "`Press ${key} again to ${exiting() ? \"exit\" : \"interrupt\"}`": "`按 ${key} 再次${exiting() ? \"退出\" : \"中断\"}`",
+    "`${key} again to ${exiting() ? \"exit\" : \"interrupt\"}`": "`${key} 再次${exiting() ? \"退出\" : \"中断\"}`",
+    "`${key} again: ${action}`": "`${key} 再次: ${action}`",
+    "shell() ? \"Shell\" : \"\"": "shell() ? \"命令行\" : \"\"",
+    "interruptLabel() ? `${interruptLabel()} stop` : \"Running\"": "interruptLabel() ? `${interruptLabel()} 停止` : \"运行中\"",
+    "${interruptLabel()} interrupt": "${interruptLabel()} 中断"
   }
 }

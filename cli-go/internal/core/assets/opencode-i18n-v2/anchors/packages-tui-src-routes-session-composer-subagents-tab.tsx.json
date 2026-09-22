@@ -10,6 +10,8 @@
     "label: \"Subagents\"": "label: \"子智能体\"",
     "{ label: \"interrupt\", shortcut:": "{ label: \"中断\", shortcut:",
     "label: `show ${store.active ? \"inactive\" : \"active\"}`": "label: `显示${store.active ? \"非活跃\" : \"活跃\"}`",
-    "fallback={<text fg={theme.text.muted}> No {store.active ? \"active\" : \"inactive\"} subagents</text>}": "fallback={<text fg={theme.text.muted}> 暂无{store.active ? \"活跃\" : \"非活跃\"}子智能体</text>}"
+    "fallback={<text fg={theme.text.muted}> No {store.active ? \"active\" : \"inactive\"} subagents</text>}": "fallback={<text fg={theme.text.muted}> 暂无{store.active ? \"活跃\" : \"非活跃\"}子智能体</text>}",
+    ": \"Subagent\",": ": \"子智能体\",",
+    "return \"Running\"": "return \"运行中\""
   }
 }

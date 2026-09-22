@@ -9,6 +9,7 @@
     "Could not load stats. Reopen /stats to try again.": "无法加载统计。请重新打开 /stats 重试。",
     "Gathering your stats…": "正在汇总你的统计数据...",
     "metric.label === \"best streak\"": "metric.label === \"最长连续天数\"",
-    "\"System\"": "\"系统\""
+    "\"System\"": "\"系统\"",
+    "title: \"back\"": "title: \"返回\""
   }
 }

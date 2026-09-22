@@ -1,0 +1,30 @@
+{
+  "file": "packages/tui/src/component/devtools-bar.tsx",
+  "replacements": {
+    "Server": "服务器",
+    "UI": "界面",
+    "Theme": "主题",
+    "Tools": "工具",
+    "Experiments": "实验功能",
+    "Render": "渲染",
+    "label=\"Status\"": "label=\"状态\"",
+    "\"Connected\"": "\"已连接\"",
+    "label=\"Reconnect\"": "label=\"重连\"",
+    "label=\"Last error\"": "label=\"最近错误\"",
+    "label=\"Version\"": "label=\"版本\"",
+    "label=\"Address\"": "label=\"地址\"",
+    "label=\"Name\"": "label=\"名称\"",
+    "label=\"Mode\"": "label=\"模式\"",
+    "Server details unavailable": "服务器详情不可用",
+    "Switch to ": "切换到 ",
+    "Debug overlay": "调试覆盖层",
+    "Time to first draw": "首次绘制耗时",
+    "Turn token usage (verbose)": "每轮 tokens 用量(详细)",
+    "Turn token usage": "每轮 tokens 用量",
+    "label=\"Loop\"": "label=\"事件循环\"",
+    "label=\"Memory\"": "label=\"内存\"",
+    "Write debug snapshot": "写入调试快照",
+    "Writing debug snapshot…": "正在写入调试快照...",
+    "\"Unknown\"": "\"未知\""
+  }
+}
