@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/stream-v2.image.ts",
+  "replacements": {
+    "`[Image ${index + 1}]`": "`[图片 ${index + 1}]`"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/acp/config-option.ts",
+  "replacements": {
+    "description: \"Available effort levels for this model\"": "description: \"该模型可用的 effort 级别\""
+  }
+}

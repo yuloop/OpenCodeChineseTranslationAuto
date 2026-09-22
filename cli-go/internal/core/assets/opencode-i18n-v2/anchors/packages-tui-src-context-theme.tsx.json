@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/context/theme.tsx",
+  "replacements": {
+    "title: \"Theme performance\"": "title: \"主题性能\""
+  }
+}

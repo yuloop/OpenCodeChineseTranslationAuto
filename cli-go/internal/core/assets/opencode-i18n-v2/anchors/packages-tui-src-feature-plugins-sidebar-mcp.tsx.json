@@ -3,9 +3,10 @@
   "replacements": {
     ">Connected</Match>": ">已连接</Match>",
     ">Disabled</Match>": ">已禁用</Match>",
-    ">Needs auth</Match>": ">需要认证</Match>",
-    "Needs client ID": "需要客户端 ID",
     "} active": "} 个活跃",
-    "} error": "} 错误"
+    "} error${bad() > 1 ? \"s\" : \"\"}": "} 错误",
+    ">Sign in</Match>": ">登录</Match>",
+    ">Connecting</Match>": ">连接中</Match>",
+    ">Error</Match>": ">错误</Match>"
   }
 }

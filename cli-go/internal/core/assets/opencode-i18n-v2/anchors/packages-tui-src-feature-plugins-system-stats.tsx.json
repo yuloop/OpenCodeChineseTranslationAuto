@@ -1,0 +1,14 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/stats.tsx",
+  "replacements": {
+    "\" days\"": "\" 天\"",
+    "title: \"Usage statistics\"": "title: \"使用统计\"",
+    "\n          opencode / stats\n        ": "\n          opencode / 统计\n        ",
+    "Your last ": "最近 ",
+    " weeks": " 周",
+    "Could not load stats. Reopen /stats to try again.": "无法加载统计。请重新打开 /stats 重试。",
+    "Gathering your stats…": "正在汇总你的统计数据...",
+    "metric.label === \"best streak\"": "metric.label === \"最长连续天数\"",
+    "\"System\"": "\"系统\""
+  }
+}

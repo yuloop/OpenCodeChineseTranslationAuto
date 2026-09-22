@@ -5,12 +5,17 @@
     "Cancel": "取消",
     "Confirm": "确认",
     "Continue after repeated failures": "连续失败后继续",
-    "Path: ": "路径: ",
     "Pattern: ": "模式: ",
     "Reject": "拒绝",
     "Shell command": "Shell 命令",
     "This keeps the session running despite repeated failures.": "即使连续失败也保持会话运行。",
     "title: \"Continue after repeated failures\"": "title: \"连续失败后继续\"",
-    "title: `WebFetch ${url}`": "title: `网页获取 ${url}`"
+    "title: `WebFetch ${url}`": "title: `网页获取 ${url}`",
+    "title: `Edit ${formatPath(file)}`": "title: `编辑 ${formatPath(file)}`",
+    "title: `${Locale.titlecase(agent)} Subagent`": "title: `${Locale.titlecase(agent)} 子智能体`",
+    "title: `Access external directory ${formatPath(directory)}`": "title: `访问外部目录 ${formatPath(directory)}`",
+    "title: `Call tool ${source.action}`": "title: `调用工具 ${source.action}`",
+    "`Path: ${formatPath(value)}`": "`路径: ${formatPath(value)}`",
+    "`Path: ${formatPath(file)}`": "`路径: ${formatPath(file)}`"
   }
 }

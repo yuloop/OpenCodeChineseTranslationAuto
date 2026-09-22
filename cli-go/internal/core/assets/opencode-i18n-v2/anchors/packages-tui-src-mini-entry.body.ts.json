@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/mini/entry.body.ts",
+  "replacements": {
+    "\"Image\"": "\"图片\""
+  }
+}

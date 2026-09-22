@@ -1,0 +1,8 @@
+{
+  "file": "packages/cli/src/acp/service.ts",
+  "replacements": {
+    "description: \"Run `opencode auth login` in the terminal\"": "description: \"在终端中运行 `opencode auth login`\"",
+    "label: \"OpenCode Login\"": "label: \"OpenCode 登录\"",
+    "description: \"ACP embedded context\"": "description: \"ACP 嵌入上下文\""
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "file": "packages/cli/src/commands/handlers/uninstall.ts",
+  "replacements": {
+    "label: \"Data\"": "label: \"数据\"",
+    "label: \"Cache\"": "label: \"缓存\"",
+    "label: \"State\"": "label: \"状态\"",
+    "message: \"Are you sure you want to uninstall?\"": "message: \"确定要卸载吗?\""
+  }
+}

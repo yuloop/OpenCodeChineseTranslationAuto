@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/config/schema.ts",
+  "replacements": {
+    "description: \"JSON Schema for CLI configuration\"": "description: \"CLI 配置的 JSON Schema\""
+  }
+}

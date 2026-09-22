@@ -1,0 +1,9 @@
+{
+  "file": "packages/cli/src/commands/handlers/auth/login.ts",
+  "replacements": {
+    "message: \"Select integration\"": "message: \"选择集成\"",
+    "hint: \"recommended\"": "hint: \"推荐\"",
+    "message: \"Select login method\"": "message: \"选择登录方式\"",
+    "message: \"Paste the authorization code\"": "message: \"粘贴授权码\""
+  }
+}

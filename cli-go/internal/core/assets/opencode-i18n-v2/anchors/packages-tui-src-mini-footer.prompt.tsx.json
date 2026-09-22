@@ -18,6 +18,15 @@
     "failed to open editor": "打开编辑器失败",
     "loading commands": "命令加载中",
     "start a new session": "开始新会话",
-    "waiting for current response": "等待当前响应完成"
+    "waiting for current response": "等待当前响应完成",
+    "description: \"configure Mini transcript output\"": "description: \"配置 Mini 记录输出\"",
+    "description: \"compact older session context to free space\"": "description: \"压缩较早的会话上下文以释放空间\"",
+    "title: \"Queue prompt\"": "title: \"队列提示\"",
+    "title: \"Exit shell mode\"": "title: \"退出 Shell 模式\"",
+    "No preview": "无预览",
+    " more\n              ": " 更多\n              ",
+    "\"Prompt\"": "\"提示\"",
+    "\"Session\"": "\"会话\"",
+    "\"Shell mode\"": "\"命令行模式\""
   }
 }

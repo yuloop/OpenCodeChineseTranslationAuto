@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/mini/stream-v2.subagent.ts",
+  "replacements": {
+    "text: `Thinking: ${item.text}`": "text: `思考: ${item.text}`",
+    "text: `Thinking: ${update.text}`": "text: `思考: ${update.text}`",
+    "text: `Thinking: ${event.data.text}`": "text: `思考: ${event.data.text}`"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/plugins.tsx",
+  "replacements": {
+    "title=\"Plugins\"": "title=\"插件\"",
+    "`${entry().runtime === \"tui\" ? \"TUI\" : \"Server\"} plugin error`": "`${entry().runtime === \"tui\" ? \"TUI\" : \"Server\"} 插件错误`",
+    "\"updating\"": "\"更新中\"",
+    "message: `Failed to update plugin ${current.id}`": "message: `更新插件 ${current.id} 失败`",
+    "title: \"Toggle internal plugins\"": "title: \"切换内部插件\"",
+    "label: `${showInternal() ? \"hide\" : \"show\"} internal`": "label: `${showInternal() ? \"hide\" : \"show\"} 内部插件`",
+    "\"checking for updates\"": "\"正在检查更新\"",
+    "\"check for updates\"": "\"检查更新\"",
+    "title: \"view error\"": "title: \"查看错误\"",
+    "\"Unknown plugin error\"": "\"未知插件错误\"",
+    "`Plugin: ${label(entry(), props.context)}\\nStatus: failed\\nRuntime: ${entry().runtime}\\nSource: ${pluginSource(entry(), props.context)}`": "`插件: ${label(entry(), props.context)}\\n状态: 失败\\n运行时: ${entry().runtime}\\n来源: ${pluginSource(entry(), props.context)}`",
+    " view error": " 查看错误",
+    "\"System\"": "\"系统\""
+  }
+}

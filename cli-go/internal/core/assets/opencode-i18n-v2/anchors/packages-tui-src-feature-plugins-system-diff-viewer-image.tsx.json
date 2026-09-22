@@ -1,0 +1,10 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/diff-viewer-image.tsx",
+  "replacements": {
+    "\"Working tree preview\"": "\"工作树预览\"",
+    "Could not load image": "无法加载图片",
+    "Loading image…": "正在加载图片...",
+    "Could not decode image": "无法解码图片",
+    "\n                          Click to enlarge\n                        ": "\n                          点击放大\n                        "
+  }
+}

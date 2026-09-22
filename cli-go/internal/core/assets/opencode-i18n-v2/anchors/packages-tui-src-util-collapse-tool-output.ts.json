@@ -1,0 +1,6 @@
+{
+  "file": "packages/tui/src/util/collapse-tool-output.ts",
+  "replacements": {
+    "`(${count} earlier ${count === 1 ? \"line\" : \"lines\"})`": "`(前面还有 ${count} 行)`"
+  }
+}

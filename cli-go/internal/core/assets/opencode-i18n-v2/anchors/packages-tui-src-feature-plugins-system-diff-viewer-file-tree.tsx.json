@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/feature-plugins/system/diff-viewer-file-tree.tsx",
+  "replacements": {
+    "\"Files\"": "\"文件\"",
+    "\" reviewed\"": "\" 已审阅\"",
+    "No files": "暂无文件"
+  }
+}
