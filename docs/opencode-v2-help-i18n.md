@@ -194,6 +194,61 @@ opencode v2.0.13 的 `package.json` catalog 固定 `effect: 4.0.0-rc.112`。对�
 
 ---
 
-## ⑩ 二进制层 `--help` 实测(合并后发布,待回填)
+## ⑩ 二进制层 `--help` 实测(合并后发布,已回填)
 
-PR 合并后重发 V2 Release、下载二进制实测 `--help`,逐字对比「本次改动前 vs 后」,结果回填于此(含:顶层 FLAGS/ARGUMENTS 是否变中文、GLOBAL FLAGS/分区标题是否仍英文、子命令 `--help` 抽样)。
+- 日期:2026-09-23
+- 方式:PR #16 合并(main `280567a0f`)后,对同一上游版本 `v2.0.14` 再 dispatch 一次 `opencode-cn-v2-nightly.yml`(`workflow_dispatch` 一律构建 + `overwrite_files` 原地覆盖 `v2-cn-2.0.14`),下载新产物与改动前二进制逐字对比。
+- **Run(两 job 全绿,head SHA `280567a0f`)**:https://github.com/yuloop/OpenCodeChineseTranslationAuto/actions/runs/35753235857
+- **CI 门禁(与本地一致)**:`apply --dry-run --strict --min-match-rate 1` → 📁 文件 **227 成功, 0 跳过, 0 失败** / 📝 替换 **2085/2085 (100.0%)**;中文落地验证 4/4 命中,CJK 转义序列 **66,487 → 67,208**(净增约 721,来自本次 69 条新译文)。
+
+**产物(Release 附件,本地重新下载复核 sha256 一致)**:
+
+| | sha256 | 体积 |
+|---|---|---|
+| 改动前 `opencode-v2-v2.0.14-linux-x64` | `b23a7dddcd3826b35920629ec86ec556aad04bff95aec749027470caf22df472` | 200,852,960 B |
+| 改动后(本次) | `57d6ded1c4f355ee8fb75ce724bafb2d324a43fbb177aa297f9e8dc3127a3b87` | 200,857,056 B |
+
+### 顶层 `--help` 逐字 diff(改动前 → 后)
+
+**8 条目标串全部变中文**(与 ⑥ 表一致):
+
+```
+ARGUMENTS
+-  directory string    Directory to start OpenCode in (optional)
++  directory string    启动 OpenCode 的目录 (optional)
+FLAGS
+-  --standalone            Run with a private server instead of the background service
++  --standalone            使用独立服务器运行,而非后台服务
+-  --server string         Connect to a server URL instead of the background service
++  --server string         连接到服务器 URL,而非后台服务
+-  --auto                  Auto-approve permissions that are not explicitly denied
++  --auto                  自动批准未被明确拒绝的权限
+-  --continue, -c          Continue the last session
++  --continue, -c          继续上一个会话
+-  --session, -s string    Session ID to continue
++  --session, -s string    要继续的会话 ID
+-  --prompt string         Prompt to use
++  --prompt string         要使用的提示
+GLOBAL FLAGS
+-  --print-logs   Print logs to stderr (server logs require --standalone)
++  --print-logs   将日志打印到 stderr(服务器日志需要 --standalone)
+```
+
+**保持英文(与 ⑤ 保持英文清单一致,未硬翻)**:
+
+- 分区标题 `DESCRIPTION` / `USAGE` / `ARGUMENTS` / `FLAGS` / `GLOBAL FLAGS` / `SUBCOMMANDS` —— 仍英文(effect 库串)。
+- GLOBAL FLAGS 的 `--help/--version/--wizard/--completions/--log-level` 五条描述 —— 仍英文(effect 库串)。
+- SUBCOMMANDS 全部子命令描述 —— 仍中文(上单已译,无回退)。
+
+### 子命令 `--help` 抽样 diff(run / stats / session list / uninstall / mini)
+
+五个子命令的 FLAGS/ARGUMENTS 区**全部 flag/arg 描述变中文**,与 ⑥ 表逐条对应,例如:
+
+- `run`:`Message to send→要发送的消息`、`Fork the session before continuing→继续前分支会话`、`Model to use in the format provider/model#variant→要使用的模型,格式为 provider/model#variant`、`File to attach to the message→要附加到消息的文件`、`Session title→会话标题`、`Show thinking blocks→显示思考块`。
+- `stats`:`Show the last N days; 0 means today→显示最近 N 天;0 表示今天`、`Filter by project ID, or use "." for the current project→按项目 ID 过滤,或使用 "." 表示当前项目`、`Output statistics as JSON→以 JSON 格式输出统计`。
+- `mini`:`Restore session history on resume and resize (disable with --no-replay)→在恢复和调整大小时还原会话历史(用 --no-replay 禁用)`、`Fork the session when continuing→继续时分支会话`。
+- `uninstall` / `session list` 同理全部落地。
+
+**如实呈现的边界(未美化)**:由 effect 框架**自动拼接**的后缀仍为英文,与「库串保持英文」口径一致——`(optional)`(Argument/Flag.optional 追加)、`(choices: default, json)` / `(choices: table, json)`(Flag.choice 从选项数组追加)。这些后缀不在 `commands.ts` 源码内,属框架生成,无法经 apply 锚定;要汉化需改库(禁改门禁/不动 node_modules),故保持英文。
+
+**一句话结论**:本次改动精确收掉了 `commands.ts` 行内 flag/arg 描述这一整批英文(顶层 + 全部子命令),代码位/技术令牌零误伤;库生成的 GLOBAL FLAGS 描述、分区标题与 `(optional)`/`(choices:)` 后缀按设计保持英文。改动前后二进制 sha256 不同(+4,096 B)、CJK 转义 66,487→67,208,证明新资产确已注入并编译进二进制。
