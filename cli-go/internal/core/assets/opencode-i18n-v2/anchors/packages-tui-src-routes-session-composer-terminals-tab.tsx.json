@@ -1,0 +1,12 @@
+{
+  "file": "packages/tui/src/routes/session/composer/terminals-tab.tsx",
+  "replacements": {
+    "title: \"Previous terminal\"": "title: \"上一个终端\"",
+    "title: \"Next terminal\"": "title: \"下一个终端\"",
+    "title: \"Select terminal\"": "title: \"选择终端\"",
+    "group: \"Composer\"": "group: \"组合面板\"",
+    "label: \"Terminals\"": "label: \"终端\"",
+    "?? \"+ New terminal\"": "?? \"+ 新建终端\"",
+    "message: \"Unable to load terminal\"": "message: \"无法加载终端\""
+  }
+}
