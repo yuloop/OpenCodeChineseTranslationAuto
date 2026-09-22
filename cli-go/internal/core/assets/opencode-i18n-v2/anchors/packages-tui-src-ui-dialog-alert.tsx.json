@@ -1,6 +1,8 @@
 {
   "file": "packages/tui/src/ui/dialog-alert.tsx",
   "replacements": {
-    "<text fg={theme.selectedListItemText}>ok</text>": "<text fg={theme.selectedListItemText}>确定</text>"
+    "title: \"Confirm alert\"": "title: \"确认提示\"",
+    "<text fg={theme.text.action.primary.focused}>ok</text>": "<text fg={theme.text.action.primary.focused}>确定</text>",
+    "group: \"Dialog\"": "group: \"对话框\""
   }
 }

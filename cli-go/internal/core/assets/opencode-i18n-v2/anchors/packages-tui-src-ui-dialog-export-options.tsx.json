@@ -1,14 +1,15 @@
 {
   "file": "packages/tui/src/ui/dialog-export-options.tsx",
   "replacements": {
-    ">Filename:<": ">文件名:<",
-    "Export Options": "导出选项",
-    "Include assistant metadata": "包含助手元数据",
     "Include thinking": "包含思考过程",
-    "Include tool details": "包含工具详情",
-    "Open without saving": "不保存直接打开",
-    "for options": "查看选项",
-    "placeholder=\"Enter filename\"": "placeholder=\"输入文件名\"",
-    "to confirm": "确认"
+    "title: \"Next export option\"": "title: \"下一个导出选项\"",
+    "title: \"Select export option\"": "title: \"选择导出选项\"",
+    "Export session": "导出会话",
+    "Export as:": "导出为:",
+    "Include tools": "包含工具",
+    "Sanitize sensitive data": "脱敏敏感数据",
+    "<text fg={overlayTheme.text.base}>Copy</text>": "<text fg={overlayTheme.text.base}>复制</text>",
+    "<text fg={store.active === \"export\" ? theme.text.action.primary.focused : theme.text.action.primary.base}>\n            Export\n          </text>": "<text fg={store.active === \"export\" ? theme.text.action.primary.focused : theme.text.action.primary.base}>\n            导出\n          </text>",
+    "group: \"Dialog\"": "group: \"对话框\""
   }
 }

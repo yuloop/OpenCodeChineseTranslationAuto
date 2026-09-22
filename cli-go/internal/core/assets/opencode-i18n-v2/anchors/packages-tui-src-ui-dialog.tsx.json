@@ -1,0 +1,7 @@
+{
+  "file": "packages/tui/src/ui/dialog.tsx",
+  "replacements": {
+    "title: \"Close dialog\"": "title: \"关闭对话框\"",
+    "group: \"Dialog\"": "group: \"对话框\""
+  }
+}
