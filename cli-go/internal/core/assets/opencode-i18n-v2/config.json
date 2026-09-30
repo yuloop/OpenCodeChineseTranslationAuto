@@ -10,14 +10,14 @@
   },
   "v1AssetsVersion": "6.2",
   "totals": {
-    "total": 496,
+    "total": 497,
     "kept": 152,
     "moved": 95,
     "moved_unique": 39,
     "moved_disambiguated": 56,
     "moved_manual": 3,
-    "deferred": 248,
-    "deferred_no_hit": 217,
+    "deferred": 249,
+    "deferred_no_hit": 218,
     "deferred_outside_universe": 17,
     "deferred_ambiguous": 5,
     "deferred_no_consensus": 3,
@@ -27,14 +27,14 @@
   },
   "manifest": {
     "totals": {
-      "total": 496,
+      "total": 497,
       "kept": 152,
       "moved": 95,
       "moved_unique": 39,
       "moved_disambiguated": 56,
       "moved_manual": 3,
-      "deferred": 248,
-      "deferred_no_hit": 217,
+      "deferred": 249,
+      "deferred_no_hit": 218,
       "deferred_outside_universe": 17,
       "deferred_ambiguous": 5,
       "deferred_no_consensus": 3,
@@ -130,6 +130,15 @@
         "status": "deferred",
         "from": "packages/tui/src/app.tsx",
         "to": "packages/tui/src/app.tsx",
+        "basis": "no-hit",
+        "hits": []
+      },
+      {
+        "rule": "common/common-toast.json",
+        "key": "message: \"An unknown error has occurred\"",
+        "status": "deferred",
+        "from": "packages/tui/src/ui/toast.tsx",
+        "to": "packages/tui/src/ui/toast.tsx",
         "basis": "no-hit",
         "hits": []
       },
@@ -4750,6 +4759,7 @@
       }
     ],
     "manualNotes": {
+      "common/common-toast.json|message: \"An unknown error has occurred\"": "上游已删此串，非待锚定：v2.0.14(0846214) packages/tui/src/ui/toast.tsx:175 尚有 message: \"An unknown error has occurred\"；v2.0.20(84c9be93a563) 该串全树 0 命中，同文件 169 行改为 toast.show({ variant: \"error\", message: errorMessage(err) })（errorMessage 见 packages/tui/src/util/error.ts:121）。V1 词表仍保留该条（上游 1.18.x 仍在用），故 V2 账本保留条目、按 deferred/no-hit 记账（不可删：删了 V1 条目就在账本里丢失），status 不得记 kept/in-place-match——源树里已无此串。",
       "components/command-panel.json|\"Manage workspaces\"": "V1 锚点 app.tsx 是命令面板定义处；V2 该命令仍存在且同名同 id：prompt/index.tsx:618 title/619 desc（palette:true, name=session.move），keybind.ts:108 是同一命令 id 的键位标签。两处均为用户可见字符串。",
       "dialogs/dialog-status.json|Status": "护栏误报：code_skeleton 只抹引号字符串，JSX 文本节点不在其列。V2 packages/tui/src/component/dialog-status.tsx:23 全文件唯一一处 \\bStatus\\b 即 <text attributes={BOLD}>Status</text> 标签，与 V1 同文件:47 同一处 UI 文本，替换安全。",
       "dialogs/dialog-toast.json|message: \"Copied to clipboard\"": "V1 锚点 ui/dialog.tsx:192 的 toast 调用；V2 全宇宙 4 处均为同一 toast.show({ message: \"Copied to clipboard\", ... }) 调用，字符串与角色完全一致。app.tsx:582 那处已由 common/error-messages.json 的同名 kept 条目覆盖，此处不重复锚定。",
