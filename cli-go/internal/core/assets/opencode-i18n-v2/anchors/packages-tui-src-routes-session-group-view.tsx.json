@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/routes/session/group-view.tsx",
+  "replacements": {
+    "pending={latest() ? `Thinking: ${latest()}` : \"Thinking\"}": "pending={latest() ? `思考中: ${latest()}` : \"思考中\"}",
+    "{props.completed ? \"Thought\" : latest() ? `Thinking: ${latest()}` : \"Thinking\"}": "{props.completed ? \"思考\" : latest() ? `思考中: ${latest()}` : \"思考中\"}",
+    "<Show when={props.completed && thoughts().length > 1}> · {thoughts().length} steps</Show>": "<Show when={props.completed && thoughts().length > 1}> · {thoughts().length} 步</Show>"
+  }
+}

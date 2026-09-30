@@ -22,7 +22,7 @@
     "description: \"Active attention sound pack ID\"": "description: \"当前提醒音效包 ID\"",
     "description: \"Sound file overrides by attention event\"": "description: \"按提醒事件覆盖音效文件\"",
     "description: \"System notification and sound settings\"": "description: \"系统通知和声音设置\"",
-    "description: \"Initial diff source; defaults to 'branch' (branch and uncommitted changes)\"": "description: \"初始差异来源;默认为 'branch'(分支与未提交更改)\"",
+    "Initial diff source; defaults to 'branch' (branch and uncommitted changes). 'turn' shows the session's last turn and falls back to 'branch' outside a session": "初始差异来源;默认为 'branch' (分支和未提交的更改). 'turn' 显示会话的最后一轮, 在会话之外回退为 'branch'",
     "description: \"Line wrapping behavior in diff output\"": "description: \"差异输出中的换行行为\"",
     "description: \"Show the diff file tree\"": "description: \"显示差异文件树\"",
     "description: \"Show only the selected file patch\"": "description: \"仅显示所选文件的补丁\"",

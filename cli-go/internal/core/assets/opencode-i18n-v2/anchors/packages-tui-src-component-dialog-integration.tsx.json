@@ -34,7 +34,6 @@
     "placeholder=\"Account name\"": "placeholder=\"账户名称\"",
     "placeholder=\"Authorization code\"": "placeholder=\"授权码\"",
     "placeholder=\"Type your own answer\"": "placeholder=\"输入你自己的答案\"",
-    "return \"Authentication failed\"": "return \"认证失败\"",
     "title: \"Add account\"": "title: \"添加账户\"",
     "title: \"Continue\"": "title: \"继续\"",
     "title: \"Copy authorization details\"": "title: \"复制授权详情\"",

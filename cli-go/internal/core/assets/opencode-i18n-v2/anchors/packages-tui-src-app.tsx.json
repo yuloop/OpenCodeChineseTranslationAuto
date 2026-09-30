@@ -62,7 +62,6 @@
     "category: \"Integration\"": "category: \"集成\"",
     "title: \"Open settings\"": "title: \"打开设置\"",
     "title: \"Update OpenCode\"": "title: \"更新 OpenCode\"",
-    "description: \"Update OpenCode (upgrade)\"": "description: \"更新 OpenCode (升级)\"",
     "title: \"Pair device\"": "title: \"配对设备\"",
     "title: \"Restart service\"": "title: \"重启服务\"",
     "message: \"Restarting service…\"": "message: \"正在重启服务...\"",
