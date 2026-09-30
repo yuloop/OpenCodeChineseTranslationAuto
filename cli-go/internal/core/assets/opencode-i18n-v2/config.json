@@ -10,8 +10,8 @@
   },
   "v1AssetsVersion": "6.2",
   "totals": {
-    "total": 497,
-    "kept": 153,
+    "total": 496,
+    "kept": 152,
     "moved": 95,
     "moved_unique": 39,
     "moved_disambiguated": 56,
@@ -27,8 +27,8 @@
   },
   "manifest": {
     "totals": {
-      "total": 497,
-      "kept": 153,
+      "total": 496,
+      "kept": 152,
       "moved": 95,
       "moved_unique": 39,
       "moved_disambiguated": 56,
@@ -132,14 +132,6 @@
         "to": "packages/tui/src/app.tsx",
         "basis": "no-hit",
         "hits": []
-      },
-      {
-        "rule": "common/common-toast.json",
-        "key": "message: \"An unknown error has occurred\"",
-        "status": "kept",
-        "from": "packages/tui/src/ui/toast.tsx",
-        "to": "packages/tui/src/ui/toast.tsx",
-        "basis": "in-place-match"
       },
       {
         "rule": "common/error-messages.json",
