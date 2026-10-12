@@ -1,0 +1,8 @@
+{
+  "file": "packages/tui/src/context/update-notification.tsx",
+  "description": "更新通知上下文（上游 v1.19.0 新增）",
+  "replacements": {
+    "`${message}\\nTo install OpenCode 2.0 manually, see ${MAJOR_INSTRUCTIONS}`": "`${message}\\n如需手动安装 OpenCode 2.0，请参阅 ${MAJOR_INSTRUCTIONS}`"
+  },
+  "note": "上游 v1.19.0 从 app.tsx 拆出更新通知逻辑"
+}

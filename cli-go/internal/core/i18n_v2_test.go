@@ -104,8 +104,13 @@ func loadEmbedded(t *testing.T, dir string, embedded fs.FS) []TranslationConfig 
 
 func TestEmbeddedV1AssetsUnchanged(t *testing.T) {
 	configs := loadEmbedded(t, "assets/opencode-i18n", embeddedAssets)
-	if len(configs) != 54 {
-		t.Errorf("V1 规则文件数应保持 54: got %d", len(configs))
+	// 2026-10-12：上游 v1.19.0 把更新对话框从 app.tsx 拆到
+	// component/dialog-update.tsx（+ context/update-notification.tsx），
+	// V1 词表随之新增 dialogs/dialog-update.json(19 条) 与
+	// common/update-notification.json(1 条)，并移除 app.tsx 里 4 条失效条目：
+	// 54 -> 56 个规则文件，497 -> 513 条条目。
+	if len(configs) != 56 {
+		t.Errorf("V1 规则文件数应保持 56: got %d", len(configs))
 	}
 	total := 0
 	for _, config := range configs {
@@ -114,8 +119,8 @@ func TestEmbeddedV1AssetsUnchanged(t *testing.T) {
 		}
 		total += len(config.Replacements)
 	}
-	if total != 497 {
-		t.Errorf("V1 翻译条目数应保持 497: got %d", total)
+	if total != 513 {
+		t.Errorf("V1 翻译条目数应保持 513: got %d", total)
 	}
 }
 
