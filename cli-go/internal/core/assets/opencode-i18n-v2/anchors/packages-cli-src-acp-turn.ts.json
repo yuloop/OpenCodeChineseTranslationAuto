@@ -1,0 +1,6 @@
+{
+  "file": "packages/cli/src/acp/turn.ts",
+  "replacements": {
+    "description: \"ACP embedded context\"": "description: \"ACP 嵌入上下文\""
+  }
+}

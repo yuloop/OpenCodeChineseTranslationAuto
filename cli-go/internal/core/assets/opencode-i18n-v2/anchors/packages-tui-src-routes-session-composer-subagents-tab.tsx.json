@@ -9,9 +9,9 @@
     "group: \"Composer\"": "group: \"组合面板\"",
     "label: \"Subagents\"": "label: \"子智能体\"",
     "{ label: \"interrupt\", shortcut:": "{ label: \"中断\", shortcut:",
-    "label: `show ${store.active ? \"inactive\" : \"active\"}`": "label: `显示${store.active ? \"非活跃\" : \"活跃\"}`",
-    "fallback={<text fg={theme.text.muted}> No {store.active ? \"active\" : \"inactive\"} subagents</text>}": "fallback={<text fg={theme.text.muted}> 暂无{store.active ? \"活跃\" : \"非活跃\"}子智能体</text>}",
     ": \"Subagent\",": ": \"子智能体\",",
-    "return \"Running\"": "return \"运行中\""
+    "return \"Running\"": "return \"运行中\"",
+    "fallback={<text fg={theme.text.muted}> No {filter.active ? \"active\" : \"inactive\"} subagents</text>}": "fallback={<text fg={theme.text.muted}> 暂无{filter.active ? \"活跃\" : \"非活跃\"}子智能体</text>}",
+    "label: `show ${filter.active ? \"inactive\" : \"active\"}`": "label: `显示${filter.active ? \"非活跃\" : \"活跃\"}`"
   }
 }
