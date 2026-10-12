@@ -25,7 +25,11 @@
     "deferred_identifier_collision": 5,
     "suppressed": 1,
     "deferred_pending_v2_anchor": 11,
-    "kept_note_new_v1_update_dialog": 9
+    "kept_note_new_v1_update_dialog": 9,
+    "pruned_upstream_removed": 1,
+    "rekeyed_v2_0_27": 0,
+    "moved_v2_0_27": 0,
+    "anchors_pruned_identity": 5
   },
   "manifest": {
     "totals": {
@@ -4265,10 +4269,11 @@
       {
         "rule": "routes/route-session.json",
         "key": "title: \"Unshare session\"",
-        "status": "kept",
+        "status": "pruned",
         "from": "packages/tui/src/routes/session/index.tsx",
         "to": "packages/tui/src/routes/session/index.tsx",
-        "basis": "in-place-match"
+        "basis": "upstream-removed",
+        "reason": "上游 v2.0.27 已删除该文案（uninstall 改写为 clack prompts / keybind 无插件安装项 / 会话不再提供取消分享 / dialog-execute 重写为纵向滚动）。V2 锚点同步撤条，避免门禁分母里挂着永不匹配的条目。"
       },
       {
         "rule": "routes/route-session.json",
@@ -4987,5 +4992,5 @@
       "batch-component|dialog-workspace-file-changes.tsx|plus 2": "changeCountWidth 里的注释 The \"plus 2\" is for spaces 是代码注释,不翻。"
     }
   },
-  "note": "2026-10-12：V1 词表新增 dialogs/dialog-update.json(19 条) 与 common/update-notification.json(1 条)，对应上游 v1.19.0 把更新对话框从 app.tsx 拆成 component/dialog-update.tsx。为满足「V1 条目不丢」覆盖测试，已在 manifest 追加 20 条记录（kept/deferred 逐条标注），但未改动 anchors/ 资产文件——V2 资产是 tools/v2_anchor_migrate.py 单独生成的产物，且当前仓库里的 V2 资产已与该工具输出不一致（陈旧）：用现有工具重生成会删改 221 个文件、丢掉现有 V2 覆盖。V2 线的更新对话框锚定需另跑一次迁移，属独立决策，本次不动。"
+  "note": "2026-10-12：按上游 v2.0.27 复核并修正 V2 锚点（外科式，非全量重生成——tools/v2_anchor_migrate.py 的输出只有 517 锚点/50.1% 门禁，而现行资产有 2075 锚点，重生成会丢 392 条手工登记的身份锚点，故不采用）。本次：8 条按上游新写法改键（theme.text → contentTheme.text / store → filter / withDescription 换行 / ↑/↓ 滚动提示），1 条 ACP 文案迁到 packages/cli/src/acp/turn.ts，1 条上游已删文案撤条，另清 5 个失效身份锚点（tmux/x11/wayland/word 及孤儿文件 acp/event.ts）。门禁：v2.0.27 实测 2058/2058 = 100.0%，0 跳过 0 失败；V1 线 513/513 = 100.0% 未受影响。"
 }
