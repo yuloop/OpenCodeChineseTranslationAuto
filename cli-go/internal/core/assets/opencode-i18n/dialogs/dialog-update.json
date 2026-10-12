@@ -1,0 +1,26 @@
+{
+  "file": "packages/tui/src/component/dialog-update.tsx",
+  "description": "更新对话框（上游 v1.19.0 从 app.tsx 拆出）",
+  "replacements": {
+    "? \"Updating OpenCode\"": "? \"正在更新 OpenCode\"",
+    "? \"Update available\"": "? \"有可用更新\"",
+    ": \"Update\"}": ": \"更新\"}",
+    ">Checking for updates…<": ">正在检查更新…<",
+    "An update is available. After installing, you'll be prompted to restart OpenCode.": "有可用更新。安装完成后，将提示您重启 OpenCode。",
+    "? \"Installing OpenCode 2.0…\"": "? \"正在安装 OpenCode 2.0…\"",
+    ": `Installing OpenCode ${installing.target.version}…`": ": `正在安装 OpenCode ${installing.target.version}…`",
+    "? \"Update successful! A restart is required. Run `opencode` to start OpenCode 2.0.\"": "? \"更新成功！需要重启。运行 `opencode` 即可启动 OpenCode 2.0。\"",
+    ": \"Update successful! A restart is required.\"": ": \"更新成功！需要重启。\"",
+    "OpenCode 2.0 is the next major release.": "OpenCode 2.0 是下一个重大版本。",
+    "It contains some breaking changes.": "它包含一些破坏性变更。",
+    "Read more about it:{\" \"}": "了解更多：{\" \"}",
+    "\"Couldn't check for updates.\"": "\"无法检查更新。\"",
+    "? \"Dismiss\" : \"Skip\"": "? \"忽略\" : \"跳过\"",
+    "? \"Upgrade\" : \"Update\"": "? \"升级\" : \"更新\"",
+    "Restart": "重新启动",
+    "\"Confirm update action\"": "\"确认更新操作\"",
+    "\"Previous update action\"": "\"上一个更新操作\"",
+    "\"Next update action\"": "\"下一个更新操作\""
+  },
+  "note": "上游 v1.19.0 新增组件；原 app.tsx 里的 Update Available / Update Failed / Updating to v 条目已迁到此处"
+}

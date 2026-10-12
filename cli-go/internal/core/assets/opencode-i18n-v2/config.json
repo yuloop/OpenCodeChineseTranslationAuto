@@ -10,20 +10,22 @@
   },
   "v1AssetsVersion": "6.2",
   "totals": {
-    "total": 497,
+    "total": 517,
     "kept": 152,
     "moved": 95,
     "moved_unique": 39,
     "moved_disambiguated": 56,
     "moved_manual": 3,
-    "deferred": 249,
+    "deferred": 260,
     "deferred_no_hit": 218,
     "deferred_outside_universe": 17,
     "deferred_ambiguous": 5,
     "deferred_no_consensus": 3,
     "deferred_weak_evidence": 1,
     "deferred_identifier_collision": 5,
-    "suppressed": 1
+    "suppressed": 1,
+    "deferred_pending_v2_anchor": 11,
+    "kept_note_new_v1_update_dialog": 9
   },
   "manifest": {
     "totals": {
@@ -4747,6 +4749,206 @@
         "to": "packages/tui/src/feature-plugins/sidebar/mcp.tsx",
         "basis": "no-hit",
         "hits": []
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "? \"Updating OpenCode\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "in-place-match",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线 v2.0.12/21/27 同路径同文本仍命中，但尚未写入 V2 anchors/ 资产文件（V2 资产为单独生成物，见本文件 note）。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "? \"Update available\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "in-place-match",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线 v2.0.12/21/27 同路径同文本仍命中，但尚未写入 V2 anchors/ 资产文件（V2 资产为单独生成物，见本文件 note）。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": ": \"Update\"}",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "in-place-match",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线 v2.0.12/21/27 同路径同文本仍命中，但尚未写入 V2 anchors/ 资产文件（V2 资产为单独生成物，见本文件 note）。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": ">Checking for updates…<",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "in-place-match",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线 v2.0.12/21/27 同路径同文本仍命中，但尚未写入 V2 anchors/ 资产文件（V2 资产为单独生成物，见本文件 note）。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "An update is available. After installing, you'll be prompted to restart OpenCode.",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "in-place-match",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线 v2.0.12/21/27 同路径同文本仍命中，但尚未写入 V2 anchors/ 资产文件（V2 资产为单独生成物，见本文件 note）。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "? \"Installing OpenCode 2.0…\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": ": `Installing OpenCode ${installing.target.version}…`",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "? \"Update successful! A restart is required. Run `opencode` to start OpenCode 2.0.\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": ": \"Update successful! A restart is required.\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "OpenCode 2.0 is the next major release.",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "It contains some breaking changes.",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "Read more about it:{\" \"}",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "\"Couldn't check for updates.\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "? \"Dismiss\" : \"Skip\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "? \"Upgrade\" : \"Update\"",
+        "status": "deferred",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "Restart",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "in-place-match",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线 v2.0.12/21/27 同路径同文本仍命中，但尚未写入 V2 anchors/ 资产文件（V2 资产为单独生成物，见本文件 note）。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "\"Confirm update action\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "in-place-match",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线 v2.0.12/21/27 同路径同文本仍命中，但尚未写入 V2 anchors/ 资产文件（V2 资产为单独生成物，见本文件 note）。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "\"Previous update action\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "in-place-match",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线 v2.0.12/21/27 同路径同文本仍命中，但尚未写入 V2 anchors/ 资产文件（V2 资产为单独生成物，见本文件 note）。"
+      },
+      {
+        "rule": "dialogs/dialog-update.json",
+        "key": "\"Next update action\"",
+        "status": "kept",
+        "from": "packages/tui/src/component/dialog-update.tsx",
+        "to": "packages/tui/src/component/dialog-update.tsx",
+        "basis": "in-place-match",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线 v2.0.12/21/27 同路径同文本仍命中，但尚未写入 V2 anchors/ 资产文件（V2 资产为单独生成物，见本文件 note）。"
+      },
+      {
+        "rule": "common/update-notification.json",
+        "key": "`${message}\\nTo install OpenCode 2.0 manually, see ${MAJOR_INSTRUCTIONS}`",
+        "status": "deferred",
+        "from": "packages/tui/src/context/update-notification.tsx",
+        "to": "packages/tui/src/context/update-notification.tsx",
+        "basis": "pending-v2-anchor",
+        "hits": [],
+        "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
       }
     ],
     "conflicts": [
@@ -4784,5 +4986,6 @@
       "batch-component|dialog-session-list.tsx|Location unavailable": "throw new Error(\"Location unavailable\") 不显示给用户(searchState 用通用 message 覆盖),按 Tier B 代码位不翻。",
       "batch-component|dialog-workspace-file-changes.tsx|plus 2": "changeCountWidth 里的注释 The \"plus 2\" is for spaces 是代码注释,不翻。"
     }
-  }
+  },
+  "note": "2026-10-12：V1 词表新增 dialogs/dialog-update.json(19 条) 与 common/update-notification.json(1 条)，对应上游 v1.19.0 把更新对话框从 app.tsx 拆成 component/dialog-update.tsx。为满足「V1 条目不丢」覆盖测试，已在 manifest 追加 20 条记录（kept/deferred 逐条标注），但未改动 anchors/ 资产文件——V2 资产是 tools/v2_anchor_migrate.py 单独生成的产物，且当前仓库里的 V2 资产已与该工具输出不一致（陈旧）：用现有工具重生成会删改 221 个文件、丢掉现有 V2 覆盖。V2 线的更新对话框锚定需另跑一次迁移，属独立决策，本次不动。"
 }

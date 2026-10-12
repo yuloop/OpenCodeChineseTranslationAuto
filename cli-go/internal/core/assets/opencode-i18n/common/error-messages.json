@@ -3,10 +3,7 @@
   "description": "提示消息",
   "replacements": {
     "message: \"The current session was deleted\"": "message: \"当前会话已删除\"",
-    "message: \"Copied to clipboard\"": "message: \"已复制到剪贴板\"",
-    "`Update Available`": "`有可用更新`",
-    "title: \"Update Failed\"": "title: \"更新失败\"",
-    "message: \"Update failed\"": "message: \"更新失败\""
+    "message: \"Copied to clipboard\"": "message: \"已复制到剪贴板\""
   },
-  "note": "已移除不再存在于源代码中的条目: return An error occurred"
+  "note": "已移除不再存在于源代码中的条目: Update Available / Update Failed（上游 v1.19.0 将更新对话框移至 component/dialog-update.tsx，见 dialogs/dialog-update.json）"
 }
