@@ -1,4 +1,4 @@
-name: OpenCode Chinese Nightly
+name: OpenCode Chinese Nightly (V1, 定时已退役)
 
 # opencode 汉化版【实时预览版】自动构建发布流水线（nightly）
 # 每小时检查上游 dev 分支最新提交：有变化则校验翻译词表 100% 匹配 → 应用汉化 → 构建 →
@@ -6,10 +6,18 @@ name: OpenCode Chinese Nightly
 # 发布后自动清理旧预览版，页面只保留最新 1 个预览条目）
 # 正式版见 release.yml（跟随上游正式 Release tag）
 # 构建模式：不 merge 上游——独立 checkout 上游源码到 build/upstream，打补丁+应用翻译后构建
+#
+# 【2026-10-13 退役定时触发，仅保留手动 dispatch】
+# 原因：上游把 dev 分支切到了 2.0.x 布局（packages/opencode 目录已删，拆成
+# packages/cli / packages/tui 等），本 workflow 的 resolve 步骤读
+# packages/opencode/package.json 必然 404，自 2026-10-10 起每晚固定失败。
+# 该流水线的原始目的（跟随上游 dev 出预览版）已被 V2 专用线
+# opencode-cn-v2-nightly.yml（跟踪上游 v2.0.x tag）覆盖，故退役定时触发、消除噪音。
+# 保留 workflow_dispatch 以便需要时手动构建：用 upstream_ref 显式传一个 1.x ref
+# （例如 v1.19.0），此时 V1 布局仍在，流水线照常可用。
+# V1 正式线 release.yml 不受影响（它跟上游最新 release，仍是 1.x 布局）。
 
 on:
-  schedule:
-    - cron: "37 * * * *"
   workflow_dispatch:
     inputs:
       upstream_ref:
