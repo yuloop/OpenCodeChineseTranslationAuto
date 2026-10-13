@@ -52,8 +52,14 @@ export const mergeProviderOptions = (
 export const HttpTimeout = Schema.Union([Schema.Number.check(Schema.isGreaterThan(0)), Schema.Literal(false)])
 export type HttpTimeout = Schema.Schema.Type<typeof HttpTimeout>
 
-/** Applied to `headerTimeout` and `chunkTimeout` when a request leaves them unset. */
+/** Applied to `headerTimeout` when a request leaves it unset. */
 export const DEFAULT_HTTP_TIMEOUT_MS = 300_000
+
+/**
+ * Applied to `chunkTimeout` when a request leaves it unset. Some providers, such as DeepSeek, have specifically asked
+ * clients to allow at least 15 minutes, because their models can stream nothing for minutes while they reason.
+ */
+export const DEFAULT_CHUNK_TIMEOUT_MS = 900_000
 
 /** `Content-Encoding` for JSON request bodies; `none` sends plain JSON. */
 export const RequestEncoding = Schema.Literals(["zstd", "gzip", "none"])
@@ -201,6 +207,9 @@ export type LanguageModelMaxTokensFieldCompatibility = Schema.Schema.Type<
   typeof LanguageModelMaxTokensFieldCompatibility
 >
 
+export const LanguageModelCacheFormatCompatibility = Schema.Literals(["anthropic", "alibaba"])
+export type LanguageModelCacheFormatCompatibility = Schema.Schema.Type<typeof LanguageModelCacheFormatCompatibility>
+
 export class LanguageModelCompatibility extends Schema.Class<LanguageModelCompatibility>(
   "LLM.LanguageModelCompatibility",
 )({
@@ -218,6 +227,8 @@ export class LanguageModelCompatibility extends Schema.Class<LanguageModelCompat
   // this is true; other protocols omit it only when this is false.
   // Session-affinity headers still flow regardless.
   supportsPromptCacheKey: Schema.optional(Schema.Boolean),
+  /** Prompt-cache marker syntax the endpoint accepts. Overrides the route default; both send `cache_control`, and `alibaba` skips tool definitions. */
+  cacheFormat: Schema.optional(LanguageModelCacheFormatCompatibility),
   zaiToolStream: Schema.optional(Schema.Boolean),
   requireSignature: Schema.optional(Schema.Boolean),
   /** Supports Anthropic's thinking-prefix mismatch controls. Overrides model-ID detection. */

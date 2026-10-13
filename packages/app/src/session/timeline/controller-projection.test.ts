@@ -73,6 +73,7 @@ describe("visibleTimelineMessages", () => {
       expect(projection.rows().map((row) => [row._tag, row.userMessageID])).toEqual([
         ["UserMessage", "msg_1"],
         ["AssistantPart", "msg_1"],
+        ["Activity", "msg_1"],
         ["TurnGap", "msg_3"],
         ["UserMessage", "msg_3"],
       ])
@@ -85,11 +86,11 @@ describe("visibleTimelineMessages", () => {
       expect(projection.assistantMessagesByParent().has(steer.id)).toBe(false)
       expect([...projection.messageRowIndex()]).toEqual([
         ["msg_1", 0],
-        ["msg_3", 2],
+        ["msg_3", 3],
       ])
       expect([...projection.messageLastRowIndex()]).toEqual([
-        ["msg_1", 1],
-        ["msg_3", 3],
+        ["msg_1", 2],
+        ["msg_3", 4],
       ])
       expect([...projection.lastAssistantGroupKey()]).toEqual([["msg_1", "context:msg_5:tool_read"]])
       expect(projection.rowByKey().get("user-message:msg_1")).toBe(projection.rows()[0])
@@ -250,6 +251,7 @@ describe("applyTimelineMessageHandoff", () => {
     id: "msg_image_model",
     type: "model-switched",
     model: selection.model,
+    previous: { id: "old", providerID: "provider" },
     time: { created: 1 },
   } satisfies SessionMessageInfo
 
@@ -263,7 +265,7 @@ describe("applyTimelineMessageHandoff", () => {
     {
       name: "only a variant change",
       session: { agent: "plan", model: { ...selection.model, variant: undefined } },
-      notices: [model],
+      notices: [{ ...model, previous: { ...selection.model, variant: undefined } }],
     },
     {
       name: "the agent echoed",
@@ -275,6 +277,17 @@ describe("applyTimelineMessageHandoff", () => {
     expect(applyTimelineMessageHandoff(messages.slice(0, 2), handoff, row.session)).toEqual([
       ...messages.slice(0, 2),
       ...row.notices,
+      message,
+    ])
+  })
+
+  test("projects a return to the default variant with its previous selection", () => {
+    const toDefault = { ...handoff, selection: { ...selection, model: { ...selection.model, variant: undefined } } }
+    const previous = { ...selection.model, variant: "xhigh" }
+
+    expect(applyTimelineMessageHandoff(messages.slice(0, 2), toDefault, { agent: "plan", model: previous })).toEqual([
+      ...messages.slice(0, 2),
+      { ...model, model: toDefault.selection.model, previous },
       message,
     ])
   })
