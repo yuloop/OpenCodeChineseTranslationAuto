@@ -145,7 +145,7 @@ test("open file tab browses, searches, and tracks missing files", async ({ page 
   const panel = page.locator("#review-panel")
   const sidebar = panel.locator('[data-slot="session-review-v2-sidebar"]')
   const sidebarToggle = panel.getByRole("button", { name: "Toggle file tree" })
-  const contextButton = page.getByRole("button", { name: "View context usage" })
+  const contextButton = page.getByRole("button", { name: "Toggle session context" })
   const openFile = panel.getByRole("button", { name: "Open file" })
   const tab = (name: string) => panel.getByRole("tab", { name, exact: true })
   await contextButton.click()
@@ -311,7 +311,7 @@ test("context closes the side region only when its button opened it", async ({ p
   })
   const panel = page.locator("#review-panel")
   const toggle = page.getByRole("button", { name: "Toggle review", exact: true })
-  const contextButton = page.getByRole("button", { name: "View context usage" })
+  const contextButton = page.getByRole("button", { name: "Toggle session context" })
   const context = panel.getByRole("tab", { name: "Context", exact: true })
 
   await contextButton.click()
@@ -333,6 +333,83 @@ test("context closes the side region only when its button opened it", async ({ p
   await expect(context).toHaveCount(0)
   await expect(toggle).toHaveAttribute("aria-expanded", "true")
   await expect(panel.locator("#session-side-panel-review-tab")).toHaveAttribute("aria-selected", "true")
+})
+
+test("context hides free-model cost but keeps paid-model zero cost", async ({ page }) => {
+  const cases = [
+    { id: "ses_context_free", title: "Free model", model: "free", cost: 0, usage: false, text: "0" },
+    { id: "ses_context_paid", title: "Paid model", model: "paid", cost: 0, usage: false, text: "0·$0.00" },
+    { id: "ses_context_used", title: "Paid usage", model: "paid", cost: 1.25, usage: true, text: "2k·$1.25" },
+    { id: "ses_context_free_used", title: "Free usage", model: "free", cost: 0, usage: true, text: "2k" },
+    { id: "ses_context_mixed", title: "Previously paid", model: "free", cost: 1.25, usage: true, text: "2k·$1.25" },
+    { id: "ses_context_unknown", title: "Unknown pricing", model: "missing", cost: 0, usage: false, text: "0·$0.00" },
+    { id: "ses_context_output", title: "Output pricing", model: "output", cost: 0, usage: false, text: "0·$0.00" },
+    // The root's model is free, but its subagent spent on a paid model: the family total shows.
+    { id: "ses_context_family", title: "Paid subagent", model: "free", cost: 0, usage: true, text: "2k·$1.25" },
+    // A completed compaction resets the context until the next reply reports usage, as in the TUI.
+    { id: "ses_context_compacted", title: "Compacted", model: "paid", cost: 1.25, usage: true, text: "0·$1.25" },
+  ]
+
+  await openSession(page, {
+    name: "ContextPricing",
+    provider: provider(
+      { id: "free", name: "Free", cost: { input: 0, output: 0 } },
+      { id: "paid", name: "Paid", cost: { input: 1, output: 3 } },
+      { id: "output", name: "Output", cost: { input: 0, output: 1 } },
+    ),
+    sessions: [
+      ...cases.map((item) => ({
+        id: item.id,
+        title: item.title,
+        model: { id: item.model, providerID: "opencode" },
+        cost: item.cost,
+      })),
+      {
+        id: "ses_context_family_child",
+        parentID: "ses_context_family",
+        title: "Subagent run",
+        model: { id: "paid", providerID: "opencode" },
+        cost: 1.25,
+      },
+    ],
+    pageMessages: (id) => ({
+      items: cases.flatMap((item): SessionMessageInfo[] =>
+        item.id === id && item.usage
+          ? [
+              {
+                id: `msg_${item.id}`,
+                type: "assistant",
+                agent: "build",
+                model: { id: item.model, providerID: "opencode" },
+                tokens: { input: 1500, output: 500, reasoning: 0, cache: { read: 0, write: 0 } },
+                content: [{ type: "text", text: "Done." }],
+                time: { created: 1, completed: 2 },
+              },
+              ...(item.id === "ses_context_compacted"
+                ? [
+                    {
+                      id: `msg_${item.id}_compaction`,
+                      type: "compaction" as const,
+                      status: "completed" as const,
+                      reason: "manual" as const,
+                      summary: "Current state",
+                      recent: "",
+                      time: { created: 3 },
+                    },
+                  ]
+                : []),
+            ]
+          : [],
+      ),
+    }),
+  })
+  const button = page.getByRole("button", { name: "Toggle session context", exact: true })
+
+  for (const item of cases) {
+    await page.locator("[data-titlebar-tab-slot]", { hasText: item.title }).click()
+    await expectSessionTitle(page, item.title)
+    await expect(button).toHaveText(item.text)
+  }
 })
 
 test("file tree expands Windows paths and scrolls long names in both directions", async ({ page }) => {
@@ -737,16 +814,22 @@ test("image files load into the review panel and keep it painted while loading",
   ).toEqual([])
 })
 
-test("video files expand into an in-window theatre overlay and collapse on Escape without remounting", async ({
+test("video files over 25 MB play in the viewer, expand into the theatre overlay, and collapse on Escape without remounting", async ({
   page,
 }) => {
   const directory = "C:/OpenCode/ReviewVideo"
-  const file = "demo.webm"
+  const file = "arcade-update-draft.mp4"
 
-  const webm = Buffer.from(
-    "GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAH5EU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEyTbuMU6uEHFO7a1OsggHj7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjMuMS4xMDJXQYxMYXZmNjMuMS4xMDJEiYhAj0AAAAAAABZUrmvXrgEAAAAAAABO14EBc8WIiQeUklk95R2cgQAitZyDdW5kiIEAhoVWX1ZQOIOBASPjg4Q7msoA4JCwgUC6gSSagQJVsIRVuYEBVe6BAOwBAAAAAAAAAgAAElTDZ/pzc59jwIBnyJlFo4dFTkNPREVSRIeMTGF2ZjYzLjEuMTAyc3PVY8CLY8WIiQeUklk95R1nyKBFo4dFTkNPREVSRIeTTGF2YzYzLjEuMTAyIGxpYnZweGfIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDEuMDAwMDAwMDAwAB9DtnWt54EAo6iBAACAsAIAnQEqQAAkAABHCIWFiJmEiAICAAaOT8zHm/FYAP7/q1CAHFO7a5G7j7OBALeK94EB8YIBsfCBAw==",
+  const head = Buffer.from(
+    "AAAAHGZ0eXBpc29tAAACAGlzb21pc28ybXA0MQAAAAhmcmVlAAAAMm1kYXSCSYNCAAPwAjYAOCQcGEIAADBgAABYS///mpmB/////7FMC////+OkgAAAAAL+bW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAA+gAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAil0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAA+gAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAEAAAAAkAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAPoAAAAAAABAAAAAAGhbWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAABAAAAAQABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABTG1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAQxzdGJsAAAAqHN0c2QAAAAAAAAAAQAAAJh2cDA5AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAEAAJABIAAAASAAAAAAAAAABF0xhdmM2My4xLjEwMiBsaWJ2cHgtdnA5AAAAAAAAAAAAGP//AAAAFHZwY0MBAAAAAAqCAgICAAAAAAAKZmllbAEAAAAAEHBhc3AAAAABAAAAAQAAABRidHJ0AAAAAAAAJxAAAAAAAAAAGHN0dHMAAAAAAAAAAQAAAAEAAEAAAAAAHHN0c2MAAAAAAAAAAQAAAAEAAAABAAAAAQAAABRzdHN6AAAAAAAAACoAAAABAAAAFHN0Y28AAAAAAAAAAQAAACwAAABhdWR0YQAAAFltZXRhAAAAAAAAACFoZGxyAAAAAAAAAABtZGlyYXBwbAAAAAAAAAAAAAAAACxpbHN0AAAAJKl0b28AAAAcZGF0YQAAAAEAAAAATGF2ZjYzLjEuMTAy",
     "base64",
   )
+
+  const mp4 = Buffer.alloc(38_400_000)
+
+  head.copy(mp4)
+  mp4.writeUInt32BE(mp4.length - head.length, head.length)
+  mp4.write("free", head.length + 4, "ascii")
 
   await openSession(page, {
     name: "ReviewVideo",
@@ -759,7 +842,7 @@ test("video files expand into an in-window theatre overlay and collapse on Escap
     route.fulfill({
       status: 200,
       headers: { "access-control-allow-origin": "*", "content-type": "application/octet-stream" },
-      body: webm,
+      body: mp4,
     }),
   )
 
@@ -768,12 +851,17 @@ test("video files expand into an in-window theatre overlay and collapse on Escap
   await panel.getByRole("button", { name: file }).click()
   await expect(panel.getByRole("tab", { name: file, exact: true })).toHaveAttribute("aria-selected", "true")
 
+  const toolbar = panel.locator('[data-slot="artifact-toolbar"]')
   const stage = panel.locator('[data-slot="artifact-stage"]')
   const video = stage.locator('video[data-slot="artifact-media"]')
   const fullscreen = stage.getByRole("button", { name: "Enter full screen", exact: true })
   const exitFullscreen = stage.getByRole("button", { name: "Exit full screen", exact: true })
 
   await expect(video).toBeVisible()
+  await expect(toolbar).toContainText("64 × 36")
+  await expect(toolbar).toContainText("0:01")
+  await expect(toolbar).toContainText("38.4 MB")
+  await expect(panel.getByText(/Binary file/)).toHaveCount(0)
   await expect(fullscreen).toHaveAttribute("aria-pressed", "false")
   const inlineBounds = (await stage.boundingBox())!
   expect(inlineBounds.width).toBeLessThan(1000)
@@ -853,7 +941,7 @@ test("restores review state and the side-panel tab per session", async ({ page }
   await page.getByRole("option", { name: "Branch changes" }).click()
   await page.getByRole("button", { name: "beta.ts" }).click()
   await selectedFile("beta.ts")
-  await page.getByRole("button", { name: "View context usage" }).click()
+  await page.getByRole("button", { name: "Toggle session context" }).click()
   await selectedTab("Context")
 
   await switchSession("Gamma review state")
