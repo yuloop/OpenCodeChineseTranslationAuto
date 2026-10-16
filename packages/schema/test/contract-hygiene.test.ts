@@ -196,6 +196,8 @@ describe("contract hygiene", () => {
       Project.Info,
       Pty.Info,
       Session.ListAnchor,
+      Session.ListCursor,
+      Session.ListFilter,
       Session.Revert,
       SessionInbox.Delivery,
       SessionInbox.UserPayload,

@@ -3,7 +3,7 @@ export * from "./session/schema.js"
 
 import { Effect, Layer, Schema, Context, Stream } from "effect"
 import { LLMClient } from "@opencode/ai"
-import { ListAnchor } from "@opencode/schema/session"
+import { ListAnchor, ListCursor } from "@opencode/schema/session"
 import { and, desc, eq } from "drizzle-orm"
 import { Project } from "./project.js"
 import { Model } from "@opencode/schema/model"
@@ -75,7 +75,7 @@ import { InstructionEntry } from "./session/instruction-entry.js"
 //   - by subpath
 // - by workspace (home is special)
 
-export { ListAnchor }
+export { ListAnchor, ListCursor }
 
 export const ListInput = SessionStore.ListInput
 export type ListInput = SessionStore.ListInput

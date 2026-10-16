@@ -7,7 +7,6 @@ import { Form } from "@opencode/core/form"
 import { DateTime, Effect, Stream } from "effect"
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api"
 import { Api } from "../api"
-import { SessionsCursor } from "@opencode/protocol/groups/session"
 import {
   ConflictError,
   CommandExecutionError,
@@ -63,7 +62,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
         Effect.fn(function* (ctx) {
           const query =
             ctx.query.cursor !== undefined
-              ? yield* SessionsCursor.parse(ctx.query.cursor).pipe(
+              ? yield* Session.ListCursor.parse(ctx.query.cursor).pipe(
                   Effect.mapError(() => new InvalidCursorError({ message: "Invalid cursor" })),
                 )
               : ctx.query
@@ -78,7 +77,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
             data: sessions,
             cursor: {
               previous: first
-                ? SessionsCursor.make({
+                ? Session.ListCursor.make({
                     ...query,
                     anchor: {
                       id: first.id,
@@ -88,7 +87,7 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
                   })
                 : undefined,
               next: last
-                ? SessionsCursor.make({
+                ? Session.ListCursor.make({
                     ...query,
                     anchor: {
                       id: last.id,
