@@ -11,6 +11,8 @@ export default createMiddleware({
     const locale = fromPathname(url.pathname)
     if (locale) {
       url.pathname = strip(url.pathname)
+      if (/^\/changelog\/?$/.test(url.pathname))
+        return new Response(null, { status: 301, headers: { Location: "/changelog" } })
       const request = new Request(url, event.request)
       request.headers.set(LOCALE_HEADER, locale)
       event.request = request

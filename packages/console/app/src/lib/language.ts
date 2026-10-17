@@ -84,7 +84,8 @@ const DOCS = {
   ja: "ja",
   pl: "pl",
   ru: "ru",
-  uk: "uk",
+  // There are no Ukrainian docs, so Ukrainian visitors read the English docs.
+  uk: "root",
   ar: "ar",
   no: "nb",
   br: "pt-br",
@@ -209,6 +210,8 @@ export function route(locale: Locale, pathname: string) {
   if (next.startsWith("/docs")) return docs(locale, next)
   if (next.startsWith("/auth")) return next
   if (next.startsWith("/workspace")) return next
+  // The changelog worker owns /changelog and only publishes English release notes.
+  if (next === "/changelog" || next.startsWith("/changelog/")) return next
   if (locale === "en") return next
   if (next === "/") return `/${locale}`
   return `/${locale}${next}`
