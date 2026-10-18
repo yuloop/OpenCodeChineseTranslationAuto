@@ -36,6 +36,7 @@ export const dict = {
   "email.placeholder": "E-mailadresse",
   "email.subscribe": "Tilmeld",
   "email.success": "Næsten færdig - tjek din indbakke og bekræft din e-mailadresse",
+  "email.error": "Tilmeldingen mislykkedes. Prøv igen.",
 
   "notFound.title": "Ikke fundet | opencode",
   "notFound.heading": "404 - Siden blev ikke fundet",
@@ -57,22 +58,6 @@ export const dict = {
   "app.meta.description": "OpenCode - Den open source kodningsagent.",
 
   "home.title": "OpenCode | Den open source AI-kodningsagent",
-
-  "temp.title": "opencode | AI-kodningsagent bygget til terminalen",
-  "temp.hero.title": "AI-kodningsagenten bygget til terminalen",
-  "temp.zen": "opencode zen",
-  "temp.getStarted": "Kom i gang",
-  "temp.feature.native.title": "Native TUI",
-  "temp.feature.native.body": "En responsiv, native, tema-bar terminal-UI",
-  "temp.feature.zen.beforeLink": "En",
-  "temp.feature.zen.link": "kurateret liste over modeller",
-  "temp.feature.zen.afterLink": "leveret af opencode",
-  "temp.feature.models.beforeLink": "Understøtter 75+ LLM-udbydere gennem",
-  "temp.feature.models.afterLink": ", inklusive lokale modeller",
-  "temp.screenshot.caption": "opencode TUI med tokyonight-temaet",
-  "temp.screenshot.alt": "opencode TUI med tokyonight-temaet",
-  "temp.logoLightAlt": "opencode logo light",
-  "temp.logoDarkAlt": "opencode logo dark",
 
   "home.banner.badge": "Ny",
 
@@ -257,7 +242,6 @@ export const dict = {
   "go.problem.title": "Hvilket problem løser Go?",
   "go.problem.body":
     "Vi fokuserer på at bringe OpenCode-oplevelsen ud til så mange som muligt. OpenCode Go er et lavprisabonnement til $10/måned. Det giver generøse grænser og pålidelig adgang til de mest kapable open source-modeller.",
-  "go.problem.subtitle": " ",
   "go.problem.item1": "Lavpris abonnementspriser",
   "go.problem.item2": "Generøse grænser og pålidelig adgang",
   "go.problem.item3": "Bygget til så mange programmører som muligt",

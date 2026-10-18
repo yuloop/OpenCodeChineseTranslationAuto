@@ -36,6 +36,7 @@ export const dict = {
   "email.placeholder": "メールアドレス",
   "email.subscribe": "登録",
   "email.success": "ほぼ完了です。受信トレイを確認してメールアドレスを認証してください",
+  "email.error": "登録できませんでした。もう一度お試しください。",
 
   "notFound.title": "見つかりません | OpenCode",
   "notFound.heading": "404 - ページが見つかりません",
@@ -57,22 +58,6 @@ export const dict = {
   "app.meta.description": "OpenCode - オープンソースのコーディングエージェント。",
 
   "home.title": "OpenCode | オープンソースのAIコーディングエージェント",
-
-  "temp.title": "OpenCode | ターミナル向けに構築されたAIコーディングエージェント",
-  "temp.hero.title": "ターミナル向けに構築されたAIコーディングエージェント",
-  "temp.zen": "OpenCode Zen",
-  "temp.getStarted": "はじめる",
-  "temp.feature.native.title": "ネイティブ TUI",
-  "temp.feature.native.body": "レスポンシブでネイティブ、テーマ変更可能なターミナルUI",
-  "temp.feature.zen.beforeLink": "OpenCodeが提供する",
-  "temp.feature.zen.link": "厳選されたモデルリスト",
-  "temp.feature.zen.afterLink": "",
-  "temp.feature.models.beforeLink": "ローカルモデルを含む、",
-  "temp.feature.models.afterLink": "を通じて75以上のLLMプロバイダーをサポート",
-  "temp.screenshot.caption": "tokyonight テーマを使用した OpenCode TUI",
-  "temp.screenshot.alt": "tokyonight テーマの OpenCode TUI",
-  "temp.logoLightAlt": "opencodeのロゴ（ライト）",
-  "temp.logoDarkAlt": "opencodeのロゴ（ダーク）",
 
   "home.banner.badge": "新着",
 
@@ -256,7 +241,6 @@ export const dict = {
   "go.problem.title": "Goはどのような問題を解決していますか？",
   "go.problem.body":
     "私たちはOpenCodeの体験をできるだけ多くの人に届けることに注力しています。OpenCode Goは月額$10の低価格なサブスクリプションです。ゆとりある上限と、最も高性能なオープンソースモデルへの信頼できるアクセスを提供します。",
-  "go.problem.subtitle": " ",
   "go.problem.item1": "低価格なサブスクリプション料金",
   "go.problem.item2": "十分な制限と安定したアクセス",
   "go.problem.item3": "できるだけ多くのプログラマーのために構築",

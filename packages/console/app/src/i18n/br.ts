@@ -36,6 +36,7 @@ export const dict = {
   "email.placeholder": "Endereço de e-mail",
   "email.subscribe": "Inscrever-se",
   "email.success": "Quase lá, verifique sua caixa de entrada e confirme seu e-mail",
+  "email.error": "Não foi possível concluir a inscrição. Tente novamente.",
 
   "notFound.title": "Não encontrado | opencode",
   "notFound.heading": "404 - Página não encontrada",
@@ -57,22 +58,6 @@ export const dict = {
   "app.meta.description": "OpenCode - O agente de codificação de código aberto.",
 
   "home.title": "OpenCode | O agente de codificação de código aberto com IA",
-
-  "temp.title": "opencode | Agente de codificação com IA feito para o terminal",
-  "temp.hero.title": "O agente de codificação com IA feito para o terminal",
-  "temp.zen": "opencode zen",
-  "temp.getStarted": "Começar",
-  "temp.feature.native.title": "TUI Nativa",
-  "temp.feature.native.body": "Uma interface de terminal responsiva, nativa e personalizável",
-  "temp.feature.zen.beforeLink": "Uma",
-  "temp.feature.zen.link": "lista selecionada de modelos",
-  "temp.feature.zen.afterLink": "fornecida pela opencode",
-  "temp.feature.models.beforeLink": "Suporta mais de 75 provedores de LLM através do",
-  "temp.feature.models.afterLink": ", incluindo modelos locais",
-  "temp.screenshot.caption": "OpenCode TUI com o tema tokyonight",
-  "temp.screenshot.alt": "OpenCode TUI com tema tokyonight",
-  "temp.logoLightAlt": "logo opencode claro",
-  "temp.logoDarkAlt": "logo opencode escuro",
 
   "home.banner.badge": "Novo",
 
@@ -258,7 +243,6 @@ export const dict = {
   "go.problem.title": "Que problema o Go resolve?",
   "go.problem.body":
     "Estamos focados em levar a experiência do OpenCode para o maior número de pessoas possível. OpenCode Go é uma assinatura de baixo custo de $10/mês. Oferece limites generosos e acesso confiável aos modelos open source mais capazes.",
-  "go.problem.subtitle": " ",
   "go.problem.item1": "Preço de assinatura de baixo custo",
   "go.problem.item2": "Limites generosos e acesso confiável",
   "go.problem.item3": "Feito para o maior número possível de programadores",

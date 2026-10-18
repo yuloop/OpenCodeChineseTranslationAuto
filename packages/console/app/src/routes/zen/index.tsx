@@ -20,6 +20,7 @@ import { IconGemini, IconMiniMax, IconZai } from "~/component/icon"
 import { useI18n } from "~/context/i18n"
 import { useLanguage } from "~/context/language"
 import { LocaleLinks } from "~/component/locale-links"
+import { SocialMeta } from "~/component/social-meta"
 
 export default function Home() {
   const i18n = useI18n()
@@ -30,8 +31,12 @@ export default function Home() {
       <Title>{i18n.t("zen.title")}</Title>
       <Meta name="description" content={i18n.t("zen.hero.body")} />
       <LocaleLinks path="/zen" />
-      <Meta property="og:image" content="/social-share-zen.png" />
-      <Meta name="twitter:image" content="/social-share-zen.png" />
+      <SocialMeta
+        title={i18n.t("zen.title")}
+        description={i18n.t("zen.hero.body")}
+        path="/zen"
+        image="/social-share-zen.png"
+      />
 
       <div data-component="container">
         <Header zen hideGetStarted />

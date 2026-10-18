@@ -36,6 +36,7 @@ export const dict = {
   "email.placeholder": "이메일 주소",
   "email.subscribe": "구독",
   "email.success": "거의 완료되었습니다. 이메일 수신함을 확인하고 주소를 인증해주세요.",
+  "email.error": "구독하지 못했습니다. 다시 시도해주세요.",
 
   "notFound.title": "페이지를 찾을 수 없음 | OpenCode",
   "notFound.heading": "404 - 페이지를 찾을 수 없음",
@@ -57,22 +58,6 @@ export const dict = {
   "app.meta.description": "OpenCode - 오픈 소스 코딩 에이전트.",
 
   "home.title": "OpenCode | 오픈 소스 AI 코딩 에이전트",
-
-  "temp.title": "OpenCode | 터미널을 위해 만들어진 AI 코딩 에이전트",
-  "temp.hero.title": "터미널을 위해 만들어진 AI 코딩 에이전트",
-  "temp.zen": "OpenCode Zen",
-  "temp.getStarted": "시작하기",
-  "temp.feature.native.title": "네이티브 TUI",
-  "temp.feature.native.body": "반응형, 네이티브, 테마 적용 가능한 터미널 UI",
-  "temp.feature.zen.beforeLink": "OpenCode가 제공하는",
-  "temp.feature.zen.link": "엄선된 모델 목록",
-  "temp.feature.zen.afterLink": "",
-  "temp.feature.models.beforeLink": "로컬 모델을 포함하여",
-  "temp.feature.models.afterLink": "를 통해 75개 이상의 LLM 제공자 지원",
-  "temp.screenshot.caption": "tokyonight 테마가 적용된 OpenCode TUI",
-  "temp.screenshot.alt": "tokyonight 테마가 적용된 OpenCode TUI",
-  "temp.logoLightAlt": "opencode 밝은 로고",
-  "temp.logoDarkAlt": "opencode 어두운 로고",
 
   "home.banner.badge": "신규",
 
@@ -252,7 +237,6 @@ export const dict = {
   "go.problem.title": "Go는 어떤 문제를 해결하나요?",
   "go.problem.body":
     "우리는 가능한 많은 사람들에게 OpenCode 경험을 제공하는 데 집중하고 있습니다. OpenCode Go는 월 $10의 저렴한 구독 서비스입니다. 넉넉한 한도와 가장 뛰어난 오픈 소스 모델에 대한 안정적인 액세스를 제공합니다.",
-  "go.problem.subtitle": " ",
   "go.problem.item1": "저렴한 구독 가격",
   "go.problem.item2": "넉넉한 한도와 안정적인 액세스",
   "go.problem.item3": "가능한 한 많은 프로그래머를 위해 제작됨",

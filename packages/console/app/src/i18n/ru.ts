@@ -36,6 +36,7 @@ export const dict = {
   "email.placeholder": "Email адрес",
   "email.subscribe": "Подписаться",
   "email.success": "Почти готово, проверьте почту и подтвердите ваш email",
+  "email.error": "Не удалось оформить подписку. Попробуйте ещё раз.",
 
   "notFound.title": "Не найдено | opencode",
   "notFound.heading": "404 - Страница не найдена",
@@ -57,22 +58,6 @@ export const dict = {
   "app.meta.description": "OpenCode - AI-агент с открытым кодом для программирования.",
 
   "home.title": "OpenCode | AI-агент с открытым кодом для программирования",
-
-  "temp.title": "opencode | AI-агент для программирования в терминале",
-  "temp.hero.title": "AI-агент для программирования в терминале",
-  "temp.zen": "opencode zen",
-  "temp.getStarted": "Начать",
-  "temp.feature.native.title": "Нативный TUI",
-  "temp.feature.native.body": "Отзывчивый, нативный, темизируемый терминальный интерфейс",
-  "temp.feature.zen.beforeLink": "",
-  "temp.feature.zen.link": "Отобранный список моделей",
-  "temp.feature.zen.afterLink": "от opencode",
-  "temp.feature.models.beforeLink": "Поддерживает 75+ провайдеров LLM через",
-  "temp.feature.models.afterLink": ", включая локальные модели",
-  "temp.screenshot.caption": "OpenCode TUI с темой tokyonight",
-  "temp.screenshot.alt": "OpenCode TUI с темой tokyonight",
-  "temp.logoLightAlt": "светлый логотип opencode",
-  "temp.logoDarkAlt": "темный логотип opencode",
 
   "home.banner.badge": "Новое",
 
@@ -260,7 +245,6 @@ export const dict = {
   "go.problem.title": "Какую проблему решает Go?",
   "go.problem.body":
     "Мы стремимся сделать OpenCode доступным для как можно большего числа людей. OpenCode Go - это недорогая подписка за $10/месяц. Она предоставляет щедрые лимиты и надежный доступ к самым мощным моделям с открытым исходным кодом.",
-  "go.problem.subtitle": " ",
   "go.problem.item1": "Недорогая подписка",
   "go.problem.item2": "Щедрые лимиты и надежный доступ",
   "go.problem.item3": "Создан для максимального числа программистов",

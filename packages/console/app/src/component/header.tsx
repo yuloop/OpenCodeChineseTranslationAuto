@@ -46,6 +46,18 @@ export function Header(props: { zen?: boolean; go?: boolean; hideGetStarted?: bo
     contextMenuPosition: { x: 0, y: 0 },
   })
 
+  let mobileToggle: HTMLButtonElement | undefined
+  createEffect(() => {
+    if (!store.mobileMenuOpen) return
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return
+      setStore("mobileMenuOpen", false)
+      mobileToggle?.focus()
+    }
+    document.addEventListener("keydown", handleKeyDown)
+    onCleanup(() => document.removeEventListener("keydown", handleKeyDown))
+  })
+
   createEffect(() => {
     const handleClickOutside = () => {
       setStore("contextMenuOpen", false)
@@ -215,9 +227,10 @@ export function Header(props: { zen?: boolean; go?: boolean; hideGetStarted?: bo
       </nav>
       <nav data-component="nav-mobile">
         <button
+          ref={mobileToggle}
           type="button"
           data-component="nav-mobile-toggle"
-          aria-expanded="false"
+          aria-expanded={store.mobileMenuOpen}
           aria-controls="nav-mobile-menu"
           class="nav-toggle"
           onClick={() => setStore("mobileMenuOpen", !store.mobileMenuOpen)}

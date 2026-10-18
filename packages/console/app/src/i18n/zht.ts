@@ -36,6 +36,7 @@ export const dict = {
   "email.placeholder": "電子郵件地址",
   "email.subscribe": "訂閱",
   "email.success": "就差一步，請查收你的信箱並確認電子郵件地址",
+  "email.error": "訂閱失敗，請再試一次。",
 
   "notFound.title": "找不到頁面 | OpenCode",
   "notFound.heading": "404 - 找不到頁面",
@@ -57,22 +58,6 @@ export const dict = {
   "app.meta.description": "OpenCode - 開源編碼代理。",
 
   "home.title": "OpenCode | 開源 AI 編碼代理",
-
-  "temp.title": "OpenCode | 專為終端打造的 AI 編碼代理",
-  "temp.hero.title": "專為終端打造的 AI 編碼代理",
-  "temp.zen": "OpenCode Zen",
-  "temp.getStarted": "開始使用",
-  "temp.feature.native.title": "原生 TUI",
-  "temp.feature.native.body": "響應式、原生、可自訂主題的終端介面",
-  "temp.feature.zen.beforeLink": "",
-  "temp.feature.zen.link": "精選模型列表",
-  "temp.feature.zen.afterLink": "由 OpenCode 提供",
-  "temp.feature.models.beforeLink": "透過",
-  "temp.feature.models.afterLink": "支援 75+ 家 LLM 供應商，包括本地模型",
-  "temp.screenshot.caption": "使用 tokyonight 主題的 OpenCode TUI",
-  "temp.screenshot.alt": "使用 tokyonight 主題的 OpenCode TUI",
-  "temp.logoLightAlt": "opencode 淺色標誌",
-  "temp.logoDarkAlt": "opencode 深色標誌",
 
   "home.banner.badge": "新",
 
@@ -244,7 +229,6 @@ export const dict = {
   "go.problem.title": "Go 正在解決什麼問題？",
   "go.problem.body":
     "我們致力於將 OpenCode 體驗帶給盡可能多的人。OpenCode Go 是一款每月 $10 的低成本訂閱服務。它提供充裕的額度，並讓您能可靠地使用最強大的開源模型。",
-  "go.problem.subtitle": " ",
   "go.problem.item1": "低成本訂閱定價",
   "go.problem.item2": "寬裕的限額與穩定存取",
   "go.problem.item3": "專為盡可能多的程式設計師打造",

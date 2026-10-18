@@ -36,6 +36,7 @@ export const dict = {
   "email.placeholder": "Dirección de correo",
   "email.subscribe": "Suscribirse",
   "email.success": "Casi listo, revisa tu bandeja de entrada y confirma tu correo",
+  "email.error": "No se pudo completar la suscripción. Inténtalo de nuevo.",
 
   "notFound.title": "No encontrado | opencode",
   "notFound.heading": "404 - Página no encontrada",
@@ -57,22 +58,6 @@ export const dict = {
   "app.meta.description": "OpenCode - El agente de codificación de código abierto.",
 
   "home.title": "OpenCode | El agente de codificación IA de código abierto",
-
-  "temp.title": "opencode | Agente de codificación IA creado para la terminal",
-  "temp.hero.title": "El agente de codificación IA creado para la terminal",
-  "temp.zen": "opencode zen",
-  "temp.getStarted": "Empezar",
-  "temp.feature.native.title": "TUI Nativa",
-  "temp.feature.native.body": "Una interfaz de terminal responsiva, nativa y personalizable",
-  "temp.feature.zen.beforeLink": "Una lista",
-  "temp.feature.zen.link": "seleccionada de modelos",
-  "temp.feature.zen.afterLink": "proporcionada por opencode",
-  "temp.feature.models.beforeLink": "Soporta más de 75 proveedores de LLM a través de",
-  "temp.feature.models.afterLink": ", incluyendo modelos locales",
-  "temp.screenshot.caption": "opencode TUI con el tema tokyonight",
-  "temp.screenshot.alt": "opencode TUI con tema tokyonight",
-  "temp.logoLightAlt": "logo de opencode claro",
-  "temp.logoDarkAlt": "logo de opencode oscuro",
 
   "home.banner.badge": "Nuevo",
 
@@ -259,7 +244,6 @@ export const dict = {
   "go.problem.title": "¿Qué problema resuelve Go?",
   "go.problem.body":
     "Nos enfocamos en llevar la experiencia de OpenCode a tantas personas como sea posible. OpenCode Go es una suscripción de bajo coste de 10 $/mes. Proporciona límites generosos y acceso fiable a los modelos de código abierto más capaces.",
-  "go.problem.subtitle": " ",
   "go.problem.item1": "Precios de suscripción de bajo coste",
   "go.problem.item2": "Límites generosos y acceso fiable",
   "go.problem.item3": "Creado para tantos programadores como sea posible",

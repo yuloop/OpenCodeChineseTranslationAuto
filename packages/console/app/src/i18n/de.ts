@@ -36,6 +36,7 @@ export const dict = {
   "email.placeholder": "E-Mail-Adresse",
   "email.subscribe": "Anmelden",
   "email.success": "Fast geschafft, überprüfe deinen Posteingang und bestätige deine E-Mail-Adresse",
+  "email.error": "Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
 
   "notFound.title": "Nicht gefunden | OpenCode",
   "notFound.heading": "404 - Seite nicht gefunden",
@@ -57,22 +58,6 @@ export const dict = {
   "app.meta.description": "OpenCode - Der Open-Source Coding-Agent.",
 
   "home.title": "OpenCode | Der Open-Source AI-Coding-Agent",
-
-  "temp.title": "OpenCode | Für das Terminal gebauter AI-Coding-Agent",
-  "temp.hero.title": "Der für das Terminal gebaute AI-Coding-Agent",
-  "temp.zen": "OpenCode Zen",
-  "temp.getStarted": "Loslegen",
-  "temp.feature.native.title": "Native TUI",
-  "temp.feature.native.body": "Eine reaktionsschnelle, native, thematisierbare Terminal-UI",
-  "temp.feature.zen.beforeLink": "Eine",
-  "temp.feature.zen.link": "kuratierte Liste von Modellen",
-  "temp.feature.zen.afterLink": "bereitgestellt von OpenCode",
-  "temp.feature.models.beforeLink": "Unterstützt 75+ LLM-Anbieter durch",
-  "temp.feature.models.afterLink": ", einschließlich lokaler Modelle",
-  "temp.screenshot.caption": "OpenCode TUI mit dem Tokyonight-Theme",
-  "temp.screenshot.alt": "OpenCode TUI mit Tokyonight-Theme",
-  "temp.logoLightAlt": "OpenCode Logo hell",
-  "temp.logoDarkAlt": "OpenCode Logo dunkel",
 
   "home.banner.badge": "Neu",
 
@@ -258,7 +243,6 @@ export const dict = {
   "go.problem.title": "Welches Problem löst Go?",
   "go.problem.body":
     "Wir konzentrieren uns darauf, die OpenCode-Erfahrung so vielen Menschen wie möglich zugänglich zu machen. OpenCode Go ist ein kostengünstiges Abonnement für $10/Monat. Es bietet großzügige Limits und zuverlässigen Zugang zu den leistungsfähigsten Open-Source-Modellen.",
-  "go.problem.subtitle": " ",
   "go.problem.item1": "Kostengünstiges Abonnement",
   "go.problem.item2": "Großzügige Limits und zuverlässiger Zugang",
   "go.problem.item3": "Für so viele Programmierer wie möglich gebaut",

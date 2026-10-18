@@ -8,6 +8,7 @@ import { LanguagePicker } from "~/component/language-picker"
 import { useI18n } from "~/context/i18n"
 import Spotlight, { defaultConfig, type SpotlightAnimationState } from "~/component/spotlight"
 import { LocaleLinks } from "~/component/locale-links"
+import { SocialMeta } from "~/component/social-meta"
 import "./black.css"
 
 export default function BlackLayout(props: RouteSectionProps) {
@@ -72,15 +73,12 @@ export default function BlackLayout(props: RouteSectionProps) {
       <Title>{i18n.t("black.meta.title")}</Title>
       <Meta name="description" content={i18n.t("black.meta.description")} />
       <LocaleLinks path="/black" />
-      <Meta property="og:type" content="website" />
-      <Meta property="og:url" content={`${config.baseUrl}${language.route("/black")}`} />
-      <Meta property="og:title" content={i18n.t("black.meta.title")} />
-      <Meta property="og:description" content={i18n.t("black.meta.description")} />
-      <Meta property="og:image" content="/social-share-black.png" />
-      <Meta name="twitter:card" content="summary_large_image" />
-      <Meta name="twitter:title" content={i18n.t("black.meta.title")} />
-      <Meta name="twitter:description" content={i18n.t("black.meta.description")} />
-      <Meta name="twitter:image" content="/social-share-black.png" />
+      <SocialMeta
+        title={i18n.t("black.meta.title")}
+        description={i18n.t("black.meta.description")}
+        path="/black"
+        image="/social-share-black.png"
+      />
 
       <Spotlight config={spotlightConfig} class="header-spotlight" onAnimationFrame={handleAnimationFrame} />
 

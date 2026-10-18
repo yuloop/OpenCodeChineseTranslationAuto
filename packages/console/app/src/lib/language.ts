@@ -325,6 +325,17 @@ export function localeFromRequest(request: Request) {
   )
 }
 
+// Pages take their language from the URL alone, so one URL serves the same language to people, crawlers and caches.
+export function pageLocale(request: Request) {
+  const pathname = new URL(request.url).pathname
+  return (
+    parseLocale(request.headers.get(LOCALE_HEADER)) ??
+    fromPathname(pathname) ??
+    fromDocsPathname(pathname) ??
+    ("en" satisfies Locale)
+  )
+}
+
 export function cookie(locale: Locale) {
   return `${LOCALE_COOKIE}=${encodeURIComponent(locale)}; Path=/; Max-Age=31536000; SameSite=Lax`
 }
