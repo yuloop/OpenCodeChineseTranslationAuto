@@ -31,6 +31,10 @@ export default createMiddleware({
       event.response.headers.append("set-cookie", cookie(locale))
     }
 
+    // Black subscriptions were migrated to Go.
+    if (/^\/black(\/|$)/.test(url.pathname))
+      return new Response(null, { status: 301, headers: { Location: locale ? `/${locale}/go` : "/go" } })
+
     // The legacy dashboard and its sign-in moved to the new Console.
     if (/^\/(auth|workspace)(\/|$)/.test(url.pathname) && Resource.ConsoleMigration.consoleUrl)
       return new Response(null, {
