@@ -202,8 +202,8 @@ describe("SessionProjector", () => {
         tokens_cache_read: 3,
         tokens_cache_write: 1,
       })
-      // A committed revert resets the fold cache so the next boundary establishes a new epoch.
-      expect(yield* db.select().from(InstructionStateTable).get().pipe(Effect.orDie)).toBeUndefined()
+      // No instruction update followed the boundary, so the fold survives.
+      expect(yield* db.select().from(InstructionStateTable).get().pipe(Effect.orDie)).toMatchObject({ through_seq: 0 })
     }),
   )
 
