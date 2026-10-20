@@ -1,13 +1,9 @@
 import { Hono } from "hono"
-import { DurableObject } from "cloudflare:workers"
 import { jwtVerify, createRemoteJWKSet } from "jose"
 import { createAppAuth } from "@octokit/auth-app"
 import { Octokit } from "@octokit/rest"
 import { Resource } from "sst"
 import { parseRepositoryClaim } from "./github"
-
-// Inert: the SYNC_SERVER binding and existing Durable Objects still reference this class, so it must stay exported.
-export class SyncServer extends DurableObject {}
 
 export default new Hono()
   .get("/", (c) => c.text("Hello, world!"))

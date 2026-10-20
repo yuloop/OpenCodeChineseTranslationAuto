@@ -1701,6 +1701,198 @@ test("server plugin failures share one notice and use source names before an ID 
   expect(setup.captureCharFrame()).toContain("Open plugins")
 })
 
+test("free usage limit lists next steps, recalls the delivered prompt once, and skips the failure toast", async () => {
+  await using state = await tmpdir()
+  const session = {
+    id: "ses_free_limit",
+    projectID: "proj_test",
+    location: { directory },
+    title: "Free limit",
+    cost: 0,
+    tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+    time: { created: 1, updated: 1 },
+  }
+  const model = { id: "big-pickle", providerID: "opencode" }
+  const error = {
+    type: "provider.free-limit",
+    message: "Free usage limit reached.",
+    status: 429,
+    retryAfterMs: 3_600_000,
+  }
+  await using setup = await createAppFixture({
+    width: 100,
+    state: state.path,
+    args: { sessionID: session.id },
+    config: { animations: false, tabs: { mode: "off" } },
+    fetch: (url) => {
+      if (url.pathname === "/api/session") return json({ data: [session], cursor: {} })
+      if (url.pathname === `/api/session/${session.id}`) return json({ data: session })
+      if (url.pathname === `/api/session/${session.id}/message`)
+        return json({
+          data: [
+            { id: "msg_queued_user", type: "user", text: "Queued follow-up", time: { created: 3 } },
+            {
+              id: "msg_free_assistant",
+              type: "assistant",
+              agent: "build",
+              model,
+              content: [],
+              time: { created: 2 },
+            },
+            { id: "msg_free_user", type: "user", text: "Refactor the parser", time: { created: 1 } },
+          ],
+          cursor: {},
+        })
+      if (url.pathname === `/api/session/${session.id}/inbox`)
+        return json({
+          data: [
+            {
+              id: "msg_queued_user",
+              sessionID: session.id,
+              type: "user",
+              delivery: "queue",
+              payload: { text: "Queued follow-up" },
+              time: { created: 3 },
+            },
+          ],
+        })
+      if (url.pathname === `/api/session/${session.id}/permission`) return json({ data: [] })
+      return undefined
+    },
+  })
+  await setup.ready
+  await setup.waitForFrame((frame) => frame.includes("Refactor the parser"))
+  setup.events.emit({
+    id: "evt_free_limit_1",
+    created: 3,
+    type: "session.step.failed",
+    durable: { aggregateID: session.id, seq: 1, version: 1 },
+    data: { sessionID: session.id, assistantMessageID: "msg_free_assistant", error },
+  })
+  setup.events.emit({
+    id: "evt_free_limit_exec",
+    created: 3,
+    type: "session.execution.failed",
+    durable: { aggregateID: session.id, seq: 2, version: 1 },
+    data: { sessionID: session.id, error },
+  })
+  await setup.waitForFrame((frame) => frame.includes("You've used today's free messages. They reset at"))
+  const frame = setup.captureCharFrame()
+  expect(frame).toContain("Upgrade to OpenCode Go → /connect · Switch model → /models")
+  expect(frame).not.toContain("Error:")
+  expect(frame).not.toContain("Session failed")
+  // The delivered prompt (not the queued one) shows once in the transcript and once more back in the composer.
+  await setup.waitForFrame((frame) => frame.split("Refactor the parser").length === 3)
+  expect(setup.captureCharFrame().split("Queued follow-up").length).toBe(2)
+
+  // Clear the composer: a duplicate event for the same step does not re-restore into the cleared composer.
+  setup.mockInput.pressKey("c", { ctrl: true })
+  await setup.waitForFrame((frame) => frame.split("Refactor the parser").length === 2)
+  setup.events.emit({
+    id: "evt_free_limit_dup",
+    created: 3,
+    type: "session.step.failed",
+    durable: { aggregateID: session.id, seq: 3, version: 1 },
+    data: {
+      sessionID: session.id,
+      assistantMessageID: "msg_free_assistant",
+      error: { ...error, retryAfterMs: undefined },
+    },
+  })
+  await setup.waitForFrame((frame) => !frame.includes("They reset at"))
+  expect(setup.captureCharFrame().split("Refactor the parser").length).toBe(2)
+
+  // With the composer still empty, delivering the next turn and hitting the limit again recalls that turn's prompt.
+  setup.events.emit({
+    id: "evt_free_limit_delivered",
+    created: 4,
+    type: "session.inbox.delivered",
+    durable: { aggregateID: session.id, seq: 4, version: 1 },
+    data: { sessionID: session.id, inboxID: "msg_queued_user" },
+  })
+  setup.events.emit({
+    id: "evt_free_limit_2",
+    created: 5,
+    type: "session.step.started",
+    durable: { aggregateID: session.id, seq: 5, version: 1 },
+    data: { sessionID: session.id, assistantMessageID: "msg_free_assistant_2", agent: "build", model, started: 5 },
+  })
+  setup.events.emit({
+    id: "evt_free_limit_3",
+    created: 6,
+    type: "session.step.failed",
+    durable: { aggregateID: session.id, seq: 6, version: 1 },
+    data: { sessionID: session.id, assistantMessageID: "msg_free_assistant_2", error },
+  })
+  await setup.waitForFrame(
+    (frame) =>
+      frame.split("You've used today's free messages").length === 3 && frame.split("Queued follow-up").length === 3,
+  )
+})
+
+test("free usage limit does not overwrite a draft while typing", async () => {
+  await using state = await tmpdir()
+  const session = {
+    id: "ses_free_limit_typing",
+    projectID: "proj_test",
+    location: { directory },
+    title: "Free limit typing",
+    cost: 0,
+    tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+    time: { created: 1, updated: 1 },
+  }
+  const model = { id: "big-pickle", providerID: "opencode" }
+  const error = {
+    type: "provider.free-limit",
+    message: "Free usage limit reached.",
+    status: 429,
+    retryAfterMs: 3_600_000,
+  }
+  await using setup = await createAppFixture({
+    width: 100,
+    state: state.path,
+    args: { sessionID: session.id },
+    config: { animations: false, tabs: { mode: "off" } },
+    fetch: (url) => {
+      if (url.pathname === "/api/session") return json({ data: [session], cursor: {} })
+      if (url.pathname === `/api/session/${session.id}`) return json({ data: session })
+      if (url.pathname === `/api/session/${session.id}/message`)
+        return json({
+          data: [
+            {
+              id: "msg_free_assistant",
+              type: "assistant",
+              agent: "build",
+              model,
+              content: [],
+              time: { created: 2 },
+            },
+            { id: "msg_free_user", type: "user", text: "Refactor the parser", time: { created: 1 } },
+          ],
+          cursor: {},
+        })
+      if ([`/api/session/${session.id}/inbox`, `/api/session/${session.id}/permission`].includes(url.pathname))
+        return json({ data: [] })
+      return undefined
+    },
+  })
+  await setup.ready
+  await setup.waitForFrame((frame) => frame.includes("Refactor the parser"))
+  await setup.mockInput.typeText("Draft in progress")
+  await setup.waitForFrame((frame) => frame.includes("Draft in progress"))
+  setup.events.emit({
+    id: "evt_free_limit_typing_1",
+    created: 3,
+    type: "session.step.failed",
+    durable: { aggregateID: session.id, seq: 1, version: 1 },
+    data: { sessionID: session.id, assistantMessageID: "msg_free_assistant", error },
+  })
+  await setup.waitForFrame((frame) => frame.includes("You've used today's free messages. They reset at"))
+  const frame = setup.captureCharFrame()
+  expect(frame).toContain("Draft in progress")
+  expect(frame.split("Refactor the parser").length).toBe(2)
+})
+
 test.each([44, 100])(
   "retry countdown updates and clears with the retry lifecycle at width %s",
   async (width) => {

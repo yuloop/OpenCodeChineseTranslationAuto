@@ -25,6 +25,9 @@ const tokenSharingMessages = {
     "This ChatGPT connection isn't authorized for this request. Reconnect to ChatGPT or choose another connection.",
 }
 
+const FREE_USAGE_LIMIT_MESSAGE =
+  "Free usage limit reached. Connect a provider or subscribe to OpenCode Go to keep going, or switch models."
+
 export function toSessionError(cause: unknown): SessionError.Error {
   if (cause instanceof AIError) {
     switch (cause.reason._tag) {
@@ -32,8 +35,17 @@ export function toSessionError(cause: unknown): SessionError.Error {
         return providerError("provider.rate-limit", cause.reason)
       case "Authentication":
         return providerError("provider.auth", cause.reason)
-      case "QuotaExceeded":
-        return providerError("provider.quota", cause.reason)
+      case "QuotaExceeded": {
+        if (!cause.reason.body?.includes("FreeUsageLimitError")) return providerError("provider.quota", cause.reason)
+        const retryAfterMs = cause.reason.retryAfterMs
+        return {
+          ...providerError("provider.free-limit", cause.reason),
+          message: FREE_USAGE_LIMIT_MESSAGE,
+          ...(retryAfterMs !== undefined && Number.isFinite(retryAfterMs) && retryAfterMs >= 0
+            ? { retryAfterMs: Math.ceil(retryAfterMs) }
+            : {}),
+        }
+      }
       case "ContentPolicy":
         return providerError("provider.content-filter", cause.reason)
       case "Transport":

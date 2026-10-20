@@ -625,6 +625,35 @@ export function Session(props: {
     current.submit()
   })
   const dialog = useDialog()
+  const handledFreeLimits = new Set<string>()
+  // Restore the prompt when the free allowance stops it.
+  onCleanup(
+    data.on("session.step.failed", (event) => {
+      if (event.data.sessionID !== route.sessionID || event.data.error.type !== "provider.free-limit") return
+      if (handledFreeLimits.has(event.data.assistantMessageID)) return
+      handledFreeLimits.add(event.data.assistantMessageID)
+      const current = prompt()
+      const wasEmpty = Boolean(
+        current &&
+          !current.current.text.trim() &&
+          !current.current.files?.length &&
+          !current.current.agents?.length &&
+          !current.current.skills?.length &&
+          !current.current.pasted.length,
+      )
+      if (!wasEmpty || !current) return
+      const list = messages()
+      const end = list.findIndex((item) => item.id === event.data.assistantMessageID)
+      for (let i = end - 1; i >= 0; i--) {
+        const item = list[i]
+        if (!item || item.type === "shell" || item.type === "idle") break
+        if (item.type === "user" && !data.session.input.has(route.sessionID, item.id)) {
+          current.set({ ...projectedPromptInput(item), pasted: [] })
+          break
+        }
+      }
+    }),
+  )
   const runPendingAction = createSingleFlight<string>()
   const mutatePending = async (action: PendingAction, inboxID: string, failureLabel?: string) => {
     const result = await runPendingAction(inboxID, async () => {
@@ -1908,12 +1937,20 @@ function AssistantFooter(props: { message: SessionMessageAssistant }) {
     turnTokensPerSecond(props.message, messages(), ctx.messageIndex(props.message.id), ctx.legacyTurns()),
   )
   const interrupted = createMemo(() => props.message.error?.message === "Step interrupted")
+  const freeLimit = createMemo(() => props.message.error?.type === "provider.free-limit")
   return (
     <>
       <Show when={props.message.error && !interrupted() && !props.message.retry}>
-        <box paddingLeft={3}>
-          <text fg={theme.text.feedback.error.base}>Error: {errorMessage(props.message.error)}</text>
-        </box>
+        <Show
+          when={freeLimit()}
+          fallback={
+            <box paddingLeft={3}>
+              <text fg={theme.text.feedback.error.base}>Error: {errorMessage(props.message.error)}</text>
+            </box>
+          }
+        >
+          <FreeLimitNotice message={props.message} />
+        </Show>
       </Show>
       <AssistantRetry retry={props.message.retry} />
       <box paddingLeft={3} marginTop={props.message.retry || (props.message.error && !interrupted()) ? 1 : 0}>
@@ -2380,6 +2417,33 @@ function QueuedPromptDock(props: { prompts: { id: string; text: string }[]; onOp
           <Show when={next()}>{(text) => <> · {text()}</>}</Show>
         </text>
       </box>
+    </box>
+  )
+}
+
+function freeLimitReset(delay: number | undefined, base: number) {
+  if (delay === undefined || !Number.isFinite(delay) || delay < 0 || delay > 7 * 86_400_000 || !Number.isFinite(base))
+    return
+  const at = base + delay
+  if (Number.isNaN(new Date(at).getTime())) return
+  const now = Date.now()
+  return new Date(at).toDateString() === new Date(now).toDateString() && at - now < 86_400_000
+    ? Locale.time(at)
+    : Locale.datetime(at)
+}
+
+function FreeLimitNotice(props: { message: Pick<SessionMessageAssistant, "error" | "time"> }) {
+  const theme = useTheme()
+  const reset = createMemo(() =>
+    freeLimitReset(props.message.error?.retryAfterMs, props.message.time.completed ?? props.message.time.created),
+  )
+  return (
+    <box paddingLeft={3} flexDirection="column">
+      <text fg={theme.text.muted}>You've used today's free messages.{reset() ? ` They reset at ${reset()}.` : ""}</text>
+      <text fg={theme.text.muted}>
+        Upgrade to OpenCode Go → <span style={{ fg: theme.text.base }}>/connect</span> · Switch model →{" "}
+        <span style={{ fg: theme.text.base }}>/models</span>
+      </text>
     </box>
   )
 }
