@@ -6,6 +6,7 @@ import { AppNodeBuilder } from "@opencode/core/effect/app-node-builder"
 import { LayerNode } from "@opencode/util/effect/layer-node"
 import { makeGlobalNode } from "@opencode/util/effect/app-node"
 import { Bus } from "@opencode/core/bus"
+import { Config } from "@opencode/core/config"
 import { Database } from "@opencode/core/database/database"
 import { Form } from "@opencode/core/form"
 import { Job } from "@opencode/core/job"
@@ -22,7 +23,12 @@ import { SessionRunner } from "@opencode/core/session/runner/index"
 import { SessionTable } from "@opencode/core/session/sql"
 import { SessionStore } from "@opencode/core/session/store"
 import { Workspace } from "@opencode/core/workspace"
+import { Document, Info } from "@opencode/schema/config"
+import { ConfigExperimental } from "@opencode/schema/config/experimental"
 import { testEffect } from "./lib/effect"
+
+// Per-workspace experimental.location_idle_timeout, read by each location's Config.
+const idleTimeouts = new Map<string, Duration.Duration | false>()
 
 // Keep real execution ownership, location caching, forms, and eviction. The fixture
 // runner waits on a form instead of making a model request before asking a question.
@@ -32,9 +38,23 @@ const locations = Layer.effect(
     const bus = yield* Bus.Service
     const map = yield* LayerMap.make(
       (ref: Location.Ref) =>
-        // The fixture only exercises these three Location services.
+        // The fixture only exercises these four Location services.
         // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertion
-        Layer.merge(
+        Layer.mergeAll(
+          Config.testLayer(
+            idleTimeouts.has(ref.workspaceID ?? "")
+              ? [
+                  new Document({
+                    type: "document",
+                    info: new Info({
+                      experimental: new ConfigExperimental.Info({
+                        location_idle_timeout: idleTimeouts.get(ref.workspaceID ?? ""),
+                      }),
+                    }),
+                  }),
+                ]
+              : [],
+          ),
           Layer.succeed(
             Location.Service,
             Location.Service.of({
@@ -238,6 +258,32 @@ describe("LocationActivity eviction", () => {
         yield* jobs.wait({ id: job.id })
         yield* TestClock.adjust("62 minutes")
         expect(Array.from(yield* RcMap.keys(map.rcMap))).toEqual([])
+      }),
+    )
+
+  for (const [timeout, after, evicted] of [
+    ["10 minutes", "11 minutes", true],
+    [false, "3 hours", false],
+  ] as const)
+    it.effect(`honors experimental.location_idle_timeout = ${JSON.stringify(timeout)}`, () =>
+      Effect.gen(function* () {
+        const map = yield* LocationServiceMap.Service
+        const workspaceID = Workspace.ID.make(`wrk_timeout_${String(timeout).replace(" ", "_")}`)
+        idleTimeouts.set(workspaceID, timeout === false ? false : Duration.fromInputUnsafe(timeout))
+        yield* Effect.addFinalizer(() => Effect.sync(() => idleTimeouts.delete(workspaceID)))
+        const configured = Location.Ref.make({ directory: AbsolutePath.make("/project"), workspaceID })
+        const fallback = Location.Ref.make({ directory: AbsolutePath.make("/project") })
+        yield* Location.Service.pipe(Effect.provide(map.get(configured)), Effect.scoped)
+        yield* Location.Service.pipe(Effect.provide(map.get(fallback)), Effect.scoped)
+
+        yield* TestClock.adjust("1 minute")
+        yield* TestClock.adjust(after)
+        const cached = Array.from(yield* RcMap.keys(map.rcMap))
+        expect(cached.some((ref) => ref.workspaceID === workspaceID)).toBe(!evicted)
+        // Locations without the setting keep the 60 minute default.
+        expect(cached.some((ref) => ref.workspaceID === undefined)).toBe(
+          Duration.toMinutes(Duration.fromInputUnsafe(after)) < 60,
+        )
       }),
     )
 })

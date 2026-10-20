@@ -91,12 +91,6 @@ test("the local Enterprise request handler applies the updated mapping to a form
         return response.ok
       },
       notifications: false,
-      accountLookup: async () => ({
-        id: "user_test",
-        email: "fake-local-visitor@example.test",
-        name: null,
-        createdAt: "2026-10-01T12:00:00.000Z",
-      }),
     },
   )
 
@@ -107,8 +101,5 @@ test("the local Enterprise request handler applies the updated mapping to a form
     Description: "  How are you bro!\nThis is a local form test.  ",
     Current_Monthly_Inference_Spend__c: "$50K–$100K",
     LeadSource: "enterprise website form",
-    Has_Console_Account__c: true,
-    Console_Account_ID__c: "user_test",
-    Console_Signup_Date__c: "2026-10-01T12:00:00.000Z",
   })
 })

@@ -1,7 +1,9 @@
 export * as LocationActivity from "./location-activity.js"
 
-import { Clock, Context, Duration, Effect, Layer, RcMap, Schema } from "effect"
+import { Clock, Context, Duration, Effect, Layer, Option, RcMap, Schema } from "effect"
+import type { Document } from "@opencode/schema/config"
 import { Bus } from "./bus.js"
+import { Config } from "./config.js"
 import { Job } from "./job.js"
 import { Location } from "./location.js"
 import { LocationServiceMap } from "./location-service-map.js"
@@ -24,13 +26,29 @@ export function layer(options: { readonly timeToLive?: Duration.Input; readonly 
       const execution = yield* SessionExecution.Service
       const jobs = yield* Job.Service
       const sessions = yield* SessionStore.Service
-      const timeToLive = Duration.toMillis(options.timeToLive ?? "60 minutes")
-      const entries = new Map<string, { readonly ref: Location.Ref; expiresAt: number }>()
+      const timeToLive = Duration.fromInputUnsafe(options.timeToLive ?? "60 minutes")
+      const entries = new Map<string, { readonly ref: Location.Ref; touchedAt: number }>()
       const key = (ref: Location.Ref) => `${LocationServiceMap.canonical(ref).directory}\0${ref.workspaceID ?? ""}`
       const touch = (ref: Location.Ref) =>
         Effect.sync(() => {
-          entries.set(key(ref), { ref, expiresAt: clock.currentTimeMillisUnsafe() + timeToLive })
+          entries.set(key(ref), { ref, touchedAt: clock.currentTimeMillisUnsafe() })
         })
+
+      // Read per location so project config can override the global value.
+      const idleTimeout = (ref: Location.Ref) =>
+        Effect.gen(function* () {
+          const context = yield* locations.contextEffectOption(ref)
+          if (Option.isNone(context)) return timeToLive
+          const entries = yield* Context.get(context.value, Config.Service).entries()
+          const configured = entries.findLast(
+            (entry): entry is Document =>
+              entry.type === "document" && entry.info.experimental?.location_idle_timeout !== undefined,
+          )
+          return configured?.info.experimental?.location_idle_timeout ?? timeToLive
+        }).pipe(
+          Effect.scoped,
+          Effect.orElseSucceed(() => timeToLive),
+        )
 
       const unsubscribe = yield* bus.listen((event) => {
         if (!isSessionEvent(event)) return Effect.void
@@ -50,7 +68,11 @@ export function layer(options: { readonly timeToLive?: Duration.Input; readonly 
           if (!cached.has(id)) entries.delete(id)
         }
         const now = clock.currentTimeMillisUnsafe()
-        const expired = Array.from(entries.values()).filter((entry) => entry.expiresAt <= now)
+        const expired = yield* Effect.filter(Array.from(entries.values()), (entry) =>
+          idleTimeout(entry.ref).pipe(
+            Effect.map((timeout) => timeout !== false && entry.touchedAt + Duration.toMillis(timeout) <= now),
+          ),
+        )
         if (expired.length === 0) return
         // Waiting on a question, a long tool call, or a background job emits no durable activity.
         const owners = [

@@ -66,12 +66,12 @@ const submit = async (captcha: string | undefined, verify: () => Promise<Respons
     }),
     {
       captcha: { secret: "test-secret", fetch: verify },
+      spam: { apiKey: "test-key", fetch: async () => new Response(null, { status: 503 }) },
       salesforceSubmit: async (payload) => {
         leads.push(payload)
         return true
       },
       notifications: false,
-      accountLookup: async () => null,
     },
   )
   return { status: response.status, leads }
