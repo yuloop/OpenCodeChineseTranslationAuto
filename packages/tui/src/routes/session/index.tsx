@@ -2073,7 +2073,7 @@ function CompactionMessage(props: { message: Extract<SessionMessageInfo, { type:
             </Match>
           </Switch>
           <text fg={color()}>
-            {props.message.status === "completed" && props.message.providerContext
+            {props.message.status === "completed" && props.message.native?.messages
               ? "Provider compaction"
               : "Compaction"}
           </text>

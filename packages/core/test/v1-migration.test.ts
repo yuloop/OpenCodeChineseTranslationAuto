@@ -337,8 +337,8 @@ describe("V1Migration.transformSession", () => {
       agent: "build",
       model: { id: "model", providerID: "provider", variant: "fast" },
       content: [
-        { type: "text", text: "", state: { separator: true } },
-        { type: "reasoning", text: "think", state: { provider: 1 }, time: { created: 21, completed: 22 } },
+        { type: "text", text: "", native: { separator: true } },
+        { type: "reasoning", text: "think", native: { provider: 1 }, time: { created: 21, completed: 22 } },
       ],
       snapshot: { start: "snap_start", end: "snap_end", files: ["a.ts", "b.ts", "c.ts"] },
       finish: "stop",
@@ -430,7 +430,7 @@ describe("V1Migration.transformSession", () => {
     })
     expect(content[2]).toMatchObject({
       id: "completed",
-      providerState: { provider: true },
+      native: { provider: true },
       state: {
         status: "completed",
         content: [
@@ -651,7 +651,7 @@ describe("V1Migration.transformSession", () => {
       id: compact.id,
       time_created: 3,
       time_updated: 6,
-      data: { status: "completed", reason: "manual", summary: "summary", recent: "" },
+      data: { status: "completed", reason: "manual", summary: "summary" },
     })
   })
 
@@ -677,8 +677,9 @@ describe("V1Migration.transformSession", () => {
     expect(result.messages[2].data).toMatchObject({
       reason: "auto",
       summary: "summary",
-      recent: "[User]: question\n\n[Assistant]: answer",
+      metadata: { recent: "[User]: question\n\n[Assistant]: answer" },
     })
+    expect(result.messages[2].data).not.toHaveProperty("recent")
     expect(result.session.agent).toBe("existing")
     expect(result.session.model).toEqual(existing.model)
   })

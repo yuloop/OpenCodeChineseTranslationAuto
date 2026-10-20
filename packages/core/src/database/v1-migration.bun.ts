@@ -297,6 +297,8 @@ export function transformSession(input: TransformInput): TransformResult {
             : -1
           const compactionIndex = messages.findIndex((candidate) => candidate.row.id === item.row.id)
           const tail = tailIndex < 0 ? [] : messages.slice(tailIndex, compactionIndex)
+          // V1 kept these messages beside the summary; they replay as text, like compactions before v2.1.
+          const recent = serializeRecent(tail, byMessage)
           return [
             row(
               { ...item.row, time_updated: Math.max(item.row.time_updated, summary.row.time_updated) },
@@ -306,7 +308,7 @@ export function transformSession(input: TransformInput): TransformResult {
                 status: "completed",
                 reason: compaction.auto ? "auto" : "manual",
                 summary: summaryText,
-                recent: serializeRecent(tail, byMessage),
+                ...(recent ? { metadata: { recent } } : {}),
                 time: { created: item.row.time_created },
               },
             ),
@@ -379,13 +381,13 @@ export function transformSession(input: TransformInput): TransformResult {
         return []
       const content = owned.flatMap((part): Array<Record<string, unknown>> => {
         if (part.type === "text")
-          return [{ type: "text", text: part.text, ...(part.metadata ? { state: part.metadata } : {}) }]
+          return [{ type: "text", text: part.text, ...(part.metadata ? { native: part.metadata } : {}) }]
         if (part.type === "reasoning")
           return [
             {
               type: "reasoning",
               text: part.text,
-              ...(part.metadata ? { state: part.metadata } : {}),
+              ...(part.metadata ? { native: part.metadata } : {}),
               time: { created: part.time.start, ...(part.time.end === undefined ? {} : { completed: part.time.end }) },
             },
           ]
@@ -955,7 +957,7 @@ function migrateTool(part: typeof SessionV1.ToolPart.Type, fallback: number) {
     type: "tool" as const,
     id: part.callID,
     name: part.tool,
-    ...(part.metadata ? { providerState: part.metadata } : {}),
+    ...(part.metadata ? { native: part.metadata } : {}),
   }
   if (part.state.status === "completed")
     return {

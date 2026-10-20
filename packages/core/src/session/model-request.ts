@@ -33,7 +33,6 @@ import { QuestionTool } from "../tool/plugin/question.js"
 import { Tool } from "../tool.js"
 import { SessionAffinity } from "./affinity.js"
 import { SessionModelTransport } from "./model-transport.js"
-import { SessionProviderContext } from "./provider-context.js"
 import { SessionRunnerModel } from "./runner/model.js"
 import { SessionSchema } from "./schema.js"
 import { SessionSystemPrompt } from "./system-prompt.js"
@@ -319,22 +318,6 @@ export const layer = Layer.effect(
           headers: Object.keys(modelHook.headers).length === 0 ? undefined : modelHook.headers,
         }),
       })
-      // History selects native windows against the catalog route before hooks run. A newly installed
-      // routing hook must not send an existing opaque window to another deployment; `prepare` has no
-      // error channel, so like hook failures this surfaces as a defect.
-      const selected = SessionProviderContext.provenance(model)
-      if (
-        selected &&
-        !SessionProviderContext.compatible(
-          selected,
-          SessionProviderContext.provenance({ model: request.model, ref: model.ref }),
-        ) &&
-        request.messages.some((message) => message.content.some((part) => part.type === "compaction"))
-      )
-        return yield* Effect.die(
-          new Error("Provider context is incompatible with the route selected by model request hooks"),
-        )
-
       const hasHttpHooks =
         (yield* hooks.has("session", "http.request", model.ref.providerID)) ||
         (yield* hooks.has("session", "http.response", model.ref.providerID))
