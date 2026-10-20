@@ -77,9 +77,11 @@ test("the local Enterprise request handler applies the updated mapping to a form
         inferenceSpend: "50k-100k",
         message: "  How are you bro!\nThis is a local form test.  ",
         alias: "",
+        captcha: "test-token",
       }),
     }),
     {
+      captcha: { secret: "test-secret", fetch: async () => Response.json({ success: true }) },
       salesforceSubmit: async (payload) => {
         const response = await fetch(`${server.url.origin}/services/data/v59.0/sobjects/Lead`, {
           method: "POST",
