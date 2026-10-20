@@ -939,9 +939,11 @@ function legacyToolNotice(messages: ReadonlyArray<TransformResult["messages"][nu
         : []),
     ...(called.has("skill") ? ["The `skill` tool now takes `id` instead of `name`."] : []),
     ...(removed.length === 1
-      ? [`The \`${removed[0]}\` tool is no longer available and must not be called.`]
+      ? [`The \`${removed[0]}\` tool is no longer available by default. Only call it if it is in your tool list.`]
       : removed.length > 1
-        ? [`The following tools are no longer available and must not be called: ${list(removed)}.`]
+        ? [
+            `The following tools are no longer available by default. Only call them if they are in your tool list: ${list(removed)}.`,
+          ]
         : []),
   ]
   if (parts.length === 0) return undefined

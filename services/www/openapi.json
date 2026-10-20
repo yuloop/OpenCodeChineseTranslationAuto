@@ -14293,6 +14293,9 @@
               "portable_shell_scanner": {
                 "type": "boolean"
               },
+              "todo": {
+                "type": "boolean"
+              },
               "subagent_depth": {
                 "type": "integer",
                 "minimum": 0

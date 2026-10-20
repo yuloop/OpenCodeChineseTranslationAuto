@@ -505,7 +505,7 @@ describe("V1Migration.transformSession", () => {
           "The following tools were renamed and must be called by their new names: `bash` is now `shell`; `task` is now `subagent`; `apply_patch` is now `patch`.",
           "The `subagent` tool takes `agent` instead of `subagent_type` and `sessionID` instead of `task_id`.",
           "The `read` tool now takes `path` instead of `filePath`.",
-          "The `todowrite` tool is no longer available and must not be called.",
+          "The `todowrite` tool is no longer available by default. Only call it if it is in your tool list.",
         ].join("\n\n"),
         time: { created: 20 },
       },
