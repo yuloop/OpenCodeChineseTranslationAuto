@@ -1,5 +1,4 @@
 import { DateTime, Schema } from "effect"
-import { Agent } from "@opencode/schema/agent"
 import { Location } from "@opencode/schema/location"
 import { Model } from "@opencode/schema/model"
 import { Project } from "@opencode/schema/project"
@@ -26,7 +25,7 @@ export function fromRow(row: typeof SessionTable.$inferSelect): SessionSchema.In
             boundary: row.fork_boundary,
           }
         : undefined,
-    agent: row.agent ? Agent.ID.make(row.agent) : undefined,
+    agent: row.agent ?? undefined,
     model: row.model
       ? {
           id: Model.ID.make(row.model.id),

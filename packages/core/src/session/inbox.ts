@@ -131,15 +131,24 @@ const promotedFromMessage = Effect.fn("SessionInbox.promotedFromMessage")(functi
     return User.make({
       ...base,
       type: "user",
-      payload: decodeUser(message),
+      payload: UserPayload.make({
+        text: message.text,
+        files: message.files,
+        agents: message.agents,
+        skills: message.skills,
+        metadata: message.metadata,
+      }),
     })
   if (message.type === "synthetic")
     return Synthetic.make({
       ...base,
       type: "synthetic",
-      payload: decodeSynthetic(message),
+      payload: SyntheticPayload.make({
+        text: message.text,
+        description: message.description,
+        metadata: message.metadata,
+      }),
     })
-  return yield* new LifecycleConflict({ id })
 })
 
 export type Interface = Effect.Success<ReturnType<typeof make>>

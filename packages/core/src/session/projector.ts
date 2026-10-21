@@ -6,7 +6,6 @@ import path from "path"
 import { Database } from "../database/database.js"
 import { Bus } from "../bus.js"
 import { makeGlobalNode } from "@opencode/util/effect/app-node"
-import { Agent } from "@opencode/schema/agent"
 import { Model } from "@opencode/schema/model"
 import { SessionEvent } from "./event.js"
 import { SessionMessage } from "./message.js"
@@ -257,13 +256,13 @@ function run(db: DatabaseService, event: MessageEvent) {
   return Effect.gen(function* () {
     const updateMessage = (message: SessionMessage.Info) => {
       const encoded = encodeMessage(message)
-      const { id, type, ...data } = encoded
+      const { id: _, type, ...data } = encoded
       return db
         .update(SessionMessageTable)
         .set({ type, time_created: DateTime.toEpochMillis(message.time.created), data })
         .where(
           and(
-            eq(SessionMessageTable.id, SessionMessage.ID.make(id)),
+            eq(SessionMessageTable.id, message.id),
             eq(SessionMessageTable.session_id, event.data.sessionID),
           ),
         )
@@ -280,7 +279,7 @@ function run(db: DatabaseService, event: MessageEvent) {
           .get()
           .pipe(
             Effect.orDie,
-            Effect.map((row) => (row?.agent ? Agent.ID.make(row.agent) : undefined)),
+            Effect.map((row) => row?.agent ?? undefined),
           )
       },
       getModel() {
@@ -411,11 +410,11 @@ function run(db: DatabaseService, event: MessageEvent) {
 
 function insertMessage(db: DatabaseService, event: SessionEvent.DurableEvent, message: SessionMessage.Info) {
   const encoded = encodeMessage(message)
-  const { id, type, ...data } = encoded
+  const { id: _, type, ...data } = encoded
   return db
     .insert(SessionMessageTable)
     .values({
-      id: SessionMessage.ID.make(id),
+      id: message.id,
       session_id: event.data.sessionID,
       type,
       seq: event.durable.seq,

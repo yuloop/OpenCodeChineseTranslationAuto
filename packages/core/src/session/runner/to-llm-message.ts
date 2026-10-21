@@ -152,8 +152,8 @@ const toolResult = (tool: SessionMessage.AssistantTool, providerMetadata: Provid
 }
 
 const assistant = (message: SessionMessage.Assistant, model: Model.Ref, providerMetadataKey: string) => {
-  const sameProvider = String(message.model.providerID) === String(model.providerID)
-  const sameModel = sameProvider && String(message.model.id) === String(model.id)
+  const sameProvider = message.model.providerID === model.providerID
+  const sameModel = sameProvider && message.model.id === model.id
   const reuseProviderMetadata = sameModel && message.error === undefined
   const reasoningInterrupted = message.content.some(
     (item) => item.type === "reasoning" && item.time !== undefined && item.time.completed === undefined,
