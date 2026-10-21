@@ -112,6 +112,8 @@ import type {
   VoiceModelsOutput,
   VoiceSessionInput,
   VoiceSessionOutput,
+  VoiceInstructionsInput,
+  VoiceInstructionsOutput,
   ProviderListInput,
   ProviderListOutput,
   ProviderGetInput,
@@ -1186,6 +1188,18 @@ export function make(options: ClientOptions) {
           },
           requestOptions,
         ).then((value) => value.data),
+      instructions: (input: VoiceInstructionsInput, requestOptions?: RequestOptions) =>
+        request<VoiceInstructionsOutput>(
+          {
+            method: "POST",
+            path: `/api/experimental/voice/session/${encodeURIComponent(input.sessionID)}/instructions`,
+            body: { instructions: input["instructions"] },
+            successStatus: 204,
+            declaredStatuses: [400, 401, 404, 503],
+            empty: true,
+          },
+          requestOptions,
+        ),
     },
     provider: {
       list: (input?: ProviderListInput, requestOptions?: RequestOptions) =>
