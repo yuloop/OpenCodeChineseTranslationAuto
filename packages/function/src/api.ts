@@ -47,6 +47,7 @@ export default new Hono()
       const installationAuth = await auth({
         type: "installation",
         installationId: installation.id,
+        ...(repository.id ? { repositoryIds: [repository.id] } : { repositoryNames: [repository.repo] }),
       })
       return c.json({ token: installationAuth.token })
     } catch (error) {
