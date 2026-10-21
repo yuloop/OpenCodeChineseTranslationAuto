@@ -33,14 +33,23 @@ describe("toSessionError", () => {
     expect(toSessionError(llm(new RateLimitError({ message: "rate", retryAfterMs: 123 })))).toEqual({
       type: "provider.rate-limit",
       message: "rate",
+      retryAfterMs: 123,
     })
     expect(toSessionError(llm(new AuthenticationError({ message: "auth" }))).type).toBe("provider.auth")
-    expect(toSessionError(llm(new QuotaExceededError({ message: "quota" }))).type).toBe("provider.quota")
+    expect(toSessionError(llm(new QuotaExceededError({ message: "quota", retryAfterMs: 456 })))).toEqual({
+      type: "provider.quota",
+      message: "quota",
+      retryAfterMs: 456,
+    })
     expect(toSessionError(llm(new ContentPolicyError({ message: "blocked" }))).type).toBe("provider.content-filter")
     expect(
       toSessionError(llm(new TransportError({ message: "transport", transport: "http", operation: "request" }))).type,
     ).toBe("provider.transport")
-    expect(toSessionError(llm(new ProviderInternalError({ message: "internal" }))).type).toBe("provider.internal")
+    expect(toSessionError(llm(new ProviderInternalError({ message: "internal", retryAfterMs: 789 })))).toEqual({
+      type: "provider.internal",
+      message: "internal",
+      retryAfterMs: 789,
+    })
     expect(toSessionError(llm(new InvalidProviderOutputError({ message: "output" }))).type).toBe(
       "provider.invalid-output",
     )
@@ -102,7 +111,7 @@ describe("toSessionError", () => {
       { "retry-after": "45" },
     )
     expect(SessionRunnerRetry.isRetryable(paid)).toBe(true)
-    expect(toSessionError(paid).type).toBe("provider.rate-limit")
+    expect(toSessionError(paid)).toMatchObject({ type: "provider.rate-limit", retryAfterMs: 45_000 })
 
     const go = fail(
       "https://opencode.ai/inference/go/openai/v1/chat/completions",
@@ -110,7 +119,7 @@ describe("toSessionError", () => {
       { "retry-after": "120" },
     )
     expect(SessionRunnerRetry.isRetryable(go)).toBe(false)
-    expect(toSessionError(go).type).toBe("provider.quota")
+    expect(toSessionError(go)).toMatchObject({ type: "provider.quota", retryAfterMs: 120_000 })
 
     const other = fail(
       "https://api.openai.com/v1/chat/completions",
@@ -118,7 +127,7 @@ describe("toSessionError", () => {
       { "retry-after": "10" },
     )
     expect(SessionRunnerRetry.isRetryable(other)).toBe(true)
-    expect(toSessionError(other).type).toBe("provider.rate-limit")
+    expect(toSessionError(other)).toMatchObject({ type: "provider.rate-limit", retryAfterMs: 10_000 })
   })
 
   test("preserves the permission rejection type without exposing internal fields", () => {

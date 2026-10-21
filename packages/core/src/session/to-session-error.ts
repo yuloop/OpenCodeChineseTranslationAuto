@@ -35,17 +35,12 @@ export function toSessionError(cause: unknown): SessionError.Error {
         return providerError("provider.rate-limit", cause.reason)
       case "Authentication":
         return providerError("provider.auth", cause.reason)
-      case "QuotaExceeded": {
+      case "QuotaExceeded":
         if (!cause.reason.body?.includes("FreeUsageLimitError")) return providerError("provider.quota", cause.reason)
-        const retryAfterMs = cause.reason.retryAfterMs
         return {
           ...providerError("provider.free-limit", cause.reason),
           message: FREE_USAGE_LIMIT_MESSAGE,
-          ...(retryAfterMs !== undefined && Number.isFinite(retryAfterMs) && retryAfterMs >= 0
-            ? { retryAfterMs: Math.ceil(retryAfterMs) }
-            : {}),
         }
-      }
       case "ContentPolicy":
         return providerError("provider.content-filter", cause.reason)
       case "Transport":
@@ -108,10 +103,12 @@ export function contentFilterError(summary: string, reason: FinishReasonDetails)
 
 function providerError(type: string, reason: AIError["reason"]): SessionError.Error {
   const status = reason.http?.status
+  const retryAfterMs = "retryAfterMs" in reason ? reason.retryAfterMs : undefined
   return {
     type,
     message: Object.entries(tokenSharingMessages).find(([code]) => reason.body?.includes(code))?.[1] ?? reason.message,
     ...(status === undefined ? {} : { status }),
     ...(reason.body === undefined ? {} : { response: { body: reason.body } }),
+    ...(retryAfterMs === undefined ? {} : { retryAfterMs }),
   }
 }

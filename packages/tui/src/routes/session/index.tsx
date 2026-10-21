@@ -70,6 +70,8 @@ import { statusLabel } from "../../component/dialog-workspace-file-changes"
 import { DialogMessage } from "./dialog-message"
 import { DialogFork } from "./dialog-fork"
 import { DialogTimeline } from "./dialog-timeline"
+import { DialogGoUpsell } from "../../component/dialog-go-upsell"
+import { useStorage } from "../../context/storage"
 import { Composer } from "./composer"
 import { filetype } from "../../util/filetype"
 import parsers from "../../parsers-config"
@@ -625,8 +627,20 @@ export function Session(props: {
     current.submit()
   })
   const dialog = useDialog()
+  const storage = useStorage()
+  const [goUpsell, updateGoUpsell] = storage.store<{ lastSeenAt?: number; dontShow?: boolean }>("go-upsell", {
+    initial: {},
+  })
+  const [goUpsellMemory, updateGoUpsellMemory] = storage.memory<{ lastSeenAt?: number; dontShow?: boolean }>(
+    "go-upsell",
+    { initial: {} },
+  )
   const handledFreeLimits = new Set<string>()
-  // Restore the prompt when the free allowance stops it.
+  let sessionDisposed = false
+  onCleanup(() => {
+    sessionDisposed = true
+  })
+  // Restore the prompt when the free allowance stops it, and offer OpenCode Go on the first hit in a day.
   onCleanup(
     data.on("session.step.failed", (event) => {
       if (event.data.sessionID !== route.sessionID || event.data.error.type !== "provider.free-limit") return
@@ -652,6 +666,82 @@ export function Session(props: {
           break
         }
       }
+      if (dialog.stack.length > 0) return
+      if (goUpsell.dontShow || goUpsellMemory.dontShow) return
+      const now = Date.now()
+      const seen = Math.max(goUpsell.lastSeenAt ?? 0, goUpsellMemory.lastSeenAt ?? 0)
+      if (seen > 0 && now - seen < 86_400_000) return
+      const expectedText = current.current.text
+      const expectedFiles = current.current.files?.length ?? 0
+      const expectedAgents = current.current.agents?.length ?? 0
+      const expectedSkills = current.current.skills?.length ?? 0
+      const expectedPasted = current.current.pasted.length
+      const hasRecalledPrompt = () => {
+        const active = prompt()
+        return Boolean(
+          !sessionDisposed &&
+            route.sessionID === event.data.sessionID &&
+            active &&
+            active.current.text === expectedText &&
+            (active.current.files?.length ?? 0) === expectedFiles &&
+            (active.current.agents?.length ?? 0) === expectedAgents &&
+            (active.current.skills?.length ?? 0) === expectedSkills &&
+            active.current.pasted.length === expectedPasted,
+        )
+      }
+      const canOpen = () =>
+        Boolean(hasRecalledPrompt() && dialog.stack.length === 0 && !goUpsell.dontShow && !goUpsellMemory.dontShow)
+      const previousSeen = goUpsellMemory.lastSeenAt
+      updateGoUpsellMemory((draft) => {
+        draft.lastSeenAt = now
+      })
+      let claimed = false
+      void updateGoUpsell((draft) => {
+        if (draft.dontShow) {
+          updateGoUpsellMemory((mem) => {
+            mem.dontShow = true
+            mem.lastSeenAt = draft.lastSeenAt ?? previousSeen
+          })
+          return
+        }
+        if ((draft.lastSeenAt ?? 0) > 0 && now - (draft.lastSeenAt ?? 0) < 86_400_000) {
+          updateGoUpsellMemory((mem) => {
+            mem.lastSeenAt = draft.lastSeenAt
+          })
+          return
+        }
+        if (!canOpen()) {
+          updateGoUpsellMemory((mem) => {
+            mem.lastSeenAt = previousSeen
+          })
+          return
+        }
+        draft.lastSeenAt = now
+        claimed = true
+      })
+        .catch(() => {
+          claimed = true
+        })
+        .then(() => {
+          if (!claimed || !canOpen()) return
+          dialog.replace(() => (
+            <DialogGoUpsell
+              reset={freeLimitReset(event.data.error.retryAfterMs, event.created)}
+              canContinue={hasRecalledPrompt}
+              onDontShowAgain={() => {
+                updateGoUpsellMemory((draft) => {
+                  draft.dontShow = true
+                })
+                void updateGoUpsell((draft) => {
+                  draft.dontShow = true
+                }).catch(() => undefined)
+              }}
+              onSubscribe={() => {
+                prompt()?.submit()
+              }}
+            />
+          ))
+        })
     }),
   )
   const runPendingAction = createSingleFlight<string>()

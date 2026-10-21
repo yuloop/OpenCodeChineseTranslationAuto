@@ -1,7 +1,7 @@
 import { Clock, Effect, Redacted, Schema } from "effect"
 import { HttpClientRequest } from "effect/http"
 import { RequestExecutor } from "../route/executor.js"
-import { AIError, HttpContext, InvalidProviderOutputError, InvalidRequestError } from "../schema/index.js"
+import { AIError, InvalidProviderOutputError, InvalidRequestError } from "../schema/index.js"
 import { encodeJson } from "../utils/json.js"
 
 const OPENAI_BASE_URL = "https://api.openai.com/v1"
@@ -157,7 +157,7 @@ const post = <A>(
           : HttpClientRequest.bodyText(encodeJson(body), "application/json"),
       ),
     )
-    const http = new HttpContext({ url: res.request.url, status: res.status, headers: res.headers })
+    const http = RequestExecutor.responseHttp(res)
     const fail = (message: string, cause?: unknown, raw?: string) =>
       new AIError({ reason: new InvalidProviderOutputError({ route, message, body: raw, http, cause }) })
     const text = yield* res.text.pipe(Effect.mapError((cause) => fail(`Failed to read ${route} response`, cause)))

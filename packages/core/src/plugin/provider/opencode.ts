@@ -197,6 +197,7 @@ function oauth(http: HttpClient.HttpClient) {
 export const OpencodePlugin = define<HttpClient.HttpClient | Bus.Service | ManagedPolicy.Service | Scope.Scope>({
   id: "opencode.provider.opencode",
   effect: Effect.fn(function* (ctx) {
+    const disableFree = ["1", "true"].includes(process.env.OPENCODE_DISABLE_FREE_MODELS?.toLowerCase() ?? "")
     const bus = yield* Bus.Service
     const client = yield* HttpClient.HttpClient
     // Every request here goes to the Console, which reads the User-Agent to tell which OpenCode a member runs
@@ -366,7 +367,7 @@ export const OpencodePlugin = define<HttpClient.HttpClient | Bus.Service | Manag
       if (!item) return
       const hasKey = Boolean(process.env.OPENCODE_API_KEY || snapshot.connection || item.provider.settings?.apiKey)
       providers.update(item.provider.id, (provider) => {
-        if (!hasKey) {
+        if (!hasKey && !disableFree) {
           provider.activation = "enabled"
           provider.settings = { ...provider.settings, apiKey: "public" }
         }
@@ -601,7 +602,10 @@ function credentialHeaders(value: Credential.Key | Credential.OAuth): Record<str
 }
 
 function serverUrl(value: Credential.Value) {
-  return typeof value.metadata?.server === "string" ? value.metadata.server : defaultServer
+  const server = typeof value.metadata?.server === "string" ? value.metadata.server : defaultServer
+  // Credentials saved before August 2026 store the retired console.opencode.ai host, which maps path-for-path onto
+  // the default server; rewriting it lets that host be shut down without forcing those users to reconnect.
+  return server.replace(/^https:\/\/console\.opencode\.ai(?=\/|$)/, defaultServer)
 }
 
 function withoutCredentials<Value>(body: Readonly<Record<string, Value>> | undefined) {

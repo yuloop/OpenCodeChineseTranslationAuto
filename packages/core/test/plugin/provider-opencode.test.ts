@@ -1313,6 +1313,25 @@ describe("OpencodePlugin", () => {
     }),
   )
 
+  it.effect("sends credentials saved with the retired console.opencode.ai host to the default Console", () =>
+    Effect.gen(function* () {
+      const credentials = yield* Credential.Service
+      const requests: string[] = []
+      const http = HttpClient.make((request) => {
+        requests.push(request.url)
+        return Effect.succeed(HttpClientResponse.fromWeb(request, new Response(null, { status: 404 })))
+      })
+      yield* credentials.create({
+        integrationID: Integration.ID.make("opencode"),
+        value: Credential.Key.make({ type: "key", key: "secret", metadata: { server: "https://console.opencode.ai" } }),
+      })
+      yield* addPlugin().pipe(Effect.provideService(HttpClient.HttpClient, http))
+      yield* drain
+
+      expect(requests).toEqual(["https://opencode.ai/console/api/v2/config"])
+    }),
+  )
+
   it.effect("reports a rejected Console refresh token as signed out without removing the credential", () =>
     Effect.acquireUseRelease(
       Effect.sync(() =>
@@ -2008,3 +2027,58 @@ describe("OpencodePlugin", () => {
     ),
   )
 })
+
+for (const key of [undefined, "secret"]) {
+  testEffect(Layer.empty).effect(
+    `disabled free models with ${key ? "an API key" : "a Console login after startup"}`,
+    () =>
+      withEnv({ OPENCODE_DISABLE_FREE_MODELS: "true", OPENCODE_API_KEY: key }, () =>
+        Effect.gen(function* () {
+          const catalog = yield* Provider.Service
+          const models = yield* Model.Service
+          const integrations = yield* Integration.Service
+          const credentials = yield* Credential.Service
+          yield* integrations.transform((editor) =>
+            editor.method.update({
+              integrationID: Integration.ID.make("opencode"),
+              method: { type: "env", names: ["OPENCODE_API_KEY"] },
+            }),
+          )
+          yield* catalog.transform((editor) => {
+            editor.update(Provider.ID.opencode, () => {})
+            editor.models.update(Provider.ID.opencode, Model.ID.make("free"), (model) => {
+              model.cost = cost(0)
+            })
+            editor.models.update(Provider.ID.opencode, Model.ID.make("paid"), (model) => {
+              model.cost = cost(1)
+            })
+          })
+          yield* addPlugin().pipe(Effect.provideService(HttpClient.HttpClient, noRemoteConfig))
+          if (!key) {
+            expect(yield* catalog.available()).toEqual([])
+            expect(yield* models.all()).toEqual([])
+            expect(yield* models.default()).toBeUndefined()
+            expect((yield* integrations.get(Integration.ID.make("opencode")))?.methods.length).toBeGreaterThan(0)
+            yield* credentials.create({
+              integrationID: Integration.ID.make("opencode"),
+              value: Credential.OAuth.make({
+                type: "oauth",
+                methodID: Integration.MethodID.make("device"),
+                access: "access",
+                refresh: "refresh",
+                expires: Date.now() + 600_000,
+              }),
+            })
+          }
+          const available = yield* eventually(models.available(), (models) =>
+            models.some((model) => model.providerID === Provider.ID.opencode),
+          )
+          expect((yield* catalog.available()).map((provider) => provider.id)).toContain(Provider.ID.opencode)
+          expect(available.map((model) => model.id)).toEqual([Model.ID.make("paid")])
+          expect(yield* models.all()).toEqual(available)
+          expect((yield* models.default())?.id).toBe(Model.ID.make("paid"))
+          expect(yield* models.get(Provider.ID.opencode, Model.ID.make("free"))).toBeUndefined()
+        }).pipe(Effect.provide(PluginTestLayer)),
+      ),
+  )
+}
