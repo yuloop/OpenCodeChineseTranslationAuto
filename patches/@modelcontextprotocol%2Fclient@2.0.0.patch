@@ -56,3 +56,29 @@ index f02ce3ca394e826fc27c9848dbe9a214bf6ba7a9..3508b8e841bb8d3d724fa5ff573902db
  	if (resource) authorizationUrl.searchParams.set("resource", resource.href);
  	return {
  		authorizationUrl,
+diff --git a/dist/src-NAgB4Mp8.cjs b/dist/src-NAgB4Mp8.cjs
+index e8f2499..07f6e5c 100644
+--- a/dist/src-NAgB4Mp8.cjs
++++ b/dist/src-NAgB4Mp8.cjs
+@@ -5698,7 +5698,7 @@ var Protocol = class {
+ 		return this._requestHandlers.get(method);
+ 	}
+ 	async _oncancel(notification) {
+-		if (!notification.params.requestId) return;
++		if (notification.params.requestId === void 0) return;
+ 		this._requestHandlerAbortControllers.get(notification.params.requestId)?.abort(notification.params.reason);
+ 	}
+ 	_setupTimeout(messageId, timeout, maxTotalTimeout, onTimeout, resetTimeoutOnProgress = false) {
+diff --git a/dist/src-D_zzAWoS.mjs b/dist/src-D_zzAWoS.mjs
+index 6ac3d53..82e0aaf 100644
+--- a/dist/src-D_zzAWoS.mjs
++++ b/dist/src-D_zzAWoS.mjs
+@@ -5697,7 +5697,7 @@ var Protocol = class {
+ 		return this._requestHandlers.get(method);
+ 	}
+ 	async _oncancel(notification) {
+-		if (!notification.params.requestId) return;
++		if (notification.params.requestId === void 0) return;
+ 		this._requestHandlerAbortControllers.get(notification.params.requestId)?.abort(notification.params.reason);
+ 	}
+ 	_setupTimeout(messageId, timeout, maxTotalTimeout, onTimeout, resetTimeoutOnProgress = false) {

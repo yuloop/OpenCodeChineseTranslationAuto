@@ -23,7 +23,8 @@
     "./solid": "./src/solid/index.ts",
     "./effect": "./src/effect/index.ts",
     "./effect/api": "./src/effect/api.ts",
-    "./effect/service": "./src/effect/service.ts"
+    "./effect/service": "./src/effect/service.ts",
+    "./mcp": "./src/mcp.ts"
   },
   "scripts": {
     "build": "bun run script/build-package.ts",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@effect/platform-node": "catalog:",
+    "@modelcontextprotocol/client": "2.0.0",
     "@opencode/httpapi-codegen": "workspace:*",
     "@tsconfig/bun": "catalog:",
     "@types/bun": "catalog:",

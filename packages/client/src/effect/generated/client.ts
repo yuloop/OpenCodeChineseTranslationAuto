@@ -160,6 +160,8 @@ import type {
   McpDisconnectOutput,
   McpResourceCatalogInput,
   McpResourceCatalogOutput,
+  McpClientTokenInput,
+  McpClientTokenOutput,
   CredentialListOutput,
   CredentialCreateInput,
   CredentialCreateOutput,
@@ -1087,6 +1089,14 @@ const EndpointMcpResourceCatalog = (raw: RawClient["server.mcp"]) => (input?: Mc
     raw["mcp.resource.catalog"]({ query: { location: input?.["location"] } }).pipe(Effect.mapError(mapClientError)),
   )
 
+const EndpointMcpClientToken = (raw: RawClient["server.mcp"]) => (input: McpClientTokenInput) =>
+  preserveEffect<McpClientTokenOutput>()(
+    raw["mcp.clientToken"]({
+      query: { location: input["location"], name: input["name"] },
+      headers: { "x-opencode-ticket": input["x-opencode-ticket"] },
+    }).pipe(Effect.mapError(mapClientError)),
+  )
+
 const adaptGroupMcp = (raw: RawClient["server.mcp"]) => ({
   list: EndpointMcpList(raw),
   add: EndpointMcpAdd(raw),
@@ -1094,6 +1104,7 @@ const adaptGroupMcp = (raw: RawClient["server.mcp"]) => ({
   connect: EndpointMcpConnect(raw),
   disconnect: EndpointMcpDisconnect(raw),
   resource: { catalog: EndpointMcpResourceCatalog(raw) },
+  client: { token: EndpointMcpClientToken(raw) },
 })
 
 const EndpointCredentialList = (raw: RawClient["server.credential"]) => () =>

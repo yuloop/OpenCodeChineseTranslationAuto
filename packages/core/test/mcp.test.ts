@@ -45,6 +45,7 @@ import {
   Exit,
   Fiber,
   Layer,
+  Option,
   PubSub,
   Ref,
   Schedule,
@@ -97,6 +98,8 @@ function resourceServer(
     listChanged?: boolean
     emptyElicitation?: boolean
     urlElicitation?: boolean
+    /** Legacy servers give up on the URL elicitation after this many milliseconds. */
+    elicitationTimeout?: number
     respond?: (request: Request) => Response | undefined | Promise<Response | undefined>
   } = {},
 ) {
@@ -174,12 +177,15 @@ function resourceServer(
             const response = inputResponse(responses, "auth")
             const result = input.modern
               ? { action: response.kind === "elicit" ? response.action : "cancel" }
-              : await protocol.elicitInput({
-                  mode: "url",
-                  message: "Authorize access",
-                  url,
-                  elicitationId: "elicitation-test",
-                })
+              : await protocol.elicitInput(
+                  {
+                    mode: "url",
+                    message: "Authorize access",
+                    url,
+                    elicitationId: "elicitation-test",
+                  },
+                  input.elicitationTimeout === undefined ? undefined : { timeout: input.elicitationTimeout },
+                )
             return {
               content: [{ type: "text", text: JSON.stringify(result) }],
               structuredContent: result,
@@ -1260,6 +1266,17 @@ test("skips MCP resource requests when the capability is absent", async () => {
   )
 })
 
+type CreatedForm = { readonly form: Form.Info; readonly directory: string | undefined }
+
+// Clients drop `form.created` events without a Location, so the form must be published inside the server's Location.
+const recordForm = (created: Deferred.Deferred<CreatedForm>, form: Form.Info) =>
+  Effect.serviceOption(Location.Service).pipe(
+    Effect.flatMap((location) =>
+      Deferred.succeed(created, { form, directory: Option.getOrUndefined(location)?.directory }),
+    ),
+    Effect.asVoid,
+  )
+
 test("accepts empty MCP elicitations without creating forms", async () => {
   await Effect.runPromise(
     Effect.scoped(
@@ -1284,13 +1301,14 @@ test("acknowledges completed MCP URL elicitations without returning internal con
     Effect.scoped(
       Effect.gen(function* () {
         const server = yield* resourceServer({ resources: false, urlElicitation: true })
-        const created = yield* Deferred.make<Form.Info>()
+        const created = yield* Deferred.make<CreatedForm>()
         const result = yield* Effect.gen(function* () {
           const service = yield* Mcp.Service
           const forms = yield* Form.Service
           const call = yield* service.callTool({ server: "resources", name: "url-elicitation" }).pipe(Effect.forkScoped)
 
-          const form = yield* Deferred.await(created)
+          const { form, directory } = yield* Deferred.await(created)
+          expect(directory).toBe(import.meta.dir)
           expect(form.fields).toEqual([{ key: "elicitation", type: "external", url: "https://example.com/authorize" }])
 
           yield* Effect.promise(server.completeElicitation)
@@ -1298,10 +1316,34 @@ test("acknowledges completed MCP URL elicitations without returning internal con
           expect(yield* forms.state(form.id)).toEqual({ status: "answered", answer: { elicitation: true } })
           return result
         }).pipe(
-          Effect.provide(resourceMcpLayer(server.url, (form) => Deferred.succeed(created, form).pipe(Effect.asVoid))),
+          Effect.provide(resourceMcpLayer(server.url, (form) => recordForm(created, form))),
         )
 
         expect(result.structured).toEqual({ action: "accept" })
+      }),
+    ),
+  )
+})
+
+test("cancels MCP elicitation forms when the server gives up on them", async () => {
+  await Effect.runPromise(
+    Effect.scoped(
+      Effect.gen(function* () {
+        const server = yield* resourceServer({ resources: false, urlElicitation: true, elicitationTimeout: 200 })
+        const created = yield* Deferred.make<CreatedForm>()
+        yield* Effect.gen(function* () {
+          const service = yield* Mcp.Service
+          const forms = yield* Form.Service
+          const call = yield* service.callTool({ server: "resources", name: "url-elicitation" }).pipe(Effect.forkScoped)
+          const { form } = yield* Deferred.await(created)
+          yield* Fiber.await(call)
+          // The server's cancellation and its tool error race; the form settles shortly after either.
+          const state = yield* forms.state(form.id).pipe(
+            Effect.repeat({ until: (state) => state.status !== "pending", schedule: Schedule.spaced("10 millis") }),
+            Effect.timeout("2 seconds"),
+          )
+          expect(state.status).toBe("cancelled")
+        }).pipe(Effect.provide(resourceMcpLayer(server.url, (form) => recordForm(created, form))))
       }),
     ),
   )
@@ -1312,13 +1354,14 @@ test("settles modern MCP URL elicitations when the user confirms", async () => {
     Effect.scoped(
       Effect.gen(function* () {
         const server = yield* resourceServer({ modern: true, resources: false, urlElicitation: true })
-        const created = yield* Deferred.make<Form.Info>()
+        const created = yield* Deferred.make<CreatedForm>()
         const result = yield* Effect.gen(function* () {
           const service = yield* Mcp.Service
           const forms = yield* Form.Service
           const call = yield* service.callTool({ server: "resources", name: "url-elicitation" }).pipe(Effect.forkScoped)
 
-          const form = yield* Deferred.await(created)
+          const { form, directory } = yield* Deferred.await(created)
+          expect(directory).toBe(import.meta.dir)
           expect(form.metadata).not.toHaveProperty("elicitationID")
           yield* forms.reply({ id: form.id, answer: { elicitation: true } })
           return yield* Fiber.join(call)
@@ -1326,7 +1369,7 @@ test("settles modern MCP URL elicitations when the user confirms", async () => {
           Effect.provide(
             resourceMcpLayer(
               new ConfigMCP.Remote({ type: "remote", url: server.url, oauth: false, protocol: "2026-07-28" }),
-              (form) => Deferred.succeed(created, form).pipe(Effect.asVoid),
+              (form) => recordForm(created, form),
             ),
           ),
         )

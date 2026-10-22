@@ -476,6 +476,15 @@ function normalizeExperimental(
         )
         if (value !== undefined) result.todo = value
       }
+      if (own(experimental, "precompute_compaction")) {
+        const value = decodeEncoded(
+          ConfigExperimental.Info.fields.precompute_compaction,
+          experimental.precompute_compaction,
+          ["experimental", "precompute_compaction"],
+          diagnostics,
+        )
+        if (value !== undefined) result.precompute_compaction = value
+      }
       if (own(experimental, "subagent_depth")) {
         const value = decodeEncoded(
           ConfigExperimental.Info.fields.subagent_depth,

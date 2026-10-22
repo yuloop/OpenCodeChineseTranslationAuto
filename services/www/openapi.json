@@ -14463,6 +14463,9 @@
               "todo": {
                 "type": "boolean"
               },
+              "precompute_compaction": {
+                "type": "boolean"
+              },
               "subagent_depth": {
                 "type": "integer",
                 "minimum": 0
