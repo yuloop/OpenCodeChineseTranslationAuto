@@ -2269,6 +2269,9 @@ export interface VcsApi<E = never> {
   readonly diff: VcsDiffOperation<E>
 }
 
+export type DebugHeapDumpOutput = { readonly path: string; readonly pid: number }
+export type DebugHeapDumpOperation<E = never> = () => Effect.Effect<DebugHeapDumpOutput, E>
+
 export type DebugLocationListOutput = ReadonlyArray<Location.PublicRef>
 export type DebugLocationListOperation<E = never> = () => Effect.Effect<DebugLocationListOutput, E>
 
@@ -2279,6 +2282,7 @@ export type DebugLocationEvictOperation<E = never> = (
 ) => Effect.Effect<DebugLocationEvictOutput, E>
 
 export interface DebugApi<E = never> {
+  readonly heapDump: DebugHeapDumpOperation<E>
   readonly location: { readonly list: DebugLocationListOperation<E>; readonly evict: DebugLocationEvictOperation<E> }
 }
 

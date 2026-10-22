@@ -117,6 +117,15 @@ const Root = Spec.make(typeof OPENCODE_CLI_NAME === "string" ? OPENCODE_CLI_NAME
       commands: [
         Spec.make("agents", { description: "List all agents" }),
         Spec.make("config", { description: "List configuration sources" }),
+        Spec.make("heap-dump", {
+          description: "Write a heap snapshot of the running server and print its path",
+          params: {
+            server: Flag.String("server").pipe(
+              Flag.withDescription("Connect to a server URL instead of the background service"),
+              Flag.optional,
+            ),
+          },
+        }),
         Spec.make("paths", {
           description: "Show global paths (data, config, cache, state)",
           params: {

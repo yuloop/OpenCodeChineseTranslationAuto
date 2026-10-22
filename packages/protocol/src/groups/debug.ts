@@ -1,9 +1,23 @@
 import { Location } from "@opencode/schema/location"
 import { Schema } from "effect"
 import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema, OpenApi } from "effect/http-api"
+import { UnknownError } from "../errors.js"
 import { LocationQuery, locationQueryOpenApi } from "./location.js"
 
 export const DebugGroup = HttpApiGroup.make("server.debug")
+  .add(
+    HttpApiEndpoint.post("debug.heapDump", "/api/debug/heap-dump", {
+      success: Schema.Struct({ path: Schema.String, pid: Schema.Int }),
+      error: UnknownError,
+    }).annotateMerge(
+      OpenApi.annotations({
+        identifier: "debug.heapDump",
+        summary: "Write a heap snapshot",
+        description:
+          "Write a JavaScript heap snapshot of the server process into its log directory and return the server-local path once the file is complete. Pauses the server while the heap serializes and can temporarily increase its memory use. The snapshot can contain credentials, prompts, and file contents.",
+      }),
+    ),
+  )
   .add(
     HttpApiEndpoint.get("debug.location", "/api/debug/location", {
       success: Schema.Array(Location.PublicRef),

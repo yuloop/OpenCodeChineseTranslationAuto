@@ -479,7 +479,10 @@ When converting the frontmatter to native V2 fields:
 - Join `model` and `variant` as `provider/model#variant`.
 - Move `temperature`, `top_p`, and provider-specific options under `request.body`.
 
-V2 translates legacy agent frontmatter automatically, so these edits are optional. See [Agents](/agents).
+V1 agent frontmatter is deprecated but still translated automatically. Each file is read as one format. A file that
+uses any of `permissions`, `request`, `system`, or `disabled` is read as V2, and V1 fields in it, such as `name`,
+`tools`, `permission`, or `temperature`, are ignored with a warning in the log. Other files that use V1 fields are read
+as V1. Convert a file's frontmatter all at once rather than mixing the two formats. See [Agents](/agents).
 
 ### Command files
 

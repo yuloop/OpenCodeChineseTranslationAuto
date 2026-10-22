@@ -57,10 +57,23 @@ index f02ce3ca394e826fc27c9848dbe9a214bf6ba7a9..3508b8e841bb8d3d724fa5ff573902db
  	return {
  		authorizationUrl,
 diff --git a/dist/src-NAgB4Mp8.cjs b/dist/src-NAgB4Mp8.cjs
-index e8f2499..07f6e5c 100644
+index e8f2499..4436b61 100644
 --- a/dist/src-NAgB4Mp8.cjs
 +++ b/dist/src-NAgB4Mp8.cjs
-@@ -5698,7 +5698,7 @@ var Protocol = class {
+@@ -1063,11 +1063,7 @@ function build$1() {
+ 			properties: zod_v4.record(zod_v4.string(), JSONValueSchema$1).optional(),
+ 			required: zod_v4.array(zod_v4.string()).optional()
+ 		}).catchall(zod_v4.unknown()),
+-		outputSchema: zod_v4.object({
+-			type: zod_v4.literal("object"),
+-			properties: zod_v4.record(zod_v4.string(), JSONValueSchema$1).optional(),
+-			required: zod_v4.array(zod_v4.string()).optional()
+-		}).catchall(zod_v4.unknown()).optional(),
++		outputSchema: zod_v4.looseObject({ $schema: zod_v4.string().optional() }).optional(),
+ 		annotations: ToolAnnotationsSchema$1.optional(),
+ 		execution: ToolExecutionSchema$1.optional(),
+ 		_meta: zod_v4.record(zod_v4.string(), zod_v4.unknown()).optional()
+@@ -5698,7 +5694,7 @@ var Protocol = class {
  		return this._requestHandlers.get(method);
  	}
  	async _oncancel(notification) {
@@ -70,10 +83,23 @@ index e8f2499..07f6e5c 100644
  	}
  	_setupTimeout(messageId, timeout, maxTotalTimeout, onTimeout, resetTimeoutOnProgress = false) {
 diff --git a/dist/src-D_zzAWoS.mjs b/dist/src-D_zzAWoS.mjs
-index 6ac3d53..82e0aaf 100644
+index 6ac3d53..9b8e48b 100644
 --- a/dist/src-D_zzAWoS.mjs
 +++ b/dist/src-D_zzAWoS.mjs
-@@ -5697,7 +5697,7 @@ var Protocol = class {
+@@ -1062,11 +1062,7 @@ function build$1() {
+ 			properties: z.record(z.string(), JSONValueSchema$1).optional(),
+ 			required: z.array(z.string()).optional()
+ 		}).catchall(z.unknown()),
+-		outputSchema: z.object({
+-			type: z.literal("object"),
+-			properties: z.record(z.string(), JSONValueSchema$1).optional(),
+-			required: z.array(z.string()).optional()
+-		}).catchall(z.unknown()).optional(),
++		outputSchema: z.looseObject({ $schema: z.string().optional() }).optional(),
+ 		annotations: ToolAnnotationsSchema$1.optional(),
+ 		execution: ToolExecutionSchema$1.optional(),
+ 		_meta: z.record(z.string(), z.unknown()).optional()
+@@ -5697,7 +5693,7 @@ var Protocol = class {
  		return this._requestHandlers.get(method);
  	}
  	async _oncancel(notification) {

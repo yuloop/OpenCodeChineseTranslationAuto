@@ -704,6 +704,31 @@ test("retains output schemas across paginated MCP discovery", async () => {
   ])
 })
 
+test("accepts legacy MCP tools whose output schema is not a root object", async () => {
+  const result = await Effect.runPromise(
+    Effect.scoped(
+      Effect.gen(function* () {
+        const connection = yield* connect(
+          "union",
+          new ConfigMCP.Local({
+            type: "local",
+            command: [process.execPath, path.join(import.meta.dir, "fixture/mcp-union-output-schema.ts")],
+          }),
+          import.meta.dir,
+        )
+        return {
+          tools: yield* connection.tools(),
+          call: yield* connection.callTool({ name: "union" }),
+        }
+      }),
+    ),
+  )
+
+  expect(result.tools.map((tool) => tool.name)).toEqual(["union"])
+  expect(result.tools[0]?.outputSchema).toHaveProperty("anyOf")
+  expect(result.call.structured).toEqual({ kind: "struct" })
+})
+
 test("lists paginated prompts and invokes them through the MCP client", async () => {
   const result = await Effect.runPromise(
     Effect.scoped(

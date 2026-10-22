@@ -264,6 +264,7 @@ import type {
   VcsBranchListOutput,
   VcsDiffInput,
   VcsDiffOutput,
+  DebugHeapDumpOutput,
   DebugLocationListOutput,
   DebugLocationEvictInput,
   DebugLocationEvictOutput,
@@ -2220,6 +2221,17 @@ export function make(options: ClientOptions) {
         ),
     },
     debug: {
+      heapDump: (requestOptions?: RequestOptions) =>
+        request<DebugHeapDumpOutput>(
+          {
+            method: "POST",
+            path: `/api/debug/heap-dump`,
+            successStatus: 200,
+            declaredStatuses: [400, 401, 500],
+            empty: false,
+          },
+          requestOptions,
+        ),
       location: {
         list: (requestOptions?: RequestOptions) =>
           request<DebugLocationListOutput>(
