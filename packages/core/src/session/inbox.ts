@@ -75,8 +75,8 @@ function matches<Type extends Item["type"]>(
 
 const fromRow = (row: typeof SessionInboxTable.$inferSelect): Info => {
   const base = {
-    id: SessionMessage.ID.make(row.id),
-    sessionID: SessionSchema.ID.make(row.session_id),
+    id: row.id,
+    sessionID: row.session_id,
     time: { created: DateTime.makeUnsafe(row.time_created) },
   }
   if (row.type === "compaction")
@@ -230,7 +230,7 @@ export const make = Effect.fn("SessionInbox.make")(function* () {
         return yield* admit({
           id: input.id,
           sessionID: input.sessionID,
-          item: { type: "compaction", payload: {}, delivery: Delivery.make(input.delivery) },
+          item: { type: "compaction", payload: {}, delivery: input.delivery },
         })
       }),
     )
@@ -473,17 +473,17 @@ const publish = Effect.fn("SessionInbox.publish")(function* (
   yield* Effect.forEach(
     rows,
     (row) => {
-      const entry = fromRow(row)
-      if (entry.type === "compaction") return Effect.die(new LifecycleConflict({ id: entry.id }))
+      if (row.type !== "move" && row.type !== "user" && row.type !== "synthetic")
+        return Effect.die(new LifecycleConflict({ id: row.id }))
       return bus
         .publish(SessionEvent.InboxDelivered, {
           sessionID,
-          inboxID: entry.id,
+          inboxID: row.id,
         })
         .pipe(
           Effect.catchDefect((defect) =>
             defect instanceof LifecycleConflict
-              ? promotedFromMessage(db, sessionID, entry.id, entry.delivery).pipe(
+              ? promotedFromMessage(db, sessionID, row.id, row.delivery).pipe(
                   Effect.flatMap((stored) => (stored !== undefined ? Effect.void : Effect.die(defect))),
                   Effect.orDie,
                 )

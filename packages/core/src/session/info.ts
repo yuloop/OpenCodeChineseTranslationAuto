@@ -1,10 +1,7 @@
 import { DateTime, Schema } from "effect"
-import { Location } from "@opencode/schema/location"
 import { Model } from "@opencode/schema/model"
-import { Project } from "@opencode/schema/project"
 import { Provider } from "@opencode/schema/provider"
 import { AbsolutePath, RelativePath } from "../schema.js"
-import { Workspace } from "@opencode/schema/workspace"
 import { SessionSchema } from "./schema.js"
 import type { SessionTable } from "./sql.js"
 import { PersistedRevert } from "@opencode/schema/session-revert"
@@ -14,14 +11,14 @@ const decodeRevert = Schema.decodeUnknownSync(PersistedRevert)
 
 export function fromRow(row: typeof SessionTable.$inferSelect): SessionSchema.Info {
   return SessionSchema.Info.make({
-    id: SessionSchema.ID.make(row.id),
-    projectID: Project.ID.make(row.project_id),
+    id: row.id,
+    projectID: row.project_id,
     title: row.title ?? undefined,
-    parentID: row.parent_id ? SessionSchema.ID.make(row.parent_id) : undefined,
+    parentID: row.parent_id ?? undefined,
     fork:
       row.fork_session_id && row.fork_boundary
         ? {
-            sessionID: SessionSchema.ID.make(row.fork_session_id),
+            sessionID: row.fork_session_id,
             boundary: row.fork_boundary,
           }
         : undefined,
@@ -43,10 +40,10 @@ export function fromRow(row: typeof SessionTable.$inferSelect): SessionSchema.In
         write: row.tokens_cache_write,
       },
     },
-    location: Location.Ref.make({
+    location: {
       directory: AbsolutePath.make(row.directory),
-      workspaceID: row.workspace_id ? Workspace.ID.make(row.workspace_id) : undefined,
-    }),
+      workspaceID: row.workspace_id ?? undefined,
+    },
     subpath: row.path ? RelativePath.make(row.path) : undefined,
     metadata: row.metadata ?? undefined,
     permissions: row.permission ?? undefined,
