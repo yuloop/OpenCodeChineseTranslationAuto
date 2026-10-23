@@ -1,7 +1,7 @@
 import { describe, expect } from "bun:test"
 import { Effect } from "effect"
 import { Evaluation, EvaluationModel, type EvaluationOptions } from "../../src/experimental.js"
-import { OpenCode, OpenRouter, TypeSafeAI } from "../../src/providers.js"
+import { OpenAI, OpenCode, OpenRouter, TypeSafeAI } from "../../src/providers.js"
 import { recordedTests } from "../recorded-test.js"
 
 const questions = {
@@ -48,6 +48,14 @@ const openrouter = recordedTests({
   metadata: { model: "typesafe/jev-1.13" },
 })
 
+const openai = recordedTests({
+  prefix: "openai-evaluation",
+  provider: "openai",
+  protocol: "openai-decisions",
+  requires: ["OPENAI_API_KEY"],
+  metadata: { model: "gpt-6-luna" },
+})
+
 describe("experimental Evaluation recorded", () => {
   typesafe.effect("evaluates choice score and boolean questions", () =>
     assertEvaluation(
@@ -69,6 +77,28 @@ describe("experimental Evaluation recorded", () => {
         "typesafe/jev-1.13",
       ),
     ),
+  )
+
+  openai.effect("evaluates choice score and boolean questions about JSON state", () =>
+    Effect.gen(function* () {
+      const response = yield* Evaluation.run({
+        model: OpenAI.configure({ apiKey: process.env.OPENAI_API_KEY ?? "fixture" }).experimental.evaluation(
+          "gpt-6-luna",
+        ),
+        state: { ticket: state, plan: "pro" },
+        questions,
+      })
+      expect(response.model).toBe("gpt-6-luna")
+      expect(response.answers.department.choice).toBe("billing")
+      expect(response.answers.department.probabilities?.billing).toBeGreaterThan(0.5)
+      expect(response.answers.department.confidence).toBeGreaterThan(0)
+      expect(Object.keys(response.answers.urgency.probabilities ?? {})).toEqual(["0", "1", "2"])
+      expect(response.answers.urgency.score).toBeGreaterThanOrEqual(0)
+      expect(response.answers.urgency.score).toBeLessThanOrEqual(2)
+      expect(response.answers.refund.probability).toBeGreaterThan(0.5)
+      expect(response.usage?.inputTokens).toBeGreaterThan(0)
+      expect(response.usage?.outputTokens).toBe(0)
+    }),
   )
 })
 

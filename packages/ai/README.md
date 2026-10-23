@@ -183,17 +183,21 @@ console.log(response.answers.refund.probability)
 ```
 
 `TypeSafeAI` reads `TYPESAFE_API_KEY`. `OpenCode` exposes the same selector and reads
-`OPENCODE_API_KEY`. OpenRouter and Vercel AI Gateway use the same provider shape:
+`OPENCODE_API_KEY`. OpenRouter, Vercel AI Gateway, and OpenAI use the same provider shape:
 
 ```ts
-import { OpenRouter, VercelAIGateway } from "@opencode/ai/providers"
+import { OpenAI, OpenRouter, VercelAIGateway } from "@opencode/ai/providers"
 
 OpenRouter.configure().experimental.evaluation("typesafe/jev-1.13")
 VercelAIGateway.configure().experimental.evaluation("typesafe-ai/jev")
+OpenAI.configure().experimental.evaluation("gpt-6-luna")
 ```
 
 OpenRouter reads `OPENROUTER_API_KEY`. Vercel reads `AI_GATEWAY_API_KEY`, then `VERCEL_OIDC_TOKEN`.
-The common API uses `boolean`; System One routes lower it to native `noul`.
+OpenAI reads `OPENAI_API_KEY` and calls `/v1/decisions`.
+The common API uses `boolean`; System One routes lower it to native `noul`, and OpenAI lowers it to
+`predicate`. OpenAI predicates take no criteria, so boolean criteria fail before the request, and a
+refused question fails the call with a `ContentPolicy` error.
 Choice and score answers include `confidence` when the provider returns it, such as
 `response.answers.department.confidence`. Score legends remain available in provider metadata, and
 the provider's rounded probabilities are returned unchanged.

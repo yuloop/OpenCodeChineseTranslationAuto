@@ -151,6 +151,7 @@ describe("public exports", () => {
     expect(TypeSafeAI.experimental.evaluation).toBeFunction()
     expect(OpenCode.experimental.evaluation).toBeFunction()
     expect(VercelAIGateway.experimental.evaluation).toBeFunction()
+    expect(OpenAI.experimental.evaluation("gpt-6-luna").route.id).toBe("openai-decisions")
     expect(XAI.model).toBeFunction()
     expect(XAI.provider.responses).toBe(XAI.responses)
     expect(XAI.provider.chat).toBe(XAI.chat)
