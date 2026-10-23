@@ -22,7 +22,8 @@
   "scripts": {
     "build": "bun run script/build.ts",
     "test": "bun test --timeout 30000",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "bun check --no-script",
+    "typecheck:tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@opentui/core": "catalog:",

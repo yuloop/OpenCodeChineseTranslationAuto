@@ -12,7 +12,8 @@
   "scripts": {
     "audit:layouts": "bun run script/layout-audit.ts",
     "test": "bun test --timeout 30000 --only-failures",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "bun check --no-script",
+    "typecheck:tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@opencode/plugin": "workspace:*",

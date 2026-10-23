@@ -26,7 +26,8 @@
   "scripts": {
     "build": "bun run script/build.ts",
     "test": "bun test --timeout 30000 --only-failures",
-    "typecheck": "tsc -b"
+    "typecheck": "bun check --no-script -b",
+    "typecheck:tsc": "tsc -b"
   },
   "dependencies": {
     "@opencode/core": "workspace:*",

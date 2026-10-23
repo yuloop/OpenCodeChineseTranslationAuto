@@ -25,6 +25,7 @@
     "test:lint-rules": "ast-grep test -c script/ast-grep/sgconfig.yml",
     "test:effect-simplification-rules": "ast-grep test -c script/ast-grep/effect-simplifications/sgconfig.yml",
     "typecheck": "bun turbo typecheck --concurrency=3",
+    "typecheck:tsc": "bun turbo typecheck:tsc --concurrency=3",
     "check": "bun run lint && bun run typecheck",
     "typecheck:profile": "bun script/profile-typecheck.ts",
     "typecheck:profile:packages": "bun script/profile-typecheck-packages.ts",
@@ -94,7 +95,7 @@
       "@playwright/test": "1.60.0",
       "semver": "7.7.4",
       "typescript": "npm:@typescript/typescript6@6.0.2",
-      "@typescript/native": "npm:typescript@7.0.2",
+      "@typescript/native": "npm:typescript@7.1.0-beta",
       "zod": "4.1.8",
       "remeda": "2.26.0",
       "sst": "4.13.1",
@@ -184,7 +185,7 @@
     "@ff-labs/fff-bun@0.10.5": "patches/@ff-labs%2Ffff-bun@0.10.5.patch",
     "ghostty-web@github:anomalyco/ghostty-web#83c0a07": "patches/ghostty-web@0.3.0.patch",
     "vite@8.2.2": "patches/vite@8.2.2.patch",
-    "@modelcontextprotocol/client@2.0.0": "patches/@modelcontextprotocol%2Fclient@2.0.0.patch",
+    "@modelcontextprotocol/client@2.3.1": "patches/@modelcontextprotocol%2Fclient@2.3.1.patch",
     "@corvu/drawer@0.2.4": "patches/@corvu%2Fdrawer@0.2.4.patch"
   }
 }

@@ -11,7 +11,8 @@
   },
   "scripts": {
     "start": "bun src/stat-sync.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "bun check --no-script",
+    "typecheck:tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@effect/platform-node": "catalog:",

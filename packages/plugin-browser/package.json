@@ -23,7 +23,8 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "typecheck": "tsc --noEmit -p tsconfig.test.json",
+    "typecheck": "bun check --no-script -p tsconfig.test.json",
+    "typecheck:tsc": "tsc --noEmit -p tsconfig.test.json",
     "test": "bun test"
   },
   "dependencies": {

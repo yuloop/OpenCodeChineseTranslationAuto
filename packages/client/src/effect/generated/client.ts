@@ -266,6 +266,7 @@ import type {
   VcsBranchListOutput,
   VcsDiffInput,
   VcsDiffOutput,
+  DebugHeapDumpInput,
   DebugHeapDumpOutput,
   DebugLocationListOutput,
   DebugLocationEvictInput,
@@ -1625,8 +1626,10 @@ const adaptGroupVcs = (raw: RawClient["server.vcs"]) => ({
   diff: EndpointVcsDiff(raw),
 })
 
-const EndpointDebugHeapDump = (raw: RawClient["server.debug"]) => () =>
-  preserveEffect<DebugHeapDumpOutput>()(raw["debug.heapDump"]({}).pipe(Effect.mapError(mapClientError)))
+const EndpointDebugHeapDump = (raw: RawClient["server.debug"]) => (input?: DebugHeapDumpInput) =>
+  preserveEffect<DebugHeapDumpOutput>()(
+    raw["debug.heapDump"]({ query: { directory: input?.["directory"] } }).pipe(Effect.mapError(mapClientError)),
+  )
 
 const EndpointDebugLocationList = (raw: RawClient["server.debug"]) => () =>
   preserveEffect<DebugLocationListOutput>()(raw["debug.location"]({}).pipe(Effect.mapError(mapClientError)))

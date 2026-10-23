@@ -68,6 +68,19 @@ The current list of models includes:
 
 The list of models may change as we test and add new ones.
 
+### Enable restricted models
+
+Workspace privacy settings apply to Go. By default, paid endpoints that train on request data are blocked, and
+allowed regions are **Europe & United States**. Workspaces without saved privacy settings also allow **Global**
+for requests from China.
+
+In **Settings › Privacy**, an owner or admin can enable:
+
+- **DeepSeek V4.1 Flash and V4 Pro:** select **Global** under **Regions**.
+- **Gemini 4 Argon Contributor, Muse Spark 1.3 Contributor, and Muse Spark 1.2 Contributor:** turn on **Allow paid endpoints that train on request data**.
+
+See [Privacy](#privacy) for each model's training and retention terms.
+
 ## Where can I use it?
 
 OpenCode Go is designed for [OpenCode](https://opencode.ai) and other coding agents
@@ -108,8 +121,8 @@ investigated. The linked reports track fixes and workarounds.
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **DeepSeek Harness**    | Session information arrives on some model paths, but is missing on others. We recognize its native header; the remaining work is to send it across all adapters. [Discussion #5495](https://github.com/deepseek-ai/deepseek-harness/discussions/5495). |
 | **GitHub Copilot Chat** | Automatic session-header support is requested in [VS Code issue #334186](https://github.com/microsoft/vscode/issues/334186).                                                                                                                           |
-| **Kimi Code**           | Automatic session-header support is requested in [issue #3506](https://github.com/MoonshotAI/kimi-code/issues/3506).                                                                                                                                   |
-| **MiMo Code**           | [Issue #2317](https://github.com/XiaomiMiMo/MiMo-Code/issues/2317) has a proposed fix in [PR #2327](https://github.com/XiaomiMiMo/MiMo-Code/pull/2327), which has not yet merged.                                                                      |
+| **Kimi Code**           | The session-header request in [issue #3506](https://github.com/MoonshotAI/kimi-code/issues/3506) was closed as not planned.                                                                                                                            |
+| **MiMo Code**           | [Issue #2317](https://github.com/XiaomiMiMo/MiMo-Code/issues/2317) is closed, and [PR #2327](https://github.com/XiaomiMiMo/MiMo-Code/pull/2327) was closed without merging.                                                                            |
 
 ## Usage limits
 
@@ -333,8 +346,8 @@ Usage limits may change as we learn from early usage and feedback.
 
 ### Usage beyond limits
 
-If you also have credits in your Console balance, you can turn on **Extra usage** on the
-**Overview** credits card. When enabled, Go will fall back to your [pay-as-you-go balance](/console/models#pricing)
+If you also have credits in your Console balance, you can turn on **Extra Usage** on the
+**Go** page. When enabled, Go will fall back to your [pay-as-you-go balance](/console/models#pricing)
 after you've reached your usage limits instead of blocking requests.
 
 ### Why some models have lower usage

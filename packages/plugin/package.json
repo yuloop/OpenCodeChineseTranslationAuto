@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "test": "bun test --only-failures",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "bun check --no-script",
+    "typecheck:tsc": "tsc --noEmit",
     "build": "tsc -p tsconfig.build.json"
   },
   "exports": {

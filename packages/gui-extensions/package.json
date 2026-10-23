@@ -14,7 +14,8 @@
     "./updater": "./src/updater/contract.ts"
   },
   "scripts": {
-    "typecheck": "tsc -b",
+    "typecheck": "bun check --no-script -b",
+    "typecheck:tsc": "tsc -b",
     "test": "bun test"
   },
   "dependencies": {

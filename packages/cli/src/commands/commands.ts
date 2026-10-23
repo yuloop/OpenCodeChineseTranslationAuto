@@ -120,6 +120,10 @@ const Root = Spec.make(typeof OPENCODE_CLI_NAME === "string" ? OPENCODE_CLI_NAME
         Spec.make("heap-dump", {
           description: "Write a heap snapshot of the running server and print its path",
           params: {
+            directory: Flag.String("directory").pipe(
+              Flag.withDescription("Directory to write the snapshot into instead of the server's log directory"),
+              Flag.optional,
+            ),
             server: Flag.String("server").pipe(
               Flag.withDescription("Connect to a server URL instead of the background service"),
               Flag.optional,
