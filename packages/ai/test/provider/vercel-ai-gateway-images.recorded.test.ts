@@ -21,7 +21,7 @@ describe("Vercel AI Gateway Images recorded", () => {
       const response = yield* Image.generate({
         model,
         prompt: "A simple flat black circle centered on a plain white background.",
-        format: "webp",
+        providerOptions: { outputFormat: "webp" },
       })
 
       expect(response.images).toHaveLength(1)
