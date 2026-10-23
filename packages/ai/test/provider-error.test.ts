@@ -206,6 +206,18 @@ describe("provider error classification", () => {
     ).toBe("ContentPolicy")
   })
 
+  test("classifies Alibaba Model Studio data inspection failures", () => {
+    const alibaba = {
+      request_id: "1537ecc9-6873-93f7-9865-6fe4eb1d7851",
+      code: "DataInspectionFailed",
+      message: "Green net check failed for text (input): Input data may contain inappropriate content.",
+    }
+
+    expect(
+      classifyProviderFailure({ message: alibaba.message, status: 400, rawBody: JSON.stringify(alibaba) })._tag,
+    ).toBe("ContentPolicy")
+  })
+
   test("recovers policy codes that OpenCode Zen preserves only in its message label", () => {
     // Zen drops upstream codes outside its allow-list and replaces the type, but
     // `Protocol.errorMessage` keeps the original code as a `[code]` prefix.

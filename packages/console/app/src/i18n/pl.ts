@@ -199,6 +199,7 @@ export const dict = {
     "Wszystkie modele Zen są hostowane w USA i UE. Dostawcy stosują politykę zerowej retencji i nie wykorzystują Twoich danych do trenowania modeli, z",
   "zen.privacy.exceptionsLink": "następującymi wyjątkami",
 
+  "go.promo.kimiK31Pro": "Kimi K3.1 Pro jest już dostępny w Go.",
   "go.title": "OpenCode Go | Niskokosztowe modele do kodowania dla każdego",
   "go.meta.description":
     "Go kosztuje $10/miesiąc, oferując hojne limity użycia i niezawodny dostęp do wiodących modeli do kodowania.",

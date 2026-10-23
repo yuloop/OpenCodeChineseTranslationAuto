@@ -153,7 +153,8 @@ const INVALID_REQUEST_CODES = new Set([
 ])
 // Azure OpenAI reports `content_filter` with `innererror.code` ResponsibleAIPolicyViolation.
 // OpenRouter tags provider failures with a typed `error_type`; its Responses skin also
-// emits `image_content_policy_violation` as the native code.
+// emits `image_content_policy_violation` as the native code. Alibaba Model Studio reports
+// moderation rejections as `DataInspectionFailed`.
 const CONTENT_POLICY_CODES = new Set([
   "content_filter",
   "content_moderation",
@@ -161,6 +162,7 @@ const CONTENT_POLICY_CODES = new Set([
   "content_policy_violation",
   "image_content_policy_violation",
   "refusal",
+  "datainspectionfailed",
 ])
 // OpenCode Zen replaces upstream codes outside its allow-list but keeps the original
 // as a `[code]` label at the start of the rewritten message.

@@ -466,6 +466,7 @@ export function createData(config: CreateDataInput) {
     // Streaming events target one assistant message and, within it, the latest part of a kind.
     // A missing target means the row was never loaded or was evicted; the event is dropped.
     editAssistant(sessionID: string, messageID: string, fn: (assistant: SessionMessageAssistant) => void) {
+      if (!messageIndex.get(sessionID)?.has(messageID)) return
       message.update(sessionID, (draft, index) => {
         const position = index.get(messageID)
         const item = position === undefined ? undefined : draft[position]
@@ -876,6 +877,7 @@ export function createData(config: CreateDataInput) {
         })
         return
       case "session.shell.ended":
+        if (!store.session.message[event.data.sessionID]) return
         message.update(event.data.sessionID, (draft) => {
           const match = message.shell(draft, event.data.shell.id)
           if (!match) return
@@ -1142,6 +1144,7 @@ export function createData(config: CreateDataInput) {
         })
         return
       case "session.compaction.delta":
+        if (!store.session.message[event.data.sessionID]) return
         message.update(event.data.sessionID, (draft) => {
           const current = message.compaction(draft)
           if (current?.status === "running") current.summary += event.data.text

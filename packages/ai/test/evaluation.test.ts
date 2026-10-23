@@ -2,7 +2,7 @@ import { describe, expect } from "bun:test"
 import { Effect, Layer } from "effect"
 import { HttpClientRequest } from "effect/http"
 import { Evaluation, EvaluationClient } from "../src/experimental.js"
-import { OpenAI, OpenCode, OpenRouter, TypeSafeAI, VercelAIGateway } from "../src/providers.js"
+import { CloudflareWorkersAI, OpenAI, OpenCode, OpenRouter, TypeSafeAI, VercelAIGateway } from "../src/providers.js"
 import { it } from "./lib/effect.js"
 import { dynamicResponse } from "./lib/http.js"
 
@@ -118,9 +118,10 @@ describe("experimental Evaluation", () => {
 
   it.effect("configures the OpenCode System One endpoint", () =>
     Evaluation.run({
-      model: OpenCode.configure({ apiKey: "opencode-key", baseURL: "https://opencode.test/v1" }).experimental.evaluation(
-        "jev-1.13",
-      ),
+      model: OpenCode.configure({
+        apiKey: "opencode-key",
+        baseURL: "https://opencode.test/v1",
+      }).experimental.evaluation("jev-1.13"),
       state: "hello",
       questions: { greeting: { type: "boolean", instructions: "Is this a greeting?" } },
     }).pipe(
@@ -420,6 +421,59 @@ describe("experimental Evaluation", () => {
       Effect.provide(
         EvaluationClient.layer.pipe(
           Layer.provide(dynamicResponse(() => Effect.die("invalid evaluation reached the network"))),
+        ),
+      ),
+    ),
+  )
+
+  it.effect("surfaces Cloudflare Run errors", () =>
+    Evaluation.run({
+      model: CloudflareWorkersAI.configure({
+        accountId: "test-account",
+        apiKey: "cloudflare-key",
+      }).experimental.evaluation("@cf/cloudflare/clef"),
+      state: "refund",
+      questions: { refund: { type: "boolean", instructions: "Is a refund requested?" } },
+    }).pipe(
+      Effect.flip,
+      Effect.tap((error) =>
+        Effect.sync(() => {
+          expect(error.reason._tag).toBe("InvalidRequest")
+          expect(error.message).toContain("At least one question is required")
+        }),
+      ),
+      Effect.provide(
+        EvaluationClient.layer.pipe(
+          Layer.provide(
+            dynamicResponse((input) => {
+              expect(input.request.url).toBe("https://api.cloudflare.com/client/v4/accounts/test-account/ai/run")
+              expect(input.request.headers.authorization).toBe("Bearer cloudflare-key")
+              expect(JSON.parse(input.text)).toEqual({
+                model: "@cf/cloudflare/clef",
+                input: {
+                  state: "refund",
+                  questions: { refund: { type: "noul", instructions: "Is a refund requested?" } },
+                },
+              })
+              return Effect.succeed(
+                input.respond(
+                  JSON.stringify({
+                    errors: [
+                      {
+                        message:
+                          "Model execution failed (User Input Error): Validation error at questions: At least one question is required",
+                        code: 7003,
+                      },
+                    ],
+                    success: false,
+                    result: {},
+                    messages: [],
+                  }),
+                  { status: 400, headers: { "content-type": "application/json" } },
+                ),
+              )
+            }),
+          ),
         ),
       ),
     ),

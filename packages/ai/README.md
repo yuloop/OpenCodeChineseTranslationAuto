@@ -186,18 +186,32 @@ console.log(response.answers.refund.probability)
 `OPENCODE_API_KEY`. OpenRouter, Vercel AI Gateway, and OpenAI use the same provider shape:
 
 ```ts
-import { OpenAI, OpenRouter, VercelAIGateway } from "@opencode/ai/providers"
+import { Baseten, DigitalOcean, OpenAI, OpenRouter, VercelAIGateway } from "@opencode/ai/providers"
 
 OpenRouter.configure().experimental.evaluation("typesafe/jev-1.13")
 VercelAIGateway.configure().experimental.evaluation("typesafe-ai/jev")
+Baseten.configure().experimental.evaluation("decision-models/baseten-elephant-9b-latest")
+DigitalOcean.configure().experimental.evaluation("typesafe-jev-1.13.0")
 OpenAI.configure().experimental.evaluation("gpt-6-luna")
 ```
 
 OpenRouter reads `OPENROUTER_API_KEY`. Vercel reads `AI_GATEWAY_API_KEY`, then `VERCEL_OIDC_TOKEN`.
+Baseten reads `BASETEN_API_KEY`, accepts `max_len` in `options`, and returns unrounded values, so
+`response.rounding` is unset. DigitalOcean reads
+`DIGITALOCEAN_ACCESS_TOKEN`, `DIGITALOCEAN_API_KEY`, then `DO_INFERENCE_API_KEY`.
 OpenAI reads `OPENAI_API_KEY` and calls `/v1/decisions`.
 The common API uses `boolean`; System One routes lower it to native `noul`, and OpenAI lowers it to
 `predicate`. OpenAI predicates take no criteria, so boolean criteria fail before the request, and a
 refused question fails the call with a `ContentPolicy` error.
+Cloudflare serves its Clef models through Workers AI and TypeSafe Jev through AI Gateway, both on `/ai/run`:
+
+```ts
+import { CloudflareAIGateway, CloudflareWorkersAI } from "@opencode/ai/providers"
+
+CloudflareWorkersAI.configure({ accountId }).experimental.evaluation("@cf/cloudflare/clef")
+CloudflareAIGateway.configure({ accountId }).experimental.evaluation("typesafe/jev")
+```
+
 Choice and score answers include `confidence` when the provider returns it, such as
 `response.answers.department.confidence`. Score legends remain available in provider metadata, and
 the provider's rounded probabilities are returned unchanged.
@@ -273,6 +287,14 @@ strings. Qwen 3.8 Chat rejects requests combining a thinking budget with effort.
 Package entrypoints are `@opencode/ai/providers/alibaba`, `alibaba/chat`, `alibaba/messages`,
 and `alibaba/responses`. Live recordings cover all three APIs in Singapore; regional URL construction
 is unit-tested for all six regions.
+
+### Images
+
+`alibaba.image(...)` uses the native multimodal generation API (`/api/v1/services/aigc/multimodal-generation/generation`)
+for Qwen-Image (`qwen-image-2.0`, `qwen-image-2.0-pro`) and Wan (`wan2.7-image`, `wan2.7-image-pro`). `size` lowers to
+`W*H`, and `images` are sent as URLs or data URLs for editing. Native `parameters` include `negativePrompt`,
+`promptExtend`, `watermark`, `thinkingMode`, and `enableSequential`; raw keys such as `bbox_list` or `size: "2K"`
+pass through. Results are URLs that Model Studio keeps for 24 hours. A complete `baseURL` for images includes `/api/v1`.
 
 ## Z.AI
 
@@ -551,15 +573,20 @@ call rather than being dropped, so check this table before swapping only the `mo
 | Google (Gemini)       | 1   | ✗         | ✓             | ✓      | ✗        | ✓ (no public URLs)               | ✗                   |
 | xAI                   | ✓   | ✗         | ✓             | ✗      | ✗        | ✓                                | ✗                   |
 | Z.ai                  | ✗   | ✓         | ✗             | ✗      | ✗        | ✗                                | ✗                   |
+| Alibaba               | ✓   | ✓         | ✗             | ✓      | ✗        | ✓                                | ✗                   |
 | Meta                  | ✓   | ✓ (hint)  | ✗             | ✗      | ✓        | ✓                                | ✗                   |
 | Black Forest Labs     | 1   | per model | per model     | ✓      | ✓        | per model (1–8)                  | `flux-pro-1.0-fill` |
 | fal                   | ✓   | per model | per model     | ✓      | ✓        | 1 (several on `/edit`, `/multi`) | ✓                   |
 | Replicate             | ✗   | ✗         | ✗             | ✗      | ✗        | ✗ (use `providerOptions`)        | ✗                   |
 | Stability `image`     | 1   | ✗         | ✓             | ✓      | ✓        | 1 (not on `core`)                | ✗                   |
 | Stability `upscale()` | ✗   | ✗         | ✗             | ✓      | ✓        | exactly 1 (required)             | ✗                   |
+| Vercel AI Gateway     | ✓   | per model | ✗             | ✗      | ignored  | per model                        | per model           |
+| Cloudflare Workers AI | 1   | ✓²        | ✗             | ✓²     | ✗        | ✗                                | ✗                   |
 
 ✓ lowers natively; ✗ fails whenever the field is set (including `n: 1`); `1` means `n > 1` fails. ¹ `Image.stream` on OpenAI generates one image. fal
-rejects `size` and `aspectRatio` together; which one a fal or BFL model takes depends on the model.
+rejects `size` and `aspectRatio` together; which one a fal or BFL model takes depends on the model. Vercel AI Gateway
+forwards `format` but does not apply it, so the returned bytes keep the upstream model's own format. ² Workers AI
+`@cf/black-forest-labs/flux-1-schnell` takes neither `size` nor `seed`, and the provider rejects them.
 
 `Media.Asset` is the one asset type shared by image requests, image responses, LLM messages, and tool results.
 `asset.source` is the serializable `Media.Source` (`bytes`, `base64`, `url`, or `ref`); `asset.bytes()`,

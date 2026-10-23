@@ -132,7 +132,7 @@
         "@opencode/util": "workspace:*",
         "@opentui/core": "catalog:",
         "@opentui/solid": "catalog:",
-        "@opentunnel/client": "0.4.1",
+        "@opentunnel/client": "0.6.1",
         "@parcel/watcher": "2.5.1",
         "@silvia-odwyer/photon-node": "0.3.4",
         "diff": "catalog:",
@@ -2126,9 +2126,9 @@
 
     "@opentui/solid": ["@opentui/solid@0.6.8", "", { "dependencies": { "@babel/core": "7.29.7", "@babel/preset-typescript": "7.27.1", "@opentui/core": "0.6.8", "babel-plugin-module-resolver": "5.0.2", "babel-preset-solid": "1.9.12", "entities": "7.0.1", "s-js": "^0.4.9" }, "peerDependencies": { "solid-js": "1.9.12" } }, "sha512-GwLhMdGSRBX1Tlh/aUcbpDwIG/FI15y5xL2yMlNIO27q5yRTiZHeg6yvXv3HgM55ykRm9F8YBhiFcuc5M609FA=="],
 
-    "@opentunnel/client": ["@opentunnel/client@0.4.1", "", { "dependencies": { "@opentunnel/protocol": "0.4.1" }, "peerDependencies": { "effect": "^4.0.0" } }, "sha512-TLHCko/cSoF6LY/IBvex9s/u9vh4CB3K/S06q7Zwu0HUISikMC+j/4437Y39slF7hmx1oSpTo7AySELu7j5DQg=="],
+    "@opentunnel/client": ["@opentunnel/client@0.6.1", "", { "dependencies": { "@opentunnel/protocol": "0.6.1" }, "peerDependencies": { "effect": "^4.0.0", "undici": ">=7.0.0" }, "optionalPeers": ["undici"] }, "sha512-OuVNlWywQebIXCtkixjVHebOsR3KFRxJ0DSZry6Dzj4hHaHIf3eTVmQ7VwLCjuVmw+ctU2qHIP6RxuAPr07WDw=="],
 
-    "@opentunnel/protocol": ["@opentunnel/protocol@0.4.1", "", { "peerDependencies": { "effect": "^4.0.0" } }, "sha512-ebAO6/H5VdeAtweqWhMBqTthTMqQfsmZRsbHJULpDLK3HGJa02L1VO4e4LnigLbIPhP/PULqPjFe5nmcMXUvNQ=="],
+    "@opentunnel/protocol": ["@opentunnel/protocol@0.6.1", "", { "peerDependencies": { "effect": "^4.0.0" } }, "sha512-fdckKvQ4TEJSQ2Ia/M/GKmDbCTCw148Wc1zo6HcpUBjSwsFeKs6Tbql4Uih1oIVR8NVqtGrcPZukVVvWFyOEHA=="],
 
     "@oslojs/encoding": ["@oslojs/encoding@1.1.0", "", {}, "sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ=="],
 

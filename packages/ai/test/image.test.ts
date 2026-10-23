@@ -127,7 +127,7 @@ describe("Image", () => {
     ),
   )
 
-  it.effect("sends only model and prompt by default and decodes OpenAI bytes as png", () =>
+  it.effect("sends only model and prompt by default and sniffs bytes when output_format is missing", () =>
     Effect.gen(function* () {
       const openai = OpenAI.configure({ apiKey: "test", baseURL: "https://openai.test/v1" })
       expect(openai.image("gpt-image-2").route.id).toBe("openai-images")
@@ -140,7 +140,7 @@ describe("Image", () => {
                   const web = yield* HttpClientRequest.toWeb(input.request).pipe(Effect.orDie)
                   expect(web.url).toBe("https://openai.test/v1/images/generations")
                   expect(JSON.parse(input.text)).toEqual({ model: "gpt-image-2", prompt: "A lighthouse" })
-                  return input.respond(JSON.stringify({ data: [{ b64_json: "AQID" }] }), {
+                  return input.respond(JSON.stringify({ data: [{ b64_json: "/9j/4AAQ" }] }), {
                     headers: { "content-type": "application/json" },
                   })
                 }),
@@ -149,8 +149,12 @@ describe("Image", () => {
           ),
         ),
       )
-      expect(response.image.source).toEqual({ type: "bytes", data: Uint8Array.from([1, 2, 3]), mediaType: "image/png" })
-      expect(response.image.info).toEqual({ format: "png" })
+      expect(response.image.source).toEqual({
+        type: "bytes",
+        data: Uint8Array.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10]),
+        mediaType: "image/jpeg",
+      })
+      expect(response.providerMetadata).toEqual({ openai: {} })
     }),
   )
 
@@ -186,7 +190,7 @@ describe("Image", () => {
                 provider_future_option: { enabled: true },
               })
               return Effect.succeed(
-                input.respond(JSON.stringify({ data: [{ b64_json: "AQID" }] }), {
+                input.respond(JSON.stringify({ data: [{ b64_json: "AQID" }], output_format: "avif" }), {
                   headers: { "content-type": "application/json" },
                 }),
               )

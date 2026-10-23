@@ -44,6 +44,7 @@ The current list of models includes:
 - **GPT 5.6 Luna**
 - **Claude Haiku 5.5**
 - **Gemini 4 Argon Contributor**
+- **Kimi K3.1 Pro**
 - **Kimi K3**
 - **Kimi K2.7 Code**
 - **LongCat-2.0**
@@ -145,7 +146,8 @@ Token prices are per 1M tokens.
     | GLM-5.3-Flash                           | $0.15  | $0.50  | $0.03       | -            | **$60**                                               |
     | GLM-5.3                                 | $1.40  | $4.40  | $0.26       | -            | **$15**                                               |
     | GLM-5.2                                 | $1.40  | $4.40  | $0.26       | -            | **$60**                                               |
-    | Kimi K3                                 | $3.00  | $15.00 | $0.30       | -            | **$15**                                               |
+    | Kimi K3.1 Pro                           | $2.00  | $10.00 | $0.20       | $2.00        | **$15**                                               |
+    | Kimi K3                                 | $3.00  | $15.00 | $0.30       | $3.00        | **$15**                                               |
     | Kimi K2.7 Code                          | $0.95  | $4.00  | $0.19       | -            | **$60**                                               |
     | LongCat-2.0                             | $0.30  | $1.20  | $0.006      | -            | **$60**                                               |
     | LongCat 2.5 Preview Free                | Free   | Free   | Free        | -            | **Unlimited**<br /><small>limited time</small>        |
@@ -187,7 +189,8 @@ Token prices are per 1M tokens.
     | GLM-5.3-Flash                           | $0.15  | $0.50  | $0.03       | -            | **$180**                                                |
     | GLM-5.3                                 | $1.40  | $4.40  | $0.26       | -            | **$120**                                                |
     | GLM-5.2                                 | $1.40  | $4.40  | $0.26       | -            | **$180**                                                |
-    | Kimi K3                                 | $3.00  | $15.00 | $0.30       | -            | **$60**                                                 |
+    | Kimi K3.1 Pro                           | $2.00  | $10.00 | $0.20       | $2.00        | **$60**                                                 |
+    | Kimi K3                                 | $3.00  | $15.00 | $0.30       | $3.00        | **$60**                                                 |
     | Kimi K2.7 Code                          | $0.95  | $4.00  | $0.19       | -            | **$180**                                                |
     | LongCat-2.0                             | $0.30  | $1.20  | $0.006      | -            | **$240**                                                |
     | LongCat 2.5 Preview Free                | Free   | Free   | Free        | -            | **Unlimited**<br /><small>limited time</small>          |
@@ -243,6 +246,7 @@ Plus estimates scale with each model's higher usage limit.
     | GLM-5.3-Flash                                                    | 6,320                | 15,790                 | 31,580                   |
     | GLM-5.3                                                          | 220                  | 540                    | 1,080                    |
     | GLM-5.2                                                          | 880                  | 2,150                  | 4,300                    |
+    | Kimi K3.1 Pro                                                    | 147                  | 368                    | 735                      |
     | Kimi K3                                                          | 110                  | 250                    | 490                      |
     | Kimi K2.7 Code                                                   | 1,350                | 3,380                  | 6,750                    |
     | LongCat-2.0                                                      | 11,400               | 28,600                 | 57,200                   |
@@ -278,6 +282,7 @@ Plus estimates scale with each model's higher usage limit.
     | GLM-5.3-Flash                                                    | 18,960                 | 47,370                   | 94,740                   |
     | GLM-5.3                                                          | 1,760                  | 4,320                    | 8,640                    |
     | GLM-5.2                                                          | 2,640                  | 6,450                    | 12,900                   |
+    | Kimi K3.1 Pro                                                    | 588                    | 1,471                    | 2,941                    |
     | Kimi K3                                                          | 440                    | 1,000                    | 1,960                    |
     | Kimi K2.7 Code                                                   | 4,050                  | 10,140                   | 20,250                   |
     | LongCat-2.0                                                      | 45,600                 | 114,400                  | 228,800                  |
@@ -316,6 +321,7 @@ The estimates use the following token counts per request; actual usage varies.
 - GPT 6 Luna — 1,000 input, 50,000 cached, 220 output tokens per request
 - GPT 5.6 Luna — 1,000 input, 50,000 cached, 220 output tokens per request
 - Claude Haiku 5.5 — 1,100 input, 55,000 cached, 240 output tokens per request
+- Kimi K3.1 Pro — 1,050 input, 76,500 cached, 300 output tokens per request
 - Kimi K3 — 1,050 input, 76,500 cached, 300 output tokens per request
 - Kimi K2.7 Code — 870 input, 55,000 cached, 200 output tokens per request
 - LongCat-2.0 — 920 input, 88,900 cached, 200 output tokens per request
@@ -376,6 +382,7 @@ You can also access Go models through the following API endpoints.
 | GLM-5.3-Flash              | glm-5.3-flash              | `https://opencode.ai/inference/go/openai/v1/chat/completions`                      | `@ai-sdk/openai-compatible` |
 | GLM-5.3                    | glm-5.3                    | `https://opencode.ai/inference/go/openai/v1/chat/completions`                      | `@ai-sdk/openai-compatible` |
 | GLM-5.2                    | glm-5.2                    | `https://opencode.ai/inference/go/openai/v1/chat/completions`                      | `@ai-sdk/openai-compatible` |
+| Kimi K3.1 Pro              | kimi-k3.1-pro              | `https://opencode.ai/inference/go/openai/v1/chat/completions`                      | `@ai-sdk/openai-compatible` |
 | Kimi K3                    | kimi-k3                    | `https://opencode.ai/inference/go/openai/v1/chat/completions`                      | `@ai-sdk/openai-compatible` |
 | Kimi K2.7 Code             | kimi-k2.7-code             | `https://opencode.ai/inference/go/openai/v1/chat/completions`                      | `@ai-sdk/openai-compatible` |
 | LongCat-2.0                | longcat-2.0                | `https://opencode.ai/inference/go/openai/v1/chat/completions`                      | `@ai-sdk/openai-compatible` |
@@ -430,6 +437,7 @@ curl https://opencode.ai/inference/go/v1/models
 | GLM-5.3-Flash                | Not used       | 0 days         |
 | GLM-5.3                      | Not used       | 0 days         |
 | GLM-5.2                      | Not used       | 0 days         |
+| Kimi K3.1 Pro                | Not used       | 0 days         |
 | Kimi K3                      | Not used       | 0 days         |
 | Kimi K2.7 Code               | Not used       | 0 days         |
 | LongCat-2.0                  | Not used       | 0 days         |

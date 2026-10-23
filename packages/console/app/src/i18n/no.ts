@@ -199,6 +199,7 @@ export const dict = {
     "Alle Zen-modeller hostes i USA og EU. Leverandører følger en policy om null oppbevaring og bruker ikke dataene dine til modelltrening, med",
   "zen.privacy.exceptionsLink": "følgende unntak",
 
+  "go.promo.kimiK31Pro": "Kimi K3.1 Pro er nå tilgjengelig i Go.",
   "go.title": "OpenCode Go | Rimelige kodemodeller for alle",
   "go.meta.description":
     "Go koster $10/måned, med sjenerøse bruksgrenser og pålitelig tilgang til ledende kodemodeller.",
