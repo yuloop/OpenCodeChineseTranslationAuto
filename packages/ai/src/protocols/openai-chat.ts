@@ -858,12 +858,7 @@ const mapFinishReason = Effect.fnUntraced(function* (event: OpenAIChatEvent, rea
     case "tool_calls":
       return "tool-calls" as const
     default:
-      return yield* new AIError({
-        reason: new UnknownProviderError({
-          message: `Provider finish_reason: ${reason}`,
-          body: ProviderShared.encodeJson(event),
-        }),
-      })
+      return "unknown" as const
   }
 })
 

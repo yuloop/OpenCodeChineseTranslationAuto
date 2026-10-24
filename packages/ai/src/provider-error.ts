@@ -154,7 +154,7 @@ const INVALID_REQUEST_CODES = new Set([
 // Azure OpenAI reports `content_filter` with `innererror.code` ResponsibleAIPolicyViolation.
 // OpenRouter tags provider failures with a typed `error_type`; its Responses skin also
 // emits `image_content_policy_violation` as the native code. Alibaba Model Studio reports
-// moderation rejections as `DataInspectionFailed`.
+// moderation rejections as `DataInspectionFailed`. OpenAI Images reports `moderation_blocked`.
 const CONTENT_POLICY_CODES = new Set([
   "content_filter",
   "content_moderation",
@@ -163,6 +163,7 @@ const CONTENT_POLICY_CODES = new Set([
   "image_content_policy_violation",
   "refusal",
   "datainspectionfailed",
+  "moderation_blocked",
 ])
 // OpenCode Zen replaces upstream codes outside its allow-list but keeps the original
 // as a `[code]` label at the start of the rewritten message.
@@ -177,9 +178,9 @@ const QUOTA_TEXT =
 // Policy rejections without a dedicated code, matched against the provider's own
 // explanation only. OpenAI reuses `invalid_prompt` for usage-policy rejections while
 // Bedrock Mantle reuses it for schema validation; Anthropic reports blocked output
-// under `invalid_request_error`.
+// under `invalid_request_error`. The Vercel AI Gateway drops OpenAI's `moderation_blocked` code.
 const CONTENT_POLICY_TEXT =
-  /violating our usage policy|blocked by content filtering policy|content[-_\s]?policy|rejected as a result of our safety system|detected potentially unsafe or sensitive content/i
+  /violating our usage policy|blocked by content filtering policy|content[-_\s]?policy|rejected (?:as a result of our|by the) safety system|detected potentially unsafe or sensitive content/i
 const SERVER_ERROR_TEXT =
   /\b(?:try again|(?:please |you can )?retry (?:the |this |your )?request|try (?:the |this |your )?request again|(?:currently |temporarily )?at capacity|overloaded|temporarily unavailable|service[-_\s]?unavailable|(?:server|internal)[-_\s]?error|server (?:is )?busy|provider returned (?:an )?error|resource[-_\s]?exhausted|upstream (?:connect|connection|request)|request buffer limit while retrying upstream)\b/i
 

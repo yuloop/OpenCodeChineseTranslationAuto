@@ -218,6 +218,35 @@ describe("provider error classification", () => {
     ).toBe("ContentPolicy")
   })
 
+  test("classifies OpenAI image moderation blocks directly and through the Vercel AI Gateway", () => {
+    const message =
+      "Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID req_123."
+    const openai = {
+      error: {
+        message,
+        type: "image_generation_user_error",
+        param: null,
+        code: "moderation_blocked",
+        moderation_details: { moderation_stage: "input", categories: ["other"] },
+      },
+    }
+    // The gateway keeps OpenAI's message but replaces its type and drops the code.
+    const vercel = {
+      error: {
+        message,
+        type: "AI_APICallError",
+        param: { error: message, statusCode: 400, name: "AI_APICallError", message, isRetryable: false },
+      },
+    }
+
+    expect(
+      [openai, vercel].map(
+        (body) =>
+          classifyProviderFailure({ message: body.error.message, status: 400, rawBody: JSON.stringify(body) })._tag,
+      ),
+    ).toEqual(["ContentPolicy", "ContentPolicy"])
+  })
+
   test("recovers policy codes that OpenCode Zen preserves only in its message label", () => {
     // Zen drops upstream codes outside its allow-list and replaces the type, but
     // `Protocol.errorMessage` keeps the original code as a `[code]` prefix.
