@@ -1176,7 +1176,6 @@ const mergeUsage = (left: Usage | undefined, right: Usage | undefined, providerM
     reasoningTokens,
     totalTokens: ProviderShared.totalTokens(inputTokens, outputTokens, undefined),
     cost: right.cost ?? left.cost,
-    allowance: right.allowance ?? left.allowance,
     providerMetadata: {
       [providerMetadataKey]:
         mergeJsonRecords(left.providerMetadata?.[providerMetadataKey], right.providerMetadata?.[providerMetadataKey]) ??

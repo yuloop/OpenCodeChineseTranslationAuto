@@ -411,7 +411,6 @@ export const createLLMEventPublisher = (bus: Pick<Bus.Interface, "publish">, inp
 
   const publishStepFailure = Effect.fnUntraced(function* (details?: {
     readonly cost?: Money.USD
-    readonly allowance?: Money.USD
     readonly tokens?: TokenUsage.Info
     readonly snapshot?: Snapshot.ID
     readonly files?: readonly RelativePath[]

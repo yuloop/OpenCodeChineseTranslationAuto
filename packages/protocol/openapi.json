@@ -19376,9 +19376,6 @@
           "cost": {
             "$ref": "#/components/schemas/Money.USD"
           },
-          "allowance": {
-            "$ref": "#/components/schemas/Money.USD"
-          },
           "tokens": {
             "$ref": "#/components/schemas/TokenUsage.Info"
           },
@@ -19543,9 +19540,6 @@
             "$ref": "#/components/schemas/Session.Message.Native_3"
           },
           "cost": {
-            "$ref": "#/components/schemas/Money.USD"
-          },
-          "allowance": {
             "$ref": "#/components/schemas/Money.USD"
           },
           "tokens": {

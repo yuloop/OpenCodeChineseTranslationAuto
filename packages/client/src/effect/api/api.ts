@@ -827,7 +827,6 @@ export type SessionLogOutput =
             readonly rawFinish?: string | undefined
             readonly native?: SessionMessage.Native | undefined
             readonly cost: Money.USD
-            readonly allowance?: Money.USD | undefined
             readonly tokens: {
               readonly input: number
               readonly output: number
@@ -861,7 +860,6 @@ export type SessionLogOutput =
             readonly rawFinish?: string | undefined
             readonly native?: SessionMessage.Native | undefined
             readonly cost?: Money.USD | undefined
-            readonly allowance?: Money.USD | undefined
             readonly tokens?:
               | {
                   readonly input: number
@@ -1215,7 +1213,6 @@ export type SessionLogOutput =
             readonly sessionID: Session.ID
             readonly source: "title" | "compaction"
             readonly cost: Money.USD
-            readonly allowance?: Money.USD | undefined
             readonly tokens: {
               readonly input: number
               readonly output: number

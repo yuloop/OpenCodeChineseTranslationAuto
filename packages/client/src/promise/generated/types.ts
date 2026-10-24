@@ -1276,7 +1276,6 @@ export type SessionStepEnded = {
     rawFinish?: string
     native?: SessionMessageNative1
     cost: MoneyUSD
-    allowance?: MoneyUSD
     tokens: TokenUsageInfo
     snapshot?: SnapshotID
     files?: Array<RelativePath>
@@ -1298,7 +1297,6 @@ export type SessionStepFailed = {
     rawFinish?: string
     native?: SessionMessageNative1
     cost?: MoneyUSD
-    allowance?: MoneyUSD
     tokens?: TokenUsageInfo
     snapshot?: SnapshotID
     files?: Array<RelativePath>
@@ -1492,13 +1490,7 @@ export type SessionUsageRecorded = {
   type: "session.usage.recorded"
   durable: { aggregateID: string; seq: EventSeq; version: 1 }
   location?: LocationRef
-  data: {
-    sessionID: SessionID
-    source: "title" | "compaction"
-    cost: MoneyUSD
-    allowance?: MoneyUSD
-    tokens: TokenUsageInfo
-  }
+  data: { sessionID: SessionID; source: "title" | "compaction"; cost: MoneyUSD; tokens: TokenUsageInfo }
 }
 
 export type LocationShutdown = {
@@ -1579,7 +1571,7 @@ export type SessionUsageUpdated = {
   metadata?: { [x: string]: any }
   type: "session.usage.updated"
   location?: LocationRef
-  data: { sessionID: SessionID; cost: MoneyUSD; allowance?: MoneyUSD; tokens: TokenUsageInfo }
+  data: { sessionID: SessionID; cost: MoneyUSD; tokens: TokenUsageInfo }
 }
 
 export type SessionTextDelta = {
@@ -2157,7 +2149,6 @@ export type SessionInfo = {
   agent?: AgentID
   model?: ModelRef
   cost: MoneyUSD
-  allowance?: MoneyUSD
   tokens: TokenUsageInfo
   outcome?: "succeeded" | "failed" | "interrupted"
   time: { created: number; updated: number; idle?: number; viewed?: number; archived?: number }
@@ -2466,7 +2457,6 @@ export type SessionMessageAssistant = {
   rawFinish?: string
   native?: SessionMessageNative
   cost?: MoneyUSD
-  allowance?: MoneyUSD
   tokens?: TokenUsageInfo
   error?: SessionStructuredError
   retry?: SessionMessageAssistantRetry
@@ -3288,7 +3278,6 @@ export type SessionImportInput = {
       readonly agent?: string
       readonly model?: { readonly id: string; readonly providerID: string; readonly variant?: string }
       readonly cost: number
-      readonly allowance?: number
       readonly tokens: {
         readonly input: number
         readonly output: number
@@ -3342,7 +3331,6 @@ export type SessionImportInput = {
       readonly agent?: string
       readonly model?: { readonly id: string; readonly providerID: string; readonly variant?: string }
       readonly cost: number
-      readonly allowance?: number
       readonly tokens: {
         readonly input: number
         readonly output: number
@@ -3396,7 +3384,6 @@ export type SessionImportInput = {
       readonly agent?: string
       readonly model?: { readonly id: string; readonly providerID: string; readonly variant?: string }
       readonly cost: number
-      readonly allowance?: number
       readonly tokens: {
         readonly input: number
         readonly output: number

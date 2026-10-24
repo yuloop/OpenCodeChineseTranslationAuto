@@ -925,7 +925,7 @@ describe("Gemini route", () => {
     }),
   )
 
-  it.effect("reports the cost and allowance the endpoint billed", () =>
+  it.effect("reports the cost the endpoint billed", () =>
     Effect.gen(function* () {
       const body = sseEvents({
         candidates: [{ content: { role: "model", parts: [{ text: "Hello" }] }, finishReason: "STOP" }],
@@ -938,7 +938,7 @@ describe("Gemini route", () => {
       })
       const response = yield* LLMClient.generate(request).pipe(Effect.provide(fixedResponse(body)))
 
-      expect(response.usage).toMatchObject({ inputTokens: 5, outputTokens: 2, cost: 0, allowance: 0.0042 })
+      expect(response.usage).toMatchObject({ inputTokens: 5, outputTokens: 2, cost: 0 })
     }),
   )
 
