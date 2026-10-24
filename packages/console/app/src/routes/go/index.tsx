@@ -39,7 +39,7 @@ const models = [
   { name: "GPT 6 Luna", training: "go.faq.a5.notUsed", retention: "go.faq.a5.retention30" },
   { name: "GPT 5.6 Luna", training: "go.faq.a5.notUsed", retention: "go.faq.a5.retention30" },
   { name: "Claude Haiku 5.5", training: "go.faq.a5.notUsed", retention: "go.faq.a5.retention30" },
-  { name: "Gemini 4 Argon Contributor", training: "go.faq.a5.used", retention: "go.faq.a5.notZdr" },
+  { name: "Gemini 4 Argon", training: "go.faq.a5.notUsed", retention: "go.faq.a5.retention0" },
   { name: "GLM-5.3-Flash", training: "go.faq.a5.notUsed", retention: "go.faq.a5.retention0" },
   { name: "GLM-5.3", training: "go.faq.a5.notUsed", retention: "go.faq.a5.retention0" },
   { name: "GLM-5.2", training: "go.faq.a5.notUsed", retention: "go.faq.a5.retention0" },
@@ -215,8 +215,8 @@ export default function Home() {
                 <span>[2]</span>
                 <div>
                   <strong>{i18n.t("go.how.step2.title")}</strong> -{" "}
-                  <a href="/v2/docs/console/go/">{i18n.t("go.how.step2.link")}</a>{" "}
-                  {i18n.t("go.how.step2.afterLink")} · {i18n.t("go.plans.plus.description")}
+                  <a href="/v2/docs/console/go/">{i18n.t("go.how.step2.link")}</a> {i18n.t("go.how.step2.afterLink")} ·{" "}
+                  {i18n.t("go.plans.plus.description")}
                 </div>
               </li>
               <li>
@@ -303,13 +303,7 @@ export default function Home() {
                     <p>
                       <strong>Claude Haiku 5.5:</strong> {i18n.t("go.faq.a5.retention")}:{" "}
                       {i18n.t("go.faq.a5.retention30")}.{" "}
-                      <a href="https://code.claude.com/docs/en/data-usage">
-                        {i18n.t("go.faq.a5.learnMore")}
-                      </a>
-                      .
-                    </p>
-                    <p>
-                      <strong>Gemini 4 Argon Contributor:</strong> {i18n.t("go.faq.a5.geminiRetention")}
+                      <a href="https://code.claude.com/docs/en/data-usage">{i18n.t("go.faq.a5.learnMore")}</a>.
                     </p>
                     <p>
                       <strong>Muse Spark 1.3 Contributor:</strong> {i18n.t("go.faq.a5.museRetention")}{" "}
