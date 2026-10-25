@@ -75,6 +75,29 @@ describe("RequestExecutor", () => {
     }),
   )
 
+  it.effect("classifies AWS modeled errors from every restJson1 identity location", () =>
+    Effect.sync(() => {
+      const cases = [
+        { body: { code: "ThrottlingException" } },
+        { body: { __type: "ThrottlingException" } },
+        { body: { code: "com.amazonaws.bedrock#ThrottlingException:http://internal.amazon.com/coral/" } },
+        { body: {}, headers: { "X-Amzn-Errortype": "ThrottlingException:http://internal.amazon.com/coral/" } },
+      ]
+      for (const item of cases) {
+        const body = JSON.stringify({ ...item.body, message: "Slow down" })
+        const error = RequestExecutor.httpFailure({
+          message: "Slow down",
+          url: request.url,
+          status: 400,
+          responseHeaders: item.headers,
+          responseBody: body,
+        })
+        expect(error.reason._tag).toBe("RateLimit")
+        expect(error.reason.body).toBe(body)
+      }
+    }),
+  )
+
   it.effect("retains the original body-read failure on an HTTP status error", () =>
     Effect.gen(function* () {
       const cause = new Error("response body disconnected")
