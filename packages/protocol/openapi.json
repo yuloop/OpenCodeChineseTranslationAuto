@@ -17376,6 +17376,9 @@
               }
             ]
           },
+          "title": {
+            "type": "string"
+          },
           "integrationID": {
             "$ref": "#/components/schemas/Integration.ID"
           }
