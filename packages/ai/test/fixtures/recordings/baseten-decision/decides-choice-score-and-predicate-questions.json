@@ -3,11 +3,11 @@
   "metadata": {
     "model": "decision-models/baseten-elephant-9b-latest",
     "tags": [
-      "prefix:baseten-evaluation",
+      "prefix:baseten-decision",
       "provider:baseten",
       "protocol:system-one"
     ],
-    "name": "baseten-evaluation/evaluates-choice-score-and-boolean-questions",
+    "name": "baseten-decision/decides-choice-score-and-predicate-questions",
     "recordedAt": "2026-10-23T07:43:52.790Z"
   },
   "interactions": [

@@ -3,11 +3,11 @@
   "metadata": {
     "model": "gpt-6-luna",
     "tags": [
-      "prefix:openai-evaluation",
+      "prefix:openai-decision",
       "provider:openai",
       "protocol:openai-decisions"
     ],
-    "name": "openai-evaluation/evaluates-choice-score-and-boolean-questions-about-json-state",
+    "name": "openai-decision/decides-choice-score-and-predicate-questions-about-json-state",
     "recordedAt": "2026-10-23T07:45:33.569Z"
   },
   "interactions": [

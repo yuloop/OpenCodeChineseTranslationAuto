@@ -3,11 +3,11 @@
   "metadata": {
     "model": "@cf/cloudflare/clef",
     "tags": [
-      "prefix:cloudflare-workers-ai-evaluation",
+      "prefix:cloudflare-workers-ai-decision",
       "provider:cloudflare-workers-ai",
       "protocol:system-one"
     ],
-    "name": "cloudflare-workers-ai-evaluation/evaluates-choice-score-and-boolean-questions",
+    "name": "cloudflare-workers-ai-decision/decides-choice-score-and-predicate-questions",
     "recordedAt": "2026-10-23T08:02:48.344Z"
   },
   "interactions": [

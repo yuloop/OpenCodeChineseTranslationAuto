@@ -3,11 +3,11 @@
   "metadata": {
     "model": "typesafe/jev-1.13",
     "tags": [
-      "prefix:openrouter-evaluation",
+      "prefix:openrouter-decision",
       "provider:openrouter",
       "protocol:system-one"
     ],
-    "name": "openrouter-evaluation/evaluates-choice-score-and-boolean-questions",
+    "name": "openrouter-decision/decides-choice-score-and-predicate-questions",
     "recordedAt": "2026-09-22T14:54:46.656Z"
   },
   "interactions": [

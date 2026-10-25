@@ -3,11 +3,11 @@
   "metadata": {
     "model": "typesafe/jev",
     "tags": [
-      "prefix:cloudflare-ai-gateway-evaluation",
+      "prefix:cloudflare-ai-gateway-decision",
       "provider:cloudflare-ai-gateway",
       "protocol:system-one"
     ],
-    "name": "cloudflare-ai-gateway-evaluation/evaluates-choice-score-and-boolean-questions",
+    "name": "cloudflare-ai-gateway-decision/decides-choice-score-and-predicate-questions",
     "recordedAt": "2026-10-23T07:46:54.512Z"
   },
   "interactions": [

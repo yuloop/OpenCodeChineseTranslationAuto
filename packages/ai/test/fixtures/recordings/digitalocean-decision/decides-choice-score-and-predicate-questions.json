@@ -3,11 +3,11 @@
   "metadata": {
     "model": "typesafe-jev-1.13.0",
     "tags": [
-      "prefix:digitalocean-evaluation",
+      "prefix:digitalocean-decision",
       "provider:digitalocean",
       "protocol:system-one"
     ],
-    "name": "digitalocean-evaluation/evaluates-choice-score-and-boolean-questions",
+    "name": "digitalocean-decision/decides-choice-score-and-predicate-questions",
     "recordedAt": "2026-10-23T07:43:53.250Z"
   },
   "interactions": [
