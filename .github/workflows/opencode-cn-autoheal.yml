@@ -212,6 +212,9 @@ jobs:
 
       - name: Trigger the release pipeline with the healed assets
         id: trigger
+        # 只有真的推出了修复提交才 dispatch：否则每小时巡检都会白触发一遍两条发布流水线
+        # （V1 自带每小时 :17、V2 自带每日 21:23 定时，本来就是绿的就没必要催）。
+        if: steps.push.outputs.pushed == 'true'
         run: |
           set -uo pipefail
           # 用 GITHUB_TOKEN 的 push 不会触发 push 事件 workflow，所以显式 dispatch；
