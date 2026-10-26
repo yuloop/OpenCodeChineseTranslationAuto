@@ -109,6 +109,11 @@ func TestEmbeddedV1AssetsUnchanged(t *testing.T) {
 	// V1 词表随之新增 dialogs/dialog-update.json(19 条) 与
 	// common/update-notification.json(1 条)，并移除 app.tsx 里 4 条失效条目：
 	// 54 -> 56 个规则文件，497 -> 513 条条目。
+	// 2026-10-26：上游 v1.19.x 把 /share、/unshare 从 TUI 移除（只剩 session.share
+	// 键位定义，源码中已无对应字符串），V1 词表随之移除 12 条永久失效条目
+	// （routes/route-session.json 7 条、components/component-tips.json 4 条、
+	// common/share-error.json 1 条）：513 -> 501 条条目，规则文件仍是 56 个
+	// （share-error.json 按 component-sidebar.json 的惯例保留为空占位）。
 	if len(configs) != 56 {
 		t.Errorf("V1 规则文件数应保持 56: got %d", len(configs))
 	}
@@ -119,8 +124,8 @@ func TestEmbeddedV1AssetsUnchanged(t *testing.T) {
 		}
 		total += len(config.Replacements)
 	}
-	if total != 513 {
-		t.Errorf("V1 翻译条目数应保持 513: got %d", total)
+	if total != 501 {
+		t.Errorf("V1 翻译条目数应保持 501: got %d", total)
 	}
 }
 

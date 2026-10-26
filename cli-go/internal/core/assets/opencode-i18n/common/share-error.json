@@ -1,7 +1,6 @@
 {
   "file": "src/cli/cmd/tui/routes/session/index.tsx",
-  "description": "分享错误消息",
-  "replacements": {
-    "message: \"Failed to copy URL to clipboard\"": "message: \"复制链接到剪贴板失败\""
-  }
+  "description": "分享错误消息 (已废弃 - 上游 v1.19.x 移除 TUI 分享界面)",
+  "note": "上游 v1.19.x 把 /share、/unshare 从 TUI 移除（仅保留 session.share 键位定义），源码中已无对应字符串；此文件保留仅为兼容旧版本，条目全部移除以免拉低翻译匹配率",
+  "replacements": {}
 }
