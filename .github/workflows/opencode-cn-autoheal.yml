@@ -174,11 +174,26 @@ jobs:
           fi
 
       # ---------------- 提交与触发 ----------------
+      - name: Guard - 词表改动必须保持冻结值测试绿
+        # bot 提交不能把 CI 打红：条目数变化时 autotranslate.py 会同步 i18n_v2_test.go 的冻结值，
+        # 这里再跑一遍 TestEmbeddedV1AssetsUnchanged / TestEmbeddedV2AssetsCoverEveryV1Entry 兜底。
+        run: |
+          set -uo pipefail
+          if git diff --quiet -- cli-go/internal/core; then
+            echo "词表没有改动，跳过测试守卫"
+            exit 0
+          fi
+          cd cli-go
+          if ! go test ./internal/core/ 2>&1 | tee /tmp/freeze-test.log; then
+            echo "::error::词表改动后冻结值测试仍红，不推送（见日志）；请人工核对 i18n_v2_test.go"
+            exit 1
+          fi
+
       - name: Commit and push healed assets
         id: push
         run: |
           set -euo pipefail
-          changed="$(git status --porcelain -- cli-go/internal/core/assets || true)"
+          changed="$(git status --porcelain -- cli-go/internal/core/assets cli-go/internal/core/i18n_v2_test.go || true)"
           if [[ -z "$changed" ]]; then
             echo "词表没有改动"
             echo "pushed=false" >>"$GITHUB_OUTPUT"
@@ -186,7 +201,7 @@ jobs:
           fi
           git config user.name "opencode-cn-bot"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add cli-go/internal/core/assets
+          git add cli-go/internal/core/assets cli-go/internal/core/i18n_v2_test.go
           {
             echo "chore(i18n): 在线自动修复汉化词表失配"
             echo

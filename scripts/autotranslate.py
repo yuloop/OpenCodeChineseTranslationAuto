@@ -11,6 +11,9 @@
 - 失配判定完全复刻 cli-go 的口径（key 作为子串是否还在目标源码里），不猜；
 - 每个文件一个补丁，逐条校验「新锚点必须真的出现在源码里」，否则丢弃该条；
 - 每轮改完立刻用真实门禁复核，某文件改坏了就回滚该文件；
+- 默认只做「重锚 / 撤条」，不新增条目（新增会打破 V1 冻结值测试和 V1⊆V2 覆盖测试），
+  确需补译时加 --allow-adds；
+- V1 条目数变化时自动同步 cli-go/internal/core/i18n_v2_test.go 的冻结值，避免 bot 提交把 CI 打红；
 - 不联网就什么都不做（未配置 API 密钥时直接退出 0，交给原来的门禁报错）。
 """
 
@@ -19,6 +22,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -161,11 +165,12 @@ def looks_like_ui_text(key: str) -> bool:
     return any(ch in key for ch in " \t:?!.,()[]-—…" )
 
 
-def apply_patch(entry: dict, patch: dict, max_adds: int = 15) -> tuple[dict, list[str]]:
-    """把 LLM 补丁落到该文件的词表上，返回 (新词表, 说明)。逐条校验锚点真实性。"""
+def apply_patch(entry: dict, patch: dict, max_adds: int = 0) -> tuple[dict, list[str], list[tuple[str, str]]]:
+    """把 LLM 补丁落到该文件的词表上，返回 (新词表, 说明, 重锚对)。逐条校验锚点真实性。"""
     cfg, text, missing = entry["cfg"], entry["text"], set(entry["missing"])
     rules = dict(cfg["data"]["replacements"])
-    notes = []
+    notes: list[str] = []
+    renames: list[tuple[str, str]] = []
     for fix in patch.get("fixes") or []:
         old, new = fix.get("old"), fix.get("new")
         if old not in missing or not isinstance(new, str) or new not in text:
@@ -174,27 +179,33 @@ def apply_patch(entry: dict, patch: dict, max_adds: int = 15) -> tuple[dict, lis
         value = fix.get("value") if isinstance(fix.get("value"), str) and fix["value"] else rules[old]
         rules.pop(old, None)
         rules[new] = new if cfg["identity"] else value
+        renames.append((old, new))
         notes.append(f"重锚 {old!r} -> {new!r}")
     for old in patch.get("drops") or []:
         if old in missing:
             rules.pop(old, None)
             notes.append(f"撤条 {old!r}")
     added = 0
-    for add in patch.get("adds") or []:
-        if added >= max_adds:
-            notes.append(f"补译超过上限 {max_adds}，其余忽略")
-            break
-        key, value = add.get("key"), add.get("value")
-        if cfg["identity"] or not isinstance(key, str) or key not in text or key in rules:
-            notes.append(f"丢弃 add {key!r}（身份锚点/不在源码里/已存在）")
-            continue
-        if not looks_like_ui_text(key) or not isinstance(value, str) or not contains_cjk(value):
-            notes.append(f"丢弃 add {key!r}（不像界面文案或译文不含中文）")
-            continue
-        rules[key] = value
-        added += 1
-        notes.append(f"补译 {key!r}")
-    return rules, notes
+    adds = patch.get("adds") or []
+    if adds and max_adds <= 0:
+        notes.append(f"未启用 --allow-adds，忽略 {len(adds)} 条补译"
+                     "（新增条目会打破 V1 冻结值测试与 V1⊆V2 覆盖测试）")
+    elif adds:
+        for add in adds:
+            if added >= max_adds:
+                notes.append(f"补译超过上限 {max_adds}，其余忽略")
+                break
+            key, value = add.get("key"), add.get("value")
+            if cfg["identity"] or not isinstance(key, str) or key not in text or key in rules:
+                notes.append(f"丢弃 add {key!r}（身份锚点/不在源码里/已存在）")
+                continue
+            if not looks_like_ui_text(key) or not isinstance(value, str) or not contains_cjk(value):
+                notes.append(f"丢弃 add {key!r}（不像界面文案或译文不含中文）")
+                continue
+            rules[key] = value
+            added += 1
+            notes.append(f"补译 {key!r}")
+    return rules, notes, renames
 
 
 def contains_cjk(text: str) -> bool:
@@ -207,6 +218,70 @@ def write_config(cfg: dict, rules: dict) -> None:
                            encoding="utf-8")
 
 
+def sync_v1_freeze(repo: Path, configs: list[dict]) -> Path | None:
+    """V1 词表的（规则文件数, 条目数）变了就同步测试里的冻结值。
+
+    cli-go/internal/core/i18n_v2_test.go 的 TestEmbeddedV1AssetsUnchanged 把这两个数字
+    写死了（56 / 501），自动修复只要增删条目就会让这个测试红；这里按实际词表改写
+    函数体里的两个数字，保证 bot 提交不会打破 CI。
+    """
+    rules_count = len(configs)
+    total = sum(len(c["data"]["replacements"]) for c in configs)
+    path = repo / "cli-go" / "internal" / "core" / "i18n_v2_test.go"
+    if not path.exists():
+        return None
+    text = path.read_text(encoding="utf-8")
+    start = text.find("func TestEmbeddedV1AssetsUnchanged")
+    if start < 0:
+        return None
+    end = text.find("\nfunc ", start + len("func TestEmbeddedV1AssetsUnchanged"))
+    body = text[start:end] if end > 0 else text[start:]
+    patched = re.sub(r"(if len\(configs\) != )\d+", rf"\g<1>{rules_count}", body, count=1)
+    patched = re.sub(r"(if total != )\d+", rf"\g<1>{total}", patched, count=1)
+    patched = re.sub(r"(V1 规则文件数应保持 )\d+", rf"\g<1>{rules_count}", patched, count=1)
+    patched = re.sub(r"(V1 翻译条目数应保持 )\d+", rf"\g<1>{total}", patched, count=1)
+    if patched == body:
+        return None
+    path.write_text(text[:start] + patched + (text[end:] if end > 0 else ""), encoding="utf-8")
+    log(f"同步冻结值：V1 规则文件 {rules_count} 个、条目 {total} 条 -> {path.name}")
+    return path
+
+
+def sync_v2_manifest(repo: Path, renames_by_rule: dict[str, list[tuple[str, str]]]) -> Path | None:
+    """V1 重锚换了 key 之后，同步 V2 config.json 的 manifest 覆盖表。
+
+    TestEmbeddedV2AssetsCoverEveryV1Entry 要求「V1 的每条 (规则, 原文) 在 V2 manifest 里都有
+    台账」，V1 重锚换了 key 就会红。manifest 只是覆盖台账（apply 用的是 anchors/*.json），
+    所以只改台账里的 key、不动 V2 锚点，V2 门禁口径完全不变。
+    """
+    if not renames_by_rule:
+        return None
+    path = repo / "cli-go" / "internal" / "core" / "assets" / V2_ASSETS / "config.json"
+    if not path.exists():
+        return None
+    data = json.loads(path.read_text(encoding="utf-8"))
+    entries = (data.get("manifest") or {}).get("entries") or []
+    updated = 0
+    unmatched: list[str] = []
+    for rule, renames in sorted(renames_by_rule.items()):
+        for old, new in renames:
+            hit = [e for e in entries if e.get("rule") == rule and e.get("key") == old]
+            if not hit:
+                unmatched.append(f"{rule} / {old!r}")
+                continue
+            for e in hit:
+                e["key"] = new
+            updated += len(hit)
+    if unmatched:
+        log(f"V2 manifest 里没有这些 V1 条目的台账（{len(unmatched)} 条），覆盖测试会红："
+            f"{'; '.join(unmatched[:3])}")
+    if not updated:
+        return None
+    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    log(f"同步 V2 manifest 覆盖台账：{updated} 条键已跟随 V1 重锚")
+    return path
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", default=".")
@@ -215,6 +290,8 @@ def main() -> int:
     ap.add_argument("--max-rounds", type=int, default=3)
     ap.add_argument("--max-files", type=int, default=6, help="每轮最多处理几个文件")
     ap.add_argument("--timeout", type=int, default=180)
+    ap.add_argument("--allow-adds", action="store_true",
+                    help="允许新增词表条目（默认关：新增会打破 V1 冻结值测试和 V1⊆V2 覆盖测试）")
     args = ap.parse_args()
 
     api_key = os.environ.get("AUTOTRANSLATE_API_KEY", "").strip()
@@ -233,6 +310,7 @@ def main() -> int:
     base = asset_dir(repo, source)
     log(f"词表目录：{base}")
     touched: set[Path] = set()
+    renames_by_rule: dict[str, list[tuple[str, str]]] = {}
 
     for round_no in range(1, args.max_rounds + 1):
         configs = load_configs(base)
@@ -251,7 +329,11 @@ def main() -> int:
             except (urllib.error.URLError, TimeoutError, ValueError, KeyError) as exc:
                 log(f"  {cfg['file']}: LLM 调用/解析失败（{exc}），跳过")
                 continue
-            rules, notes = apply_patch(entry, patch)
+            rules, notes, renames = apply_patch(entry, patch,
+                                                max_adds=15 if args.allow_adds else 0)
+            if renames:
+                rel = cfg["path"].relative_to(base).as_posix()
+                renames_by_rule.setdefault(rel, []).extend(renames)
             if not notes:
                 log(f"  {cfg['file']}: 补丁为空，跳过")
                 continue
@@ -264,6 +346,7 @@ def main() -> int:
             if still and len(still[0]["missing"]) >= len(entry["missing"]):
                 cfg["path"].write_text(before, encoding="utf-8")
                 touched.discard(cfg["path"])
+                renames_by_rule.pop(cfg["path"].relative_to(base).as_posix(), None)
                 log(f"  {cfg['file']}: 没修好（{len(entry['missing'])} -> "
                     f"{len(still[0]['missing'])}），回滚该文件")
             else:
@@ -271,6 +354,14 @@ def main() -> int:
                     f"{len(still[0]['missing']) if still else 0}")
         if run_gate(args.cli, source, repo)[0]:
             break
+
+    if touched and base.name == V1_ASSETS:
+        freeze_path = sync_v1_freeze(repo, load_configs(base))
+        if freeze_path:
+            touched.add(freeze_path)
+        manifest_path = sync_v2_manifest(repo, renames_by_rule)
+        if manifest_path:
+            touched.add(manifest_path)
 
     ok, summary = run_gate(args.cli, source, repo)
     log(f"结束：{summary or '（无输出）'} -> {'通过' if ok else '未通过'}；改动文件 {len(touched)} 个")

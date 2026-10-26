@@ -2,6 +2,7 @@
   "file": "packages/tui/src/routes/session/index.tsx",
   "description": "会话页面",
   "replacements": {
+    "title: \"Rename session\"": "title: \"重命名会话\"",
     "title: \"Jump to message\"": "title: \"跳转到消息\"",
     "title: \"Fork session\"": "title: \"从消息分支\"",
     "title: \"Compact session\"": "title: \"精简会话\"",
@@ -50,22 +51,6 @@
     "Skill \"{stringValue(props.input.name)}\"": "技能 \"{stringValue(props.input.name)}\"",
     "\"match\" : \"matches\"": "\"匹配\" : \"匹配\"",
     "Fetching from the web…": "正在从网络获取...",
-    "pending=\"Loading skill…\"": "pending=\"正在加载技能...\"",
-    "title: \"Rename session\"": "title: \"重命名会话\"",
-    "title: \"Toggle session scrollbar\"": "title: \"切换会话滚动条\"",
-    "title: \"Background subagents\"": "title: \"后台子代理\"",
-    "title: \"Go to child session\"": "title: \"转到子会话\"",
-    "title: showGenericToolOutput() ? \"Hide generic tool output\" : \"Show generic tool output\"": "title: showGenericToolOutput() ? \"隐藏通用工具输出\" : \"显示通用工具输出\"",
-    "\"Click to collapse\" : \"Click to expand\"": "\"点击收起\" : \"点击展开\"",
-    "pending=\"Writing command…\"": "pending=\"正在写入命令...\"",
-    "pending=\"Preparing write…\"": "pending=\"正在准备写入...\"",
-    "pending=\"Finding files…\"": "pending=\"正在查找文件...\"",
-    "pending=\"Reading file…\"": "pending=\"正在读取文件...\"",
-    "pending=\"Searching content…\"": "pending=\"正在搜索内容...\"",
-    "pending=\"Searching web…\"": "pending=\"正在搜索网络...\"",
-    "pending=\"Delegating…\"": "pending=\"正在委派...\"",
-    "pending=\"Preparing edit…\"": "pending=\"正在准备编辑...\"",
-    "pending=\"Preparing patch…\"": "pending=\"正在准备补丁...\"",
-    "failure=\"Patch failed\"": "failure=\"补丁失败\""
+    "pending=\"Loading skill…\"": "pending=\"正在加载技能...\""
   }
 }
