@@ -2,7 +2,7 @@
   "file": "packages/tui/src/routes/session/index.tsx",
   "description": "会话页面",
   "replacements": {
-    "title: \"Rename session\"": "title: \"重命名会话\"",
+    "title: \"Rename the session\"": "title: \"重命名会话\"",
     "title: \"Jump to message\"": "title: \"跳转到消息\"",
     "title: \"Fork session\"": "title: \"从消息分支\"",
     "title: \"Compact session\"": "title: \"精简会话\"",
