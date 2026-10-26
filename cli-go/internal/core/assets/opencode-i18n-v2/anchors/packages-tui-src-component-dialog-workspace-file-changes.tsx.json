@@ -3,6 +3,8 @@
   "replacements": {
     "?? \"Do you want to move these changes with the session?\"": "?? \"是否随会话一起移动这些更改?\"",
     "?? \"File Changes Found\"": "?? \"发现文件更改\"",
-    "theme.text.muted}>{item}</text>": "theme.text.muted}>{item === \"yes\" ? \"是\" : \"否\"}</text>"
+    "theme.text.muted}>{item}</text>": "theme.text.muted}>{item === \"yes\" ? \"是\" : \"否\"}</text>",
+    "{ title: \"cancel\", key: \"esc\", onTrigger: () => choose(\"no\") }": "{ title: \"取消\", key: \"esc\", onTrigger: () => choose(\"no\") }",
+    "?? { title: \"confirm\", key: \"enter\" }": "?? { title: \"确认\", key: \"enter\" }"
   }
 }

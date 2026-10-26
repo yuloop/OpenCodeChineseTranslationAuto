@@ -73,8 +73,6 @@
     "\"Fork session from message\"": "\"从消息分支会话\"",
     "\"Rename session\"": "\"重命名会话\"",
     "\"Delete session\"": "\"删除会话\"",
-    "\"Share current session\"": "\"分享当前会话\"",
-    "\"Unshare current session\"": "\"取消分享当前会话\"",
     "\"Interrupt current session\"": "\"中断当前会话\"",
     "\"Background blocking session tools\"": "\"将阻塞会话工具转到后台\"",
     "\"Compact the session\"": "\"精简会话\"",

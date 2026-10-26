@@ -6,7 +6,10 @@
     "\"Recent\"": "\"最近\"",
     "(Favorite)": "(收藏)",
     "return \"Select model\"": "return \"选择模型\"",
-    "title: \"Favorite\"": "title: \"收藏\"",
-    "title: connected() ? \"Connect an integration\" : \"View all integrations\"": "title: connected() ? \"连接集成\" : \"查看所有集成\""
+    "? \"favorite\" : \"Favorite\"": "? \"收藏\" : \"收藏\"",
+    "? \"Connect an integration\"": "? \"连接集成\"",
+    ": \"View all integrations\"": ": \"查看所有集成\"",
+    "? \"connect integration\"": "? \"连接集成\"",
+    ": \"view all integrations\"": ": \"查看所有集成\""
   }
 }

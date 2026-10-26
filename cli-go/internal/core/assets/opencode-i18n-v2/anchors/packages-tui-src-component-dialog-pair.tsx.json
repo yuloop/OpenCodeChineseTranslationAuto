@@ -1,7 +1,7 @@
 {
   "file": "packages/tui/src/component/dialog-pair.tsx",
   "replacements": {
-    "          Pair": "          配对",
+    "title=\"Pair\"": "title=\"配对\"",
     "Close and reopen Pair to try again.": "关闭并重新打开配对再试。",
     "Could not load server information": "无法加载服务器信息",
     "Loading server information…": "正在加载服务器信息...",

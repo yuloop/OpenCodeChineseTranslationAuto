@@ -6,7 +6,7 @@
     "group: \"Dialog\"": "group: \"对话框\"",
     "{props.busyText ?? \"Working…\"}": "{props.busyText ?? \"处理中...\"}",
     "<text fg={theme.text.muted}>processing…</text>": "<text fg={theme.text.muted}>处理中...</text>",
-    "<span style={{ fg: theme.text.muted }}>submit</span>": "<span style={{ fg: theme.text.muted }}>提交</span>",
+    "title: \"submit\", command: \"dialog.prompt.submit\"": "title: \"提交\", command: \"dialog.prompt.submit\"",
     "placeholder={props.placeholder ?? \"Enter text\"}": "placeholder={props.placeholder ?? \"输入文本\"}"
   }
 }

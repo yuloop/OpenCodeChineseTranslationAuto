@@ -1,7 +1,6 @@
 {
   "file": "packages/tui/src/ui/dialog-select.tsx",
   "replacements": {
-    "\n            esc\n          ": "\n            esc\n          ",
     "FILTER": "FILTER",
     "column": "column",
     "dialog.select.end": "dialog.select.end",

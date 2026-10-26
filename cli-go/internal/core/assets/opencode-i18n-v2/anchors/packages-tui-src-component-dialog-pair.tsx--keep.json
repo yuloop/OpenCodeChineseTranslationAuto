@@ -1,7 +1,6 @@
 {
   "file": "packages/tui/src/component/dialog-pair.tsx",
   "replacements": {
-    "\n          esc\n        ": "\n          esc\n        ",
     "center": "center",
     "column": "column",
     "flex-end": "flex-end",

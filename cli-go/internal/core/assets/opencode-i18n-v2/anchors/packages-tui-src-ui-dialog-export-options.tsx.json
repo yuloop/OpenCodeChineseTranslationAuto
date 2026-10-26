@@ -9,7 +9,9 @@
     "Include tools": "包含工具",
     "Sanitize sensitive data": "脱敏敏感数据",
     "<text fg={overlayTheme.text.base}>Copy</text>": "<text fg={overlayTheme.text.base}>复制</text>",
-    "<text fg={store.active === \"export\" ? theme.text.action.primary.focused : theme.text.action.primary.base}>\n            Export\n          </text>": "<text fg={store.active === \"export\" ? theme.text.action.primary.focused : theme.text.action.primary.base}>\n            导出\n          </text>",
-    "group: \"Dialog\"": "group: \"对话框\""
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "              Export": "              导出",
+    "{ title: \"copy\", key: \"c\", onTrigger: () => confirm(\"copy\") }": "{ title: \"复制\", key: \"c\", onTrigger: () => confirm(\"copy\") }",
+    "{ title: \"save to file\", key: \"enter\", onTrigger: () => confirm(\"export\") }": "{ title: \"保存到文件\", key: \"enter\", onTrigger: () => confirm(\"export\") }"
   }
 }

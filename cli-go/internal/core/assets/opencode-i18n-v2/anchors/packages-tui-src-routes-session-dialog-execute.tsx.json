@@ -10,19 +10,18 @@
     "title: \"Copy code\"": "title: \"复制代码\"",
     "title: \"Copy output\"": "title: \"复制输出\"",
     "group: \"Execute\"": "group: \"执行\"",
-    "flexGrow={1}>\n          execute\n": "flexGrow={1}>\n          执行\n",
-    "{copied() === \"code\" ? \"✓ copied\" : \"c\"}": "{copied() === \"code\" ? \"✓ 已复制\" : \"c\"}",
-    "{copied() === \"output\" ? \"✓ copied\" : \"o\"}": "{copied() === \"output\" ? \"✓ 已复制\" : \"o\"}",
-    "{copied() === \"code\" ? \"\" : \" copy code\"}": "{copied() === \"code\" ? \"\" : \" 复制代码\"}",
-    "{copied() === \"output\" ? \"\" : \" copy output\"}": "{copied() === \"output\" ? \"\" : \" 复制输出\"}",
+    "title: \"✓ copied\"": "title: \"✓ 已复制\"",
+    "title: \"copy code\"": "title: \"复制代码\"",
+    "title: \"copy output\"": "title: \"复制输出\"",
     "return \"Receiving code…\"": "return \"正在接收代码...\"",
     "return \"Running\"": "return \"运行中\"",
     "return `Failed${duration}`": "return `失败${duration}`",
     "return `Completed${duration}`": "return `已完成${duration}`",
     "props.part.state.status === \"completed\" ? \"No output\" : \"Waiting for output…\"": "props.part.state.status === \"completed\" ? \"暂无输出\" : \"正在等待输出...\"",
-    "fg={contentTheme.text.muted} attributes={TextAttributes.BOLD}>\n              Code\n": "fg={contentTheme.text.muted} attributes={TextAttributes.BOLD}>\n              代码\n",
-    "fg={contentTheme.text.muted} attributes={TextAttributes.BOLD}>\n              Output\n": "fg={contentTheme.text.muted} attributes={TextAttributes.BOLD}>\n              输出\n",
     "<text fg={contentTheme.text.muted}>Waiting for code…</text>": "<text fg={contentTheme.text.muted}>正在等待代码...</text>",
-    "<text fg={theme.text.muted}>↑/↓ scroll</text>": "<text fg={theme.text.muted}>↑/↓ 滚动</text>"
+    "{ title: \"scroll\", key: \"↑/↓\" }": "{ title: \"滚动\", key: \"↑/↓\" }",
+    "              execute": "              执行",
+    "                Code": "                代码",
+    "                Output": "                输出"
   }
 }

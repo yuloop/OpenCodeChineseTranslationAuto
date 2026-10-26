@@ -3,8 +3,9 @@
   "replacements": {
     "title: \"Close help\"": "title: \"关闭帮助\"",
     "Help": "帮助",
-    "\n          Press {shortcuts.get(\"command.palette.show\")} to see all available actions and commands in any context.\n        ": "\n          按 {shortcuts.get(\"command.palette.show\")} 查看所有可用的操作和命令。\n        ",
     "<text fg={theme.text.action.primary.focused}>ok</text>": "<text fg={theme.text.action.primary.focused}>确定</text>",
-    "group: \"Dialog\"": "group: \"对话框\""
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "        Press {shortcuts.get(\"command.palette.show\")} to see all available actions and commands in any context.": "        按 {shortcuts.get(\"command.palette.show\")} 查看所有可用的操作和命令。",
+    "{ title: \"ok\", key: \"enter\", onTrigger: () => dialog.clear() }": "{ title: \"确定\", key: \"enter\", onTrigger: () => dialog.clear() }"
   }
 }

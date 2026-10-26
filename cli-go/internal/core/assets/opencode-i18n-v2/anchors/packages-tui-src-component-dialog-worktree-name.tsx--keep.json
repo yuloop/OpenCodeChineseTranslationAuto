@@ -1,7 +1,0 @@
-{
-  "file": "packages/tui/src/component/dialog-worktree-name.tsx",
-  "replacements": {
-    "\n          enter ": "\n          enter ",
-    "\n          esc\n        ": "\n          esc\n        "
-  }
-}

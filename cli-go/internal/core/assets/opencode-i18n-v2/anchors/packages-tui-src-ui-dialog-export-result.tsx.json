@@ -4,6 +4,8 @@
     "title: \"Close export result\"": "title: \"关闭导出结果\"",
     "Session exported": "会话已导出",
     "<text fg={theme.text.action.primary.focused}>Close</text>": "<text fg={theme.text.action.primary.focused}>关闭</text>",
-    "group: \"Dialog\"": "group: \"对话框\""
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "title: \"copy path\"": "title: \"复制路径\"",
+    "title: \"✓ copied\"": "title: \"✓ 已复制\""
   }
 }

@@ -9,7 +9,7 @@
     "Unknown MCP connection error": "未知 MCP 连接错误",
     "\\nIntegration: ${server().integrationID}": "\\n集成: ${server().integrationID}",
     "`Status: ${server().status.status}\\nConfiguration: mcp.servers.${server().name}${": "`状态: ${server().status.status}\\n配置: mcp.servers.${server().name}${",
-    "enter to view error": "按 enter 查看错误",
+    "{ title: \"view error\", label: \"enter\", group: \"primary\" }": "{ title: \"查看错误\", label: \"enter\", group: \"primary\" }",
     "return \"connect\"": "return \"连接\"",
     "return \"disconnect\"": "return \"断开连接\"",
     "return \"retry\"": "return \"重试\"",

@@ -9,6 +9,7 @@
     "\"Session\"": "\"会话\"",
     "placeholder: \"Ask anything\"": "placeholder: \"随便问点什么\"",
     "group: \"Dialog\"": "group: \"对话框\"",
-    "{copied() ? \"\" : \" copy\"}": "{copied() ? \"\" : \" 复制\"}"
+    "title: \"copy\"": "title: \"复制\"",
+    "title: \"copy response\"": "title: \"复制回答\""
   }
 }

@@ -1,7 +1,7 @@
 {
   "file": "packages/tui/src/component/dialog-debug.tsx",
   "replacements": {
-    "        <text fg={theme.text.base} attributes={TextAttributes.BOLD}>\n          Debug\n        </text>": "        <text fg={theme.text.base} attributes={TextAttributes.BOLD}>\n          调试\n        </text>",
+    "title=\"Debug\"": "title=\"调试\"",
     "? \"✓ copied\" : \"copy\"": "? \"✓ 已复制\" : \"复制\"",
     "Share this when reporting an issue.": "报告问题时请分享此信息。",
     "group: \"Dialog\"": "group: \"对话框\"",
@@ -11,6 +11,7 @@
     "label: \"Terminal\"": "label: \"终端\"",
     "label: \"Version\"": "label: \"版本\"",
     "message: \"Debug info copied to clipboard\"": "message: \"调试信息已复制到剪贴板\"",
-    "title: \"Copy debug info\"": "title: \"复制调试信息\""
+    "title: \"Copy debug info\"": "title: \"复制调试信息\"",
+    "description=\"Share this when reporting an issue\"": "description=\"报告问题时请分享此信息\""
   }
 }

@@ -29,7 +29,12 @@
     "pruned_upstream_removed": 1,
     "rekeyed_v2_0_27": 0,
     "moved_v2_0_27": 0,
-    "anchors_pruned_identity": 5
+    "anchors_pruned_identity": 5,
+    "rekeyed_v2_0_32": 52,
+    "pruned_upstream_removed_v2_0_32": 30,
+    "moved_v2_0_32": 0,
+    "value_reshaped_v2_0_32": 29,
+    "added_v2_0_32": 26
   },
   "manifest": {
     "totals": {
@@ -4992,5 +4997,5 @@
       "batch-component|dialog-workspace-file-changes.tsx|plus 2": "changeCountWidth 里的注释 The \"plus 2\" is for spaces 是代码注释,不翻。"
     }
   },
-  "note": "2026-10-12：按上游 v2.0.27 复核并修正 V2 锚点（外科式，非全量重生成——tools/v2_anchor_migrate.py 的输出只有 517 锚点/50.1% 门禁，而现行资产有 2075 锚点，重生成会丢 392 条手工登记的身份锚点，故不采用）。本次：8 条按上游新写法改键（theme.text → contentTheme.text / store → filter / withDescription 换行 / ↑/↓ 滚动提示），1 条 ACP 文案迁到 packages/cli/src/acp/turn.ts，1 条上游已删文案撤条，另清 5 个失效身份锚点（tmux/x11/wayland/word 及孤儿文件 acp/event.ts）。门禁：v2.0.27 实测 2058/2058 = 100.0%，0 跳过 0 失败；V1 线 513/513 = 100.0% 未受影响。"
+  "note": "2026-10-26：按上游 v2.0.32 复核并修正 V2 锚点（继续外科式修正，不跑全量重生成——tools/v2_anchor_migrate.py 只产出 517 锚点/66 文件，重生成会毁掉现行 2060 条覆盖）。根因：v2.0.30–32 把对话框 footer/header 提示从 JSX 文本节点改成结构化 props（DialogFooter actions 的 { title, key }、DialogHeader 的 closeLabel、DialogSelect 的 footerHints），所有含缩进/换行的旧提示锚点（含 --keep 身份锚点里的 \"\\n  esc\\n\"）与旧多行 JSX 块集体失配，占 2058 条中的 76 条：其中 12 条让 10 个锚点文件整体 0 命中，门禁掉到 1982/2058 = 96.3%。本次：52 条按上游新形态重锚（15 条身份锚点改锚 closeLabel=\"…\"/key: \"…\"，8 条多行 JSX 块改锚整行，29 条译文键换新字面量且译文值同时按新形态重写），30 条上游已删文案撤条（会话分享 Share/Unshare 与 routes/session 的分享/未实现提示、dialog-select 的 Next/Previous dialog action、worktree-name 的 submit/group、Export 按钮与 shell-output 等旧块），26 条补齐新设计下新出现的可见标签译文（ok/confirm/cancel/copy path/save to file/scroll/follow/copy code|output/investigate/view error/change/favorite/remove account/隐藏·显示内部插件 等），另删 1 个失效 --keep 文件（component/dialog-worktree-name，两个提示条目随窗口委托 DialogPrompt 而失效）。门禁：v2.0.32 实测 2060/2060 = 100.0%，226 文件成功 0 跳过 0 失败，apply 退出码 0；verify 2060/2060 可匹配；真实 apply 后 122 个改动文件用 bun Transpiler 逐文件语法校验全部通过。"
 }

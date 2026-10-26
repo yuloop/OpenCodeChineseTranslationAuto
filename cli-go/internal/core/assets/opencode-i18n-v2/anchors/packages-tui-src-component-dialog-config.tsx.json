@@ -11,7 +11,7 @@
     "category: \"Terminal\"": "category: \"终端\"",
     "format: (value) => `${value} ms`": "format: (value) => `${value} 毫秒`",
     "group: \"Settings\"": "group: \"设置\"",
-    "label: \"change\"": "label: \"切换\"",
+    "{ title: \"change\", label: \"←/→\" }": "{ title: \"切换\", label: \"←/→\" }",
     "labels: [\"current directory\", \"global\"]": "labels: [\"当前目录\", \"全局\"]",
     "labels: [\"launch directory\", \"active session\"]": "labels: [\"启动目录\", \"活跃会话\"]",
     "labels: [\"off\", \"on\"]": "labels: [\"关\", \"开\"]",

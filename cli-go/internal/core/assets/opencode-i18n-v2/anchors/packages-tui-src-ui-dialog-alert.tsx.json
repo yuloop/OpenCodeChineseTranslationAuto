@@ -3,6 +3,7 @@
   "replacements": {
     "title: \"Confirm alert\"": "title: \"确认提示\"",
     "<text fg={theme.text.action.primary.focused}>ok</text>": "<text fg={theme.text.action.primary.focused}>确定</text>",
-    "group: \"Dialog\"": "group: \"对话框\""
+    "group: \"Dialog\"": "group: \"对话框\"",
+    "{ title: \"ok\", key: \"enter\", onTrigger: confirm }": "{ title: \"确定\", key: \"enter\", onTrigger: confirm }"
   }
 }

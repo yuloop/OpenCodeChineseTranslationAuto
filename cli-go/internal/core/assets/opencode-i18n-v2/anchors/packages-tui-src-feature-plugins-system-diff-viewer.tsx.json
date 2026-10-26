@@ -55,12 +55,12 @@
     "Loading diff…": "正在加载差异...",
     "\n                Committed comparison unavailable without base metadata. Choose a base branch from Diff source.\n              ": "\n                缺少基准元数据，无法进行已提交比较。请从差异来源中选择基准分支。\n              ",
     "No changes to show": "暂无更改",
-    "\n          Diff shortcuts\n        ": "\n          差异快捷键\n        ",
     ">Image</text>": ">图片</text>",
     "\"Review\"": "\"审查\"",
     "title: \"View\"": "title: \"查看\"",
-    "> help</span>": "> 帮助</span>",
+    "{props.label ?? \"help\"}": "{props.label ?? \"帮助\"}",
     "title: \"Go to the start of the diff\"": "title: \"转到差异开头\"",
-    "title: \"Go to the end of the diff\"": "title: \"转到差异结尾\""
+    "title: \"Go to the end of the diff\"": "title: \"转到差异结尾\"",
+    "title=\"Diff shortcuts\"": "title=\"差异快捷键\""
   }
 }
