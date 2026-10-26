@@ -52,6 +52,13 @@
     "Fetching from the web…": "正在从网络获取...",
     "pending=\"Loading skill…\"": "pending=\"正在加载技能...\"",
     "title: \"Rename session\"": "title: \"重命名会话\"",
-    "Share session link": "分享会话链接"
+    "useContext must be used within a Session component": "useContext必须在Session组件中使用",
+    "Retry Error": "重试错误",
+    "Toggle session scrollbar": "切换会话滚动条",
+    "Hide generic tool output": "隐藏通用工具输出",
+    "Show generic tool output": "显示通用工具输出",
+    "Background subagents": "后台子代理",
+    "Go to child session": "转到子会话",
+    "view subagents": "查看子代理"
   }
 }

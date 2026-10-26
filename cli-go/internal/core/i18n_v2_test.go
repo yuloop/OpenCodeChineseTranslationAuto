@@ -124,8 +124,8 @@ func TestEmbeddedV1AssetsUnchanged(t *testing.T) {
 		}
 		total += len(config.Replacements)
 	}
-	if total != 501 {
-		t.Errorf("V1 翻译条目数应保持 501: got %d", total)
+	if total != 509 {
+		t.Errorf("V1 翻译条目数应保持 509: got %d", total)
 	}
 }
 

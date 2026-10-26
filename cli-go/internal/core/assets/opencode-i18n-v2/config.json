@@ -4959,6 +4959,70 @@
         "basis": "pending-v2-anchor",
         "hits": [],
         "reason": "V1 新增条目；V2 线更新对话框文案已分化（v2.0.12/21/27 均无此文本），待针对当前上游 v2.0.x 做一次 V2 锚定迁移。"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "useContext must be used within a Session component",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "auto-added-free-translate"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "Retry Error",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "auto-added-free-translate"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "Toggle session scrollbar",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "auto-added-free-translate"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "Hide generic tool output",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "auto-added-free-translate"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "Show generic tool output",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "auto-added-free-translate"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "Background subagents",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "auto-added-free-translate"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "Go to child session",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "auto-added-free-translate"
+      },
+      {
+        "rule": "routes/route-session.json",
+        "key": "view subagents",
+        "status": "kept",
+        "from": "packages/tui/src/routes/session/index.tsx",
+        "to": "packages/tui/src/routes/session/index.tsx",
+        "basis": "auto-added-free-translate"
       }
     ],
     "conflicts": [
