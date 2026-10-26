@@ -10,22 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Probe non-draft release variants (GITHUB_TOKEN)
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - uses: actions/checkout@v4
+      - name: Prepare probe inputs
         run: |
-          set -uo pipefail
-          probe() {
-            local tag="$1"; shift
-            echo "== POST /releases tag=${tag} $* =="
-            gh api -i -X POST "repos/${GITHUB_REPOSITORY}/releases" \
-              -f tag_name="${tag}" -f name="probe ${tag}" "$@" 2>&1 \
-              | grep -E "^HTTP|Resource not accessible|errors|already_exists|message" | head -6 || true
-          }
-          probe "probe-plain-nondraft"
-          probe "probe-with-commitish" -f target_commitish="${GITHUB_SHA}"
-          probe "v2-cn-probe-pattern" -f target_commitish="${GITHUB_SHA}"
-          probe "v2-cn-probe-pre" -F prerelease=true -f target_commitish="${GITHUB_SHA}"
+          echo "probe notes" > probe-notes.md
+          echo "probe asset" > probe-asset.txt
+      - name: Action softprops/action-gh-release@v3 (与 V2 线同配置)
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v2-cn-probe-action
+          target_commitish: ${{ github.sha }}
+          name: "probe action v2-cn"
+          body_path: probe-notes.md
+          files: probe-asset.txt
+          overwrite_files: true
+          fail_on_unmatched_files: true
+        continue-on-error: true
       - name: Cleanup probe releases
         if: always()
         env:
@@ -36,6 +36,6 @@ jobs:
             --jq '.[] | select(.tag_name | startswith("probe") or startswith("v2-cn-probe")) | .id'); do
             gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/${id}" && echo "deleted release ${id}" || true
           done
-          for tag in probe-plain-nondraft probe-with-commitish v2-cn-probe-pattern v2-cn-probe-pre; do
+          for tag in v2-cn-probe-action; do
             gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/tags/${tag}" >/dev/null 2>&1 && echo "deleted tag ${tag}" || true
           done
