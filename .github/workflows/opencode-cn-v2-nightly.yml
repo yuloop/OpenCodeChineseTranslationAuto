@@ -142,6 +142,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
+      # DEBUG-RELEASE403 临时诊断（确认后删除）
+      - name: DEBUG-RELEASE403 token probe (job head)
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -uo pipefail
+          echo "== repo permissions =="
+          gh api "repos/${GITHUB_REPOSITORY}" --jq '.permissions' || true
+          echo "== POST draft release (gh api, job head) =="
+          out="$(gh api -i -X POST "repos/${GITHUB_REPOSITORY}/releases" \
+            -f tag_name="v2-cn-debug-${{ github.run_id }}-${{ github.job }}" \
+            -f name="debug" -F draft=true -f target_commitish="${GITHUB_SHA}" 2>&1)" || true
+          echo "$out" | grep -E "^HTTP|message|Resource not accessible" | head -5 || true
+          id="$(echo "$out" | sed -n 's/.*"id": *\([0-9]*\).*/\1/p' | head -1)"
+          if [ -n "${id}" ]; then
+            echo "created draft id=${id}, deleting"
+            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/${id}" >/dev/null 2>&1 && echo "deleted ok" || true
+          fi
       # 1) 本仓：cli-go 工具链（V2 布局支持：自动探测 / --layout v2）+ V2 汉化资产
       - name: Checkout this repo (cli-go toolchain + V2 assets)
         uses: actions/checkout@v6
