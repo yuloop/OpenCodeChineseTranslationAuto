@@ -1,0 +1,264 @@
+name: OpenCode Chinese Autoheal (在线翻译修复)
+
+# ============================================================================
+# 上游重构导致词表锚点失配时，在**线上**把词表修回 100%：确定性门禁判定，
+# LLM 只负责出补丁（scripts/autotranslate.py），修不动的部分原样保留并不发版。
+# ----------------------------------------------------------------------------
+# 【为什么不塞进 release.yml】release.yml 是多 job 流水线，门禁 job 里 push 出去的
+# 修复提交，下游 job 仍按 workflow 触发时的 sha 检出（拿到旧词表）→ 修了等于没修。
+# 所以独立成一条线：本工作流只干「把 main 上的词表修绿」，修完显式 dispatch 对应
+# 发布流水线（dispatch 出来的 run 以 main 最新提交为 sha，拿到的就是修好的词表）。
+#
+# 【触发】每小时 :05（早于 release.yml 的 :17）分钟错开，不占同一时刻的 runner。
+# 【依赖】仓库 secret `AUTOTRANSLATE_API_KEY`（缺了只告警跳过，不会失败刷红）；
+#          可选 vars `AUTOTRANSLATE_BASE_URL` / `AUTOTRANSLATE_MODEL`。
+# 【提交策略】只要词表有改善就提交（否则一次修不完 4 个文件就永远清零不了），
+#          但**只有门禁 100% 才 dispatch 发布**；两条线跑完仍未全绿就把 job 标红，
+#          红了就是「需要人工看一眼」，不会发出未过门禁的产物。
+# ============================================================================
+
+on:
+  schedule:
+    - cron: "5 * * * *"
+  workflow_dispatch:
+    inputs:
+      lines:
+        description: "修哪条线（both / v1 / v2）"
+        required: false
+        default: both
+        type: choice
+        options:
+          - both
+          - v1
+          - v2
+      max_files:
+        description: "每轮每线最多修几个文件"
+        required: false
+        default: "4"
+        type: string
+
+concurrency:
+  group: opencode-cn-autoheal
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  UPSTREAM_REPO: anomalyco/opencode
+  UPSTREAM_TAG_GLOB: "v2.0.*"
+  AUTOTRANSLATE_BASE_URL: ${{ vars.AUTOTRANSLATE_BASE_URL || 'https://api.deepseek.com' }}
+  AUTOTRANSLATE_MODEL: ${{ vars.AUTOTRANSLATE_MODEL || 'deepseek-chat' }}
+
+jobs:
+  autoheal:
+    name: Repair translation anchors online
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: cli-go/go.mod
+          cache: true
+          cache-dependency-path: cli-go/go.sum
+
+      - name: Check the LLM key is configured
+        id: key
+        env:
+          AUTOTRANSLATE_API_KEY: ${{ secrets.AUTOTRANSLATE_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [[ -z "${AUTOTRANSLATE_API_KEY:-}" ]]; then
+            echo "::warning::未配置 secret AUTOTRANSLATE_API_KEY，跳过在线修复（发布流水线照原样报错）"
+            echo "enabled=false" >>"$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >>"$GITHUB_OUTPUT"
+          fi
+
+      - name: Build translation tool
+        if: steps.key.outputs.enabled == 'true'
+        working-directory: cli-go
+        run: go build -trimpath -o ../dist/opencode-cli .
+
+      # ---------------- V1 线 ----------------
+      - name: Resolve V1 upstream tag
+        if: steps.key.outputs.enabled == 'true' && inputs.lines != 'v2'
+        id: v1tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: echo "tag=$(gh api "repos/${UPSTREAM_REPO}/releases/latest" --jq '.tag_name')" >>"$GITHUB_OUTPUT"
+
+      - name: Checkout V1 upstream source
+        if: steps.key.outputs.enabled == 'true' && inputs.lines != 'v2'
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.UPSTREAM_REPO }}
+          ref: ${{ steps.v1tag.outputs.tag }}
+          path: build/upstream-v1
+          fetch-depth: 1
+
+      - name: Heal V1 translation assets
+        id: v1
+        if: steps.key.outputs.enabled == 'true' && inputs.lines != 'v2'
+        env:
+          AUTOTRANSLATE_API_KEY: ${{ secrets.AUTOTRANSLATE_API_KEY }}
+        run: |
+          set -uo pipefail
+          source_dir="$PWD/build/upstream-v1"
+          gate() { OPENCODE_SOURCE_DIR="$source_dir" ./dist/opencode-cli apply --dry-run --strict --min-match-rate 1; }
+          if gate; then
+            echo "V1 门禁已通过（上游 ${{ steps.v1tag.outputs.tag }}），无需修复"
+            echo "ok=true" >>"$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "::warning::V1 门禁未通过，尝试在线修复（上游 ${{ steps.v1tag.outputs.tag }}）"
+          python3 scripts/autotranslate.py \
+            --source "$source_dir" --cli ./dist/opencode-cli \
+            --max-files "${{ inputs.max_files || '4' }}" || true
+          if gate; then
+            echo "ok=true" >>"$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >>"$GITHUB_OUTPUT"
+            echo "::warning::V1 修复后仍未全绿，需要人工看一眼（本轮改动会提交，下小时继续）"
+          fi
+
+      # ---------------- V2 线 ----------------
+      - name: Resolve V2 upstream tag
+        if: steps.key.outputs.enabled == 'true' && inputs.lines != 'v1'
+        id: v2tag
+        run: |
+          set -euo pipefail
+          tag="$(git ls-remote --tags "https://github.com/${UPSTREAM_REPO}.git" "refs/tags/${UPSTREAM_TAG_GLOB}" \
+            | sed -n 's#.*refs/tags/##p' | grep -v '\^{}' | grep -E '^v2\.0\.[0-9]+$' | sort -V | tail -1)"
+          [[ -n "$tag" ]] || { echo "未解析到上游 V2 tag" >&2; exit 1; }
+          echo "tag=$tag" >>"$GITHUB_OUTPUT"
+
+      - name: Checkout V2 upstream source
+        if: steps.key.outputs.enabled == 'true' && inputs.lines != 'v1'
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.UPSTREAM_REPO }}
+          ref: ${{ steps.v2tag.outputs.tag }}
+          path: build/upstream-v2
+          fetch-depth: 1
+
+      - name: Heal V2 translation assets
+        id: v2
+        if: steps.key.outputs.enabled == 'true' && inputs.lines != 'v1'
+        env:
+          AUTOTRANSLATE_API_KEY: ${{ secrets.AUTOTRANSLATE_API_KEY }}
+        run: |
+          set -uo pipefail
+          source_dir="$PWD/build/upstream-v2"
+          gate() { OPENCODE_SOURCE_DIR="$source_dir" ./dist/opencode-cli apply --dry-run --strict --min-match-rate 1; }
+          if gate; then
+            echo "V2 门禁已通过（上游 ${{ steps.v2tag.outputs.tag }}），无需修复"
+            echo "ok=true" >>"$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "::warning::V2 门禁未通过，尝试在线修复（上游 ${{ steps.v2tag.outputs.tag }}）"
+          python3 scripts/autotranslate.py \
+            --source "$source_dir" --cli ./dist/opencode-cli \
+            --max-files "${{ inputs.max_files || '4' }}" || true
+          if gate; then
+            echo "ok=true" >>"$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >>"$GITHUB_OUTPUT"
+            echo "::warning::V2 修复后仍未全绿，需要人工看一眼（本轮改动会提交，下小时继续）"
+          fi
+
+      # ---------------- 提交与触发 ----------------
+      - name: Commit and push healed assets
+        id: push
+        run: |
+          set -euo pipefail
+          changed="$(git status --porcelain -- cli-go/internal/core/assets || true)"
+          if [[ -z "$changed" ]]; then
+            echo "词表没有改动"
+            echo "pushed=false" >>"$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "opencode-cn-bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add cli-go/internal/core/assets
+          {
+            echo "chore(i18n): 在线自动修复汉化词表失配"
+            echo
+            echo "由 .github/workflows/opencode-cn-autoheal.yml 生成：LLM 只出补丁，"
+            echo "每条改动都用 opencode-cli apply --strict --min-match-rate 1 复核过。"
+            echo
+            echo "V1 上游 ${{ steps.v1tag.outputs.tag || '（本次未查）' }}：门禁 ok=${{ steps.v1.outputs.ok || 'n/a' }}"
+            echo "V2 上游 ${{ steps.v2tag.outputs.tag || '（本次未查）' }}：门禁 ok=${{ steps.v2.outputs.ok || 'n/a' }}"
+            echo
+            echo "$changed" | sed 's/^/- /'
+          } > /tmp/commit-msg.txt
+          git commit -F /tmp/commit-msg.txt
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "pushed=true" >>"$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "push 失败（第 ${attempt} 次），rebase 后重试" >&2
+            git pull --rebase origin main
+          done
+          echo "::error::修复提交推不上去（main 被并发改动），需要人工看一眼"
+          exit 1
+
+      - name: Trigger the release pipeline with the healed assets
+        id: trigger
+        run: |
+          set -uo pipefail
+          # 用 GITHUB_TOKEN 的 push 不会触发 push 事件 workflow，所以显式 dispatch；
+          # dispatch 出来的 run 以 main 最新提交为 sha，检出的就是修好的词表。
+          v1_ok="${{ steps.v1.outputs.ok }}"
+          v2_ok="${{ steps.v2.outputs.ok }}"
+          did=false
+          if [[ "$v1_ok" == "true" ]]; then
+            gh workflow run release.yml --ref main && did=true \
+              || echo "::warning::V1 release 触发失败，等它的每小时 :17 定时跑"
+          elif [[ -n "${{ steps.v1tag.outputs.tag }}" ]]; then
+            echo "V1 门禁未全绿，不触发发布"
+          fi
+          if [[ "$v2_ok" == "true" ]]; then
+            gh workflow run opencode-cn-v2-nightly.yml --ref main && did=true \
+              || echo "::warning::V2 nightly 触发失败，等它的每日 21:23 UTC 定时跑"
+          elif [[ -n "${{ steps.v2tag.outputs.tag }}" ]]; then
+            echo "V2 门禁未全绿，不触发发布"
+          fi
+          echo "triggered=$did" >>"$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "### 在线翻译修复"
+            echo "| 项 | 值 |"
+            echo "|---|---|"
+            echo "| LLM 密钥已配置 | ${{ steps.key.outputs.enabled }} |"
+            echo "| 产生修复提交 | ${{ steps.push.outputs.pushed == 'true' && '是' || '否' }} |"
+            echo "| V1 上游 / 门禁 | ${{ steps.v1tag.outputs.tag || '-' }} / ${{ steps.v1.outputs.ok || '-' }} |"
+            echo "| V2 上游 / 门禁 | ${{ steps.v2tag.outputs.tag || '-' }} / ${{ steps.v2.outputs.ok || '-' }} |"
+            echo ""
+            echo "流程：确定性门禁判定 → LLM 出补丁 → 逐条校验锚点真实性 → 门禁复核 → 提交 → dispatch 发布"
+          } >>"$GITHUB_STEP_SUMMARY"
+
+      - name: Fail loudly when a line is still red
+        if: always() && steps.key.outputs.enabled == 'true'
+        run: |
+          set -euo pipefail
+          bad=""
+          if [[ "${{ steps.v1.outputs.ok }}" == "false" ]]; then bad="V1 "; fi
+          if [[ "${{ steps.v2.outputs.ok }}" == "false" ]]; then bad="${bad}V2"; fi
+          if [[ -n "$bad" ]]; then
+            echo "::error::${bad} 词表修复后仍未达到 100%，需要人工处理（下一小时会继续尝试，每轮最多 4 个文件）"
+            exit 1
+          fi
+          echo "两条线都全绿或本线未检查"
