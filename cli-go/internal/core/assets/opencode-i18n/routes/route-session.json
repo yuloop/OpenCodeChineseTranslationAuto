@@ -51,6 +51,7 @@
     "\"match\" : \"matches\"": "\"匹配\" : \"匹配\"",
     "Fetching from the web…": "正在从网络获取...",
     "pending=\"Loading skill…\"": "pending=\"正在加载技能...\"",
-    "title: \"Rename session\"": "title: \"重命名会话\""
+    "title: \"Rename session\"": "title: \"重命名会话\"",
+    "Share session link": "分享会话链接"
   }
 }
