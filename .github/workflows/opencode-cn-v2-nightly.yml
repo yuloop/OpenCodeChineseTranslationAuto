@@ -142,25 +142,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
-      # DEBUG-RELEASE403 临时诊断（确认后删除）
-      - name: DEBUG-RELEASE403 token probe (job head)
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -uo pipefail
-          echo "== repo permissions =="
-          gh api "repos/${GITHUB_REPOSITORY}" --jq '.permissions' || true
-          echo "== POST draft release (gh api, job head) =="
-          out="$(gh api -i -X POST "repos/${GITHUB_REPOSITORY}/releases" \
-            -f tag_name="v2-cn-debug-${{ github.run_id }}-${{ github.job }}" \
-            -f name="debug" -F draft=true -f target_commitish="${GITHUB_SHA}" 2>&1)" || true
-          echo "$out" | grep -E "^HTTP|message|Resource not accessible" | head -5 || true
-          id="$(echo "$out" | sed -n 's/.*"id": *\([0-9]*\).*/\1/p' | head -1)"
-          if [ -n "${id}" ]; then
-            echo "created draft id=${id}, deleting"
-            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/${id}" >/dev/null 2>&1 && echo "deleted ok" || true
-          fi
       # 1) 本仓：cli-go 工具链（V2 布局支持：自动探测 / --layout v2）+ V2 汉化资产
       - name: Checkout this repo (cli-go toolchain + V2 assets)
         uses: actions/checkout@v6
@@ -455,16 +436,42 @@ jobs:
           EOF
 
       # 14) 发布 Release（tag v2-cn-<上游版本>；一次附上 linux + windows 两个二进制 + SHA256SUMS）
-      - name: Publish release
-        uses: softprops/action-gh-release@v3
-        with:
-          tag_name: ${{ needs.resolve.outputs.release_tag }}
-          target_commitish: ${{ github.sha }}
-          name: "OpenCode v${{ needs.resolve.outputs.version }} 简体中文汉化版（V2 线）"
-          body_path: release_notes.md
-          files: |
-            dist/opencode-v2-${{ needs.resolve.outputs.tag }}-linux-x64
-            dist/opencode-v2-${{ needs.resolve.outputs.tag }}-windows-x64
-            dist/SHA256SUMS
-          overwrite_files: true
-          fail_on_unmatched_files: true
+      # 2026-10-26：GitHub 偶发 403「Resource not accessible by integration」（同一 token 前后几分钟
+      # 都能建 release，判定为平台瞬时故障），而 softprops/action-gh-release 对 403 明确不再重试，
+      # 于是这里改用 gh CLI 自己重试 3 次（间隔 60s）；release 已存在时改为补传资产（--clobber）。
+      - name: Publish release (gh CLI, retry on transient 403)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ needs.resolve.outputs.release_tag }}
+          RELEASE_VERSION: ${{ needs.resolve.outputs.version }}
+          UPSTREAM_TAG: ${{ needs.resolve.outputs.tag }}
+        run: |
+          set -uo pipefail
+          files=(
+            "dist/opencode-v2-${UPSTREAM_TAG}-linux-x64"
+            "dist/opencode-v2-${UPSTREAM_TAG}-windows-x64"
+            "dist/SHA256SUMS"
+          )
+          for f in "${files[@]}"; do
+            [ -f "$f" ] || { echo "::error::缺少产物 $f"; exit 1; }
+          done
+          for attempt in 1 2 3; do
+            if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+              echo "release ${RELEASE_TAG} 已存在，补传资产（第 ${attempt} 次）"
+              if gh release upload "${RELEASE_TAG}" "${files[@]}" --clobber; then
+                echo "资产已就绪：${RELEASE_TAG}"; exit 0
+              fi
+            else
+              echo "创建 release ${RELEASE_TAG}（第 ${attempt} 次）"
+              if gh release create "${RELEASE_TAG}" \
+                   --target "${GITHUB_SHA}" \
+                   --title "OpenCode v${RELEASE_VERSION} 简体中文汉化版（V2 线）" \
+                   --notes-file release_notes.md \
+                   "${files[@]}"; then
+                echo "已发布：${RELEASE_TAG}"; exit 0
+              fi
+            fi
+            if [ "${attempt}" -lt 3 ]; then echo "等待 60s 后重试"; sleep 60; fi
+          done
+          echo "::error::发布 ${RELEASE_TAG} 连续 3 次失败"
+          exit 1
