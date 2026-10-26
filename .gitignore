@@ -103,3 +103,5 @@ CONTEXT.local.md
 
 .worktrees/
 
+# 免费翻译缓存（actions/cache 用的目录，不进仓库）
+.i18n-cache/
