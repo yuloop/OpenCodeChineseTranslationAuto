@@ -2,7 +2,6 @@
   "file": "packages/tui/src/routes/session/index.tsx",
   "description": "会话页面",
   "replacements": {
-    "title: \"Rename the session\"": "title: \"重命名会话\"",
     "title: \"Jump to message\"": "title: \"跳转到消息\"",
     "title: \"Fork session\"": "title: \"从消息分支\"",
     "title: \"Compact session\"": "title: \"精简会话\"",
@@ -51,6 +50,7 @@
     "Skill \"{stringValue(props.input.name)}\"": "技能 \"{stringValue(props.input.name)}\"",
     "\"match\" : \"matches\"": "\"匹配\" : \"匹配\"",
     "Fetching from the web…": "正在从网络获取...",
-    "pending=\"Loading skill…\"": "pending=\"正在加载技能...\""
+    "pending=\"Loading skill…\"": "pending=\"正在加载技能...\"",
+    "title: \"Rename session\"": "title: \"重命名会话\""
   }
 }
