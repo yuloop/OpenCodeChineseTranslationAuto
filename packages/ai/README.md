@@ -222,6 +222,38 @@ CloudflareAIGateway.configure({ accountId }).decision("typesafe/jev")
 OpenAI and Vercel AI Gateway use OpenAI's `/v1/decisions` API. TypeSafe, OpenCode, OpenRouter, Baseten and
 DigitalOcean use System One (`/systemone`), and Cloudflare sends the System One body through `/ai/run`.
 
+### Extraction (experimental)
+
+Extraction models read typed values out of text instead of answering questions with probabilities. A field of type
+`text`, `number`, `date`, `time`, `datetime`, `duration`, `list`, `estimate` or `forecast` gets an answer typed to
+match; other types are sent and answered as-is. Only Cloudflare's Clairic serves it today, so it lives under
+`@opencode/ai/experimental`.
+
+```ts
+import { ai } from "@opencode/ai"
+import { Extraction } from "@opencode/ai/experimental"
+import { CloudflareWorkersAI } from "@opencode/ai/providers"
+
+const response = await ai.run(
+  Extraction.generate({
+    model: CloudflareWorkersAI.configure({ accountId }).experimental.extraction("@cf/cloudflare/clairic"),
+    input: "Invoice INV-2291, issued 2026-09-02, net 30. Total $1,080.00. Contact: Dana Ruiz, Priya Shah.",
+    fields: {
+      invoiceNumber: { type: "text" },
+      dueDate: { type: "date", instructions: "Issue date plus the net payment days" },
+      total: { type: "number", decimals: 2, unit: "USD" },
+      contacts: { type: "list", items: "text" },
+    },
+  }),
+)
+response.answers.total.value // 1080, or null when the input does not say
+```
+
+Value answers carry `guess`, `nullProbability` and `confidence`; text answers carry a `span` into `input`. Estimates and
+forecasts return `median`, `p10` and `p90`. Field options other than `type`, `instructions` and `nullThreshold` go to
+Clairic as written. Effect users provide `RequestExecutor.fetchLayer` (or `AIClient.layer`). Images are not supported
+yet.
+
 ## Alibaba Cloud Model Studio
 
 `Alibaba` provides standard Model Studio inference. Configure a region explicitly, then select
@@ -1290,13 +1322,33 @@ cache: {
   tools?: boolean,
   system?: boolean,
   messages?: "latest-user-message" | "latest-assistant" | { tail: number },
-  ttlSeconds?: number,         // ≥ 3600 → 1h on Anthropic/Bedrock; else 5m
+  ttl?: CacheTTL,              // "5m", "30m", "1h", "12h", "24h", ...
 }
 ```
 
+An object with placement fields places exactly those breakpoints. An object with only `ttl` keeps automatic placement.
+
+### Cache lifetime
+
+`ttl` is a duration in models.dev's format (`<number>` followed by `ms`, `s`, `m`, `h` or `d`). It is sent to the provider as given, so use one the provider accepts. Leaving it unset keeps the provider default.
+
+```ts
+LLM.request({ model, system, prompt, cache: { ttl: "1h" } })
+```
+
+| Protocol                                                                  | How `ttl` is sent                                                                          |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Anthropic Messages family, Meta Messages                                  | `ttl` on every `cache_control` marker                                                      |
+| Bedrock Converse                                                          | `ttl` on every `cachePoint`; older Claude releases that only cache for 5m drop `"1h"`      |
+| OpenRouter, DigitalOcean, Alibaba Chat markers                            | `ttl` on every `cache_control` marker                                                      |
+| OpenAI Responses (OpenAI, Azure, Cloudflare AI Gateway)                   | `"24h"` → `prompt_cache_retention: "24h"`; anything else → `prompt_cache_options: { ttl }` |
+| Chat Completions without markers (OpenAI-compatible, Moonshot, DeepInfra) | same mapping as OpenAI Responses                                                           |
+
+OpenAI's two fields cover different models: `prompt_cache_retention` (`"in_memory"` or `"24h"`) is the only control before GPT-5.6, and GPT-5.6+ reads `prompt_cache_options.ttl` (`"30m"` or `"12h"`). Sending `prompt_cache_options` to an older model returns a 400. `"in_memory"` is not a duration; send it with an HTTP body overlay.
+
 ### Manual hints
 
-Inline `CacheHint` on any text / system / tool / tool-result part overrides automatic placement. The auto policy preserves manual hints, counts them against Anthropic and Bedrock's four-breakpoint limit, and only fills the remaining slots.
+Inline `CacheHint` (`{ type: "ephemeral", ttl? }`) on any text / system / tool / tool-result part overrides automatic placement. The auto policy preserves manual hints, counts them against Anthropic and Bedrock's four-breakpoint limit, and only fills the remaining slots.
 
 ```ts
 LLM.request({

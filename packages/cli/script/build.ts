@@ -155,7 +155,7 @@ export default { path: file, version: ${JSON.stringify(opencodePty.version)}, sh
   const executablePath = await compileExecutable(item)
   console.log(`building ${name}`)
   const result = await Bun.build({
-    entrypoints: ["./src/index.ts"],
+    entrypoints: ["./src/index.ts", "./src/photon-worker.ts"],
     tsconfig: "./tsconfig.json",
     plugins: [
       appAssetsPlugin,
@@ -267,7 +267,11 @@ async function compileExecutable(item: (typeof allTargets)[number]) {
 function compileReleaseAssets(release: string) {
   const existing = releaseAssets.get(release)
   if (existing) return existing
-  const pending = fetch(`https://api.github.com/repos/oven-sh/bun/releases/tags/${release}?cache=${Date.now()}`)
+  const token = process.env.GH_TOKEN ?? process.env.GITHUB_TOKEN
+  // Beta builds each CLI in its own job; authenticated requests avoid the per-IP limit on shared runners.
+  const pending = fetch(`https://api.github.com/repos/oven-sh/bun/releases/tags/${release}?cache=${Date.now()}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  })
     .then(async (response) => {
       if (!response.ok) throw new Error(`Failed to resolve Bun release ${release}: ${response.status}`)
       const data: unknown = await response.json()

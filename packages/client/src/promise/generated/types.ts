@@ -23,6 +23,8 @@ export type ProviderID = string
 
 export type ProviderCompaction = { type: "summary" } | { type: "native" }
 
+export type ProviderCacheTTL = `${number}${"ms" | "s" | "m" | "h" | "d"}`
+
 export type ProviderTransport = "http" | "websocket"
 
 export type ProviderEncoding = "zstd" | "gzip" | "none"
@@ -66,6 +68,7 @@ export type FileDiffInfo = {
   additions: number
   deletions: number
   status: "added" | "deleted" | "modified"
+  more?: true
 }
 
 export type SessionsCursor = string
@@ -338,29 +341,7 @@ export type LocationPublicInfo = {
 
 export type ModelRef = { id: string; providerID: ProviderID; variant?: string }
 
-export type ProviderSettings = {
-  timeout?: number | false
-  headerTimeout?: number | false
-  chunkTimeout?: number | false
-  compaction?: ProviderCompaction
-  transport?: ProviderTransport
-  encoding?: ProviderEncoding
-} & { [x: string]: any }
-
-export type ModelSettings = { compaction?: ProviderCompaction; encoding?: ProviderEncoding } & { [x: string]: any }
-
-export type ConfigProviderSettings = {
-  timeout?: number | false
-  headerTimeout?: number | false
-  chunkTimeout?: number | false
-  compaction?: ProviderCompaction
-  transport?: ProviderTransport
-  encoding?: ProviderEncoding
-} & { [x: string]: JsonValue | null }
-
-export type ConfigModelSettings = { compaction?: ProviderCompaction; encoding?: ProviderEncoding } & {
-  [x: string]: JsonValue | null
-}
+export type ProviderCache = { ttl?: ProviderCacheTTL }
 
 export type PermissionRule = { action: string; resource: string; effect: PermissionEffect }
 
@@ -933,18 +914,35 @@ export type SessionMessageCompactionCompleted = {
   tokens?: TokenUsageInfo
 }
 
-export type ProviderRequest = {
-  settings: ProviderSettings
-  headers: { [x: string]: string }
-  body: { [x: string]: any }
+export type ProviderSettings = {
+  timeout?: number | false
+  headerTimeout?: number | false
+  chunkTimeout?: number | false
+  compaction?: ProviderCompaction
+  cache?: ProviderCache
+  transport?: ProviderTransport
+  encoding?: ProviderEncoding
+} & { [x: string]: any }
+
+export type ModelSettings = { compaction?: ProviderCompaction; cache?: ProviderCache; encoding?: ProviderEncoding } & {
+  [x: string]: any
 }
 
-export type ModelVariant = {
-  id: string
-  settings?: ModelSettings
-  headers?: { [x: string]: string }
-  body?: { [x: string]: any }
-}
+export type ConfigProviderSettings = {
+  timeout?: number | false
+  headerTimeout?: number | false
+  chunkTimeout?: number | false
+  compaction?: ProviderCompaction
+  cache?: ProviderCache
+  transport?: ProviderTransport
+  encoding?: ProviderEncoding
+} & { [x: string]: JsonValue | null }
+
+export type ConfigModelSettings = {
+  compaction?: ProviderCompaction
+  cache?: ProviderCache
+  encoding?: ProviderEncoding
+} & { [x: string]: JsonValue | null }
 
 export type PermissionRuleset = Array<PermissionRule>
 
@@ -1999,19 +1997,6 @@ export type FormState =
   | { status: "answered"; answer: FormAnswer }
   | { status: "cancelled"; message?: string }
 
-export type ProviderInfo = {
-  id: ProviderID
-  canonical?: ProviderID
-  integrationID?: IntegrationID
-  name: string
-  activation: "auto" | "enabled" | "disabled"
-  package: string
-  compatibility?: ProviderCompatibility
-  settings?: ProviderSettings
-  headers?: { [x: string]: string }
-  body?: { [x: string]: any }
-}
-
 export type VoiceModelsResponse = { data: { models: Array<VoiceModel>; default?: string | undefined } }
 
 export type VoiceSessionResponse = { data: { transport: VoiceTransport } }
@@ -2108,39 +2093,30 @@ export type SessionMessageCompaction =
   | SessionMessageCompactionCompleted
   | SessionMessageCompactionFailed
 
-export type ModelInfo = {
-  id: string
-  modelID: string
-  providerID: ProviderID
+export type ProviderRequest = {
+  settings: ProviderSettings
+  headers: { [x: string]: string }
+  body: { [x: string]: any }
+}
+
+export type ProviderInfo = {
+  id: ProviderID
   canonical?: ProviderID
-  family?: string
+  integrationID?: IntegrationID
   name: string
-  compatibility?: ModelCompatibility
-  package?: string
+  activation: "auto" | "enabled" | "disabled"
+  package: string
+  compatibility?: ProviderCompatibility
+  settings?: ProviderSettings
+  headers?: { [x: string]: string }
+  body?: { [x: string]: any }
+}
+
+export type ModelVariant = {
+  id: string
   settings?: ModelSettings
   headers?: { [x: string]: string }
   body?: { [x: string]: any }
-  capabilities: ModelCapabilities
-  variants: Array<ModelVariant>
-  time: { released: number }
-  cost: Array<ModelCost>
-  status: "alpha" | "beta" | "deprecated" | "active"
-  enabled: boolean
-  limit: { context: number; input?: number; output: number }
-}
-
-export type AgentInfo = {
-  id: AgentID
-  name: string
-  model?: ModelRef
-  request: ProviderRequest
-  system?: string
-  description?: string
-  mode: "subagent" | "primary" | "all"
-  hidden: boolean
-  color?: AgentColor
-  steps?: number
-  permissions: PermissionRuleset
 }
 
 export type SessionInfo = {
@@ -2439,6 +2415,41 @@ export type CredentialEntry = {
 }
 
 export type FormFields2 = [FormField1, ...Array<FormField1>]
+
+export type AgentInfo = {
+  id: AgentID
+  name: string
+  model?: ModelRef
+  request: ProviderRequest
+  system?: string
+  description?: string
+  mode: "subagent" | "primary" | "all"
+  hidden: boolean
+  color?: AgentColor
+  steps?: number
+  permissions: PermissionRuleset
+}
+
+export type ModelInfo = {
+  id: string
+  modelID: string
+  providerID: ProviderID
+  canonical?: ProviderID
+  family?: string
+  name: string
+  compatibility?: ModelCompatibility
+  package?: string
+  settings?: ModelSettings
+  headers?: { [x: string]: string }
+  body?: { [x: string]: any }
+  capabilities: ModelCapabilities
+  variants: Array<ModelVariant>
+  time: { released: number }
+  cost: Array<ModelCost>
+  status: "alpha" | "beta" | "deprecated" | "active"
+  enabled: boolean
+  limit: { context: number; input?: number; output: number }
+}
 
 export type SessionsResponse = {
   data: Array<SessionInfo>
@@ -3313,6 +3324,7 @@ export type SessionImportInput = {
           readonly additions: number
           readonly deletions: number
           readonly status: "added" | "deleted" | "modified"
+          readonly more?: true
         }>
       }
       readonly location: { readonly directory: string }
@@ -3366,6 +3378,7 @@ export type SessionImportInput = {
           readonly additions: number
           readonly deletions: number
           readonly status: "added" | "deleted" | "modified"
+          readonly more?: true
         }>
       }
       readonly location: { readonly directory: string }
@@ -3419,6 +3432,7 @@ export type SessionImportInput = {
           readonly additions: number
           readonly deletions: number
           readonly status: "added" | "deleted" | "modified"
+          readonly more?: true
         }>
       }
       readonly location: { readonly directory: string }
@@ -5833,6 +5847,10 @@ export type ExperimentalPersistentPtyConnectTokenInput = {
 
 export type ExperimentalPersistentPtyConnectTokenOutput = { data: PtyTicketConnectToken }["data"]
 
+export type ExperimentalMediaGetInput = { readonly hash: { readonly hash: string }["hash"] }
+
+export type ExperimentalMediaGetOutput = globalThis.Uint8Array
+
 export type ShellListInput = {
   readonly location?: { readonly location?: { readonly directory?: string | undefined } | undefined }["location"]
 }
@@ -6026,25 +6044,36 @@ export type VcsDiffInput = {
     readonly mode: "working" | "branch" | "committed"
     readonly base?: string | undefined
     readonly context?: number | undefined
+    readonly untracked?: ("files" | "folders") | undefined
   }["location"]
   readonly mode: {
     readonly location?: { readonly directory?: string | undefined } | undefined
     readonly mode: "working" | "branch" | "committed"
     readonly base?: string | undefined
     readonly context?: number | undefined
+    readonly untracked?: ("files" | "folders") | undefined
   }["mode"]
   readonly base?: {
     readonly location?: { readonly directory?: string | undefined } | undefined
     readonly mode: "working" | "branch" | "committed"
     readonly base?: string | undefined
     readonly context?: number | undefined
+    readonly untracked?: ("files" | "folders") | undefined
   }["base"]
   readonly context?: {
     readonly location?: { readonly directory?: string | undefined } | undefined
     readonly mode: "working" | "branch" | "committed"
     readonly base?: string | undefined
     readonly context?: number | undefined
+    readonly untracked?: ("files" | "folders") | undefined
   }["context"]
+  readonly untracked?: {
+    readonly location?: { readonly directory?: string | undefined } | undefined
+    readonly mode: "working" | "branch" | "committed"
+    readonly base?: string | undefined
+    readonly context?: number | undefined
+    readonly untracked?: ("files" | "folders") | undefined
+  }["untracked"]
 }
 
 export type VcsDiffOutput = { location: LocationPublicRef; data: Array<FileDiffInfo> }
