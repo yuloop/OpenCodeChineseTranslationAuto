@@ -10,35 +10,32 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Probe with GITHUB_TOKEN
+      - name: Probe non-draft release variants (GITHUB_TOKEN)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -uo pipefail
-          echo "== POST /releases (GITHUB_TOKEN, draft) =="
-          gh api -i -X POST "repos/${GITHUB_REPOSITORY}/releases" \
-            -f tag_name="probe-ci-github-token" \
-            -f name="probe ci token (临时)" \
-            -F draft=true 2>&1 | sed -n '1,8p;/^{/,$p' | head -20 || true
-      - name: Probe with YU_TOKEN
-        env:
-          GH_TOKEN: ${{ secrets.YU_TOKEN }}
-        run: |
-          set -uo pipefail
-          echo "== POST /releases (YU_TOKEN, draft) =="
-          gh api -i -X POST "repos/${GITHUB_REPOSITORY}/releases" \
-            -f tag_name="probe-ci-yu-token" \
-            -f name="probe yu token (临时)" \
-            -F draft=true 2>&1 | sed -n '1,8p;/^{/,$p' | head -20 || true
-      - name: Cleanup any probe releases/tags
+          probe() {
+            local tag="$1"; shift
+            echo "== POST /releases tag=${tag} $* =="
+            gh api -i -X POST "repos/${GITHUB_REPOSITORY}/releases" \
+              -f tag_name="${tag}" -f name="probe ${tag}" "$@" 2>&1 \
+              | grep -E "^HTTP|Resource not accessible|errors|already_exists|message" | head -6 || true
+          }
+          probe "probe-plain-nondraft"
+          probe "probe-with-commitish" -f target_commitish="${GITHUB_SHA}"
+          probe "v2-cn-probe-pattern" -f target_commitish="${GITHUB_SHA}"
+          probe "v2-cn-probe-pre" -F prerelease=true -f target_commitish="${GITHUB_SHA}"
+      - name: Cleanup probe releases
         if: always()
         env:
           GH_TOKEN: ${{ secrets.YU_TOKEN }}
         run: |
           set -uo pipefail
-          for tag in probe-ci-github-token probe-ci-yu-token; do
-            id=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${tag}" --jq .id 2>/dev/null || true)
-            if [[ -n "${id:-}" ]]; then gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/${id}" || true; fi
-            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/tags/${tag}" >/dev/null 2>&1 || true
-            echo "cleaned ${tag}"
+          for id in $(gh api "repos/${GITHUB_REPOSITORY}/releases?per_page=100" \
+            --jq '.[] | select(.tag_name | startswith("probe") or startswith("v2-cn-probe")) | .id'); do
+            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/releases/${id}" && echo "deleted release ${id}" || true
+          done
+          for tag in probe-plain-nondraft probe-with-commitish v2-cn-probe-pattern v2-cn-probe-pre; do
+            gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/tags/${tag}" >/dev/null 2>&1 && echo "deleted tag ${tag}" || true
           done
