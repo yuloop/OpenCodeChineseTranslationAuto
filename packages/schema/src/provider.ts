@@ -62,11 +62,14 @@ export type Cache = typeof Cache.Type
 export const Encoding = Schema.Literals(["zstd", "gzip", "none"]).annotate({ identifier: "Provider.Encoding" })
 export type Encoding = typeof Encoding.Type
 
+const Timeout = Schema.Union([Schema.Finite, Schema.Literal(false)]).pipe(optional)
+
+// The named fields are the settings OpenCode reads itself; every other key is a provider option for the provider package.
 export const Settings = Schema.StructWithRest(
   Schema.Struct({
-    timeout: Schema.Union([Schema.Finite, Schema.Literal(false)]).pipe(optional),
-    headerTimeout: Schema.Union([Schema.Finite, Schema.Literal(false)]).pipe(optional),
-    chunkTimeout: Schema.Union([Schema.Finite, Schema.Literal(false)]).pipe(optional),
+    timeout: Timeout,
+    headerTimeout: Timeout,
+    chunkTimeout: Timeout,
     compaction: Compaction.pipe(optional),
     cache: Cache.pipe(optional),
     transport: Transport.pipe(optional),
