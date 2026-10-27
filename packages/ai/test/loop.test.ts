@@ -96,4 +96,20 @@ describe("LLM.loop", () => {
       expect(events.at(-1)?.type).toBe("finish")
     }),
   )
+  it.effect("stops after a step that reports a provider error without running its tools", () =>
+    Effect.gen(function* () {
+      const client = yield* TestLLM.Test
+      yield* client.push([
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.toolCall({ id: "call-1", name: "read_file", input: { path: "a.txt" } }),
+        LLMEvent.providerError({ message: "Overloaded" }),
+      ])
+
+      const events = yield* collect()
+
+      expect(yield* client.requests()).toHaveLength(1)
+      expect(events.filter(LLMEvent.is.toolResult)).toHaveLength(0)
+      expect(events.at(-1)).toEqual(expect.objectContaining({ type: "provider-error", message: "Overloaded" }))
+    }),
+  )
 })

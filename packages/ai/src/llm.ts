@@ -63,8 +63,8 @@ export type LoopInput<SelectedLanguageModel extends LanguageModel = LanguageMode
 }
 
 /**
- * Stream model calls, running the model's tool calls between them, until a step has no client-executed tool calls or
- * `until` returns `true`. Each step's `step-start` and `step-finish` carry its step index.
+ * Stream model calls, running the model's tool calls between them, until a step has no client-executed tool calls,
+ * reports a provider error, or `until` returns `true`. Each step's `step-start` and `step-finish` carry its step index.
  */
 export function loop<const Model extends LanguageModel>(
   input: LoopInput<Model>,
@@ -85,7 +85,7 @@ export function loop(input: LoopInput, options?: StreamOptions) {
             Effect.gen(function* () {
               const response = LLMResponse.fromEvents(events)
               const calls = response?.toolCalls.filter((call) => call.providerExecuted !== true) ?? []
-              if (!response || calls.length === 0) return Stream.empty
+              if (!response || calls.length === 0 || events.some(LLMEvent.is.providerError)) return Stream.empty
               const done = [...steps, response]
               if (until?.({ steps: done })) return Stream.empty
               const results = yield* Effect.forEach(calls, (call) => ToolRuntime.dispatch(tools, call), {

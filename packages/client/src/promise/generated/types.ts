@@ -33,15 +33,19 @@ export type AgentColor = string
 
 export type PermissionEffect = "allow" | "deny" | "ask"
 
+export type PluginID = string
+
 export type PluginSource =
   | { type: "builtin" }
   | { type: "package"; target: string; version?: string; outdated?: true; updating?: true }
   | { type: "local"; path: string }
   | { type: "sdk" }
 
-export type PluginFeatures = { server?: true; tui?: true; rpc?: true }
+export type PluginFeatures = { server?: true; tui?: true; rpc?: true; gui?: true }
 
 export type PluginState = { status: "active" } | { status: "failed"; error: string; ref?: string }
+
+export type PluginGuiBundle = { code: string; revision: string; options: { [x: string]: JsonValue } }
 
 export type SessionID = string
 
@@ -180,11 +184,31 @@ export type ModelMaxTokensField = "max_completion_tokens" | "max_tokens"
 
 export type ModelCacheFormat = "anthropic" | "alibaba"
 
+export type ModelMediaInput = "assets" | "state" | "root"
+
 export type ModelCapabilities = { tools: boolean; input: Array<string>; output: Array<string>; temperature?: boolean }
 
 export type MoneyUSDPerMillionTokens = number
 
 export type GenerateTextResponse = { data: { text: string } }
+
+export type GenerateUsage = { input?: number; output?: number }
+
+export type GenerateNative = { [x: string]: JsonValue }
+
+export type GeneratePredicateAnswer = { type: "predicate"; name: string; probability: number }
+
+export type GenerateChoiceValue = string | boolean
+
+export type GenerateScoreAnswer = {
+  type: "score"
+  name: string
+  score: number
+  probabilities: Array<{ value: number; label: string; probability: number }>
+  confidence: number
+}
+
+export type GenerateErrorAnswer = { type: "error"; name: string; reason: string; message?: string }
 
 export type VoiceTransportType = "webrtc" | "websocket"
 
@@ -347,7 +371,7 @@ export type ProviderCache = { ttl?: ProviderCacheTTL }
 
 export type PermissionRule = { action: string; resource: string; effect: PermissionEffect }
 
-export type PluginInfo = { id?: string; source: PluginSource; features: PluginFeatures; state: PluginState }
+export type PluginInfo = { id?: PluginID; source: PluginSource; features: PluginFeatures; state: PluginState }
 
 export type SessionForkBoundary =
   | { type: "before"; messageID: SessionMessageID }
@@ -405,6 +429,8 @@ export type SessionStatsTools =
   | { mode: "none" }
   | { mode: "summary"; totals: SessionStatsToolTotals }
   | { mode: "detail"; totals: SessionStatsToolTotals; usage: Array<SessionStatsToolUsage> }
+
+export type GenerateImageOutput2 = { type: "image"; data: PromptBase64; mime: string; name?: string }
 
 export type PromptFileAttachment = {
   data: PromptBase64
@@ -632,6 +658,7 @@ export type ModelCompatibility = {
   cacheFormat?: ModelCacheFormat
   supportsThinkingBlockBinding?: boolean
   supportsEffortUpdates?: boolean
+  mediaInput?: ModelMediaInput
 }
 
 export type ProviderCompatibility = {
@@ -643,6 +670,7 @@ export type ProviderCompatibility = {
   supportsPromptCacheKey?: boolean
   streamUsage?: boolean
   cacheFormat?: ModelCacheFormat
+  mediaInput?: ModelMediaInput
 }
 
 export type ModelCost = {
@@ -650,6 +678,14 @@ export type ModelCost = {
   input: MoneyUSDPerMillionTokens
   output: MoneyUSDPerMillionTokens
   cache: { read: MoneyUSDPerMillionTokens; write: MoneyUSDPerMillionTokens }
+}
+
+export type GenerateChoiceAnswer = {
+  type: "choice"
+  name: string
+  choice: GenerateChoiceValue
+  probabilities: Array<{ value: GenerateChoiceValue; probability: number }>
+  confidence: number
 }
 
 export type VoiceModel = { model: string; provider: string; transports: Array<VoiceTransportType>; available: boolean }
@@ -961,6 +997,13 @@ export type UsageLimitsBudget = {
   picked: boolean
   shared: boolean
   resetsAt: number
+}
+
+export type GenerateImageResult = {
+  images: Array<GenerateImageOutput2>
+  cost?: MoneyUSD
+  tokens?: GenerateUsage
+  native?: GenerateNative
 }
 
 export type SessionMessageUser = {
@@ -1999,6 +2042,12 @@ export type FormState =
   | { status: "answered"; answer: FormAnswer }
   | { status: "cancelled"; message?: string }
 
+export type GenerateDecisionAnswer =
+  | GeneratePredicateAnswer
+  | GenerateChoiceAnswer
+  | GenerateScoreAnswer
+  | GenerateErrorAnswer
+
 export type VoiceModelsResponse = { data: { models: Array<VoiceModel>; default?: string | undefined } }
 
 export type VoiceSessionResponse = { data: { transport: VoiceTransport } }
@@ -2364,6 +2413,8 @@ export type UsageLimitsInfo = {
   budgets: Array<UsageLimitsBudget>
 }
 
+export type GenerateImageResponse = { data: GenerateImageResult }
+
 export type SessionInboxUser = {
   id: SessionMessageID
   sessionID: SessionID
@@ -2408,6 +2459,13 @@ export type SessionMessageAssistantTool1 = {
 }
 
 export type FormFields = [FormField, ...Array<FormField>]
+
+export type GenerateDecisionResult = {
+  answers: Array<GenerateDecisionAnswer>
+  cost?: MoneyUSD
+  tokens?: GenerateUsage
+  native?: GenerateNative
+}
 
 export type CredentialEntry = {
   id: CredentialID
@@ -2512,6 +2570,8 @@ export type IntegrationKeyMethod = { type: "key"; label?: string; form?: FormFie
 
 export type IntegrationExternalMethod = { id: IntegrationMethodID; type: "external"; label: string; form?: FormFields }
 
+export type GenerateDecisionsResponse = { data: GenerateDecisionResult }
+
 export type FormInfo1 = { id: FormID; sessionID: string; title: string; metadata?: FormMetadata1; fields: FormFields2 }
 
 export type SessionMessageInfo =
@@ -2612,7 +2672,6 @@ export type SessionEventDurable =
 export type IntegrationInfo = {
   id: IntegrationID
   name: string
-  configured?: boolean
   metadata?: { [x: string]: any }
   methods: Array<IntegrationMethod>
   connections: Array<ConnectionInfo>
@@ -2755,6 +2814,14 @@ export type AgentNotFoundError = {
 export const isAgentNotFoundError = (value: unknown): value is AgentNotFoundError =>
   typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "AgentNotFoundError"
 
+export type PluginNotFoundError = {
+  readonly _tag: "PluginNotFoundError"
+  readonly pluginID: string
+  readonly message: string
+}
+export const isPluginNotFoundError = (value: unknown): value is PluginNotFoundError =>
+  typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "PluginNotFoundError"
+
 export type InvalidCursorError = { readonly _tag: "InvalidCursorError"; readonly message: string }
 export const isInvalidCursorError = (value: unknown): value is InvalidCursorError =>
   typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "InvalidCursorError"
@@ -2863,6 +2930,36 @@ export type ProviderNotFoundError = {
 }
 export const isProviderNotFoundError = (value: unknown): value is ProviderNotFoundError =>
   typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "ProviderNotFoundError"
+
+export type ModelNotFoundError = {
+  readonly _tag: "ModelNotFoundError"
+  readonly providerID: string
+  readonly modelID: string
+  readonly message: string
+}
+export const isModelNotFoundError = (value: unknown): value is ModelNotFoundError =>
+  typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "ModelNotFoundError"
+
+export type UnsupportedModelError = {
+  readonly _tag: "UnsupportedModelError"
+  readonly providerID: string
+  readonly modelID: string
+  readonly capability: string
+  readonly message: string
+}
+export const isUnsupportedModelError = (value: unknown): value is UnsupportedModelError =>
+  typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "UnsupportedModelError"
+
+export type ProviderRequestError = {
+  readonly _tag: "ProviderRequestError"
+  readonly providerID: string
+  readonly reason: "authentication" | "rate_limit" | "content_filter" | "invalid_request" | "overloaded" | "provider"
+  readonly message: string
+  readonly status?: number | undefined
+  readonly retryAfterMs?: number | undefined
+}
+export const isProviderRequestError = (value: unknown): value is ProviderRequestError =>
+  typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "ProviderRequestError"
 
 export type IntegrationNotFoundError = {
   readonly _tag: "IntegrationNotFoundError"
@@ -3000,6 +3097,13 @@ export type AgentGetOutput = { location: LocationPublicRef; data: AgentInfo }
 export type PluginListInput = { readonly location?: { readonly directory?: string | undefined } | undefined }
 
 export type PluginListOutput = { location: LocationPublicRef; data: Array<PluginInfo> }
+
+export type PluginGuiInput = {
+  readonly location?: { readonly directory?: string | undefined } | undefined
+  readonly id: string
+}
+
+export type PluginGuiOutput = { location: LocationPublicRef; data: PluginGuiBundle }
 
 export type PluginCheckInput = {
   readonly location?: { readonly directory?: string | undefined } | undefined
@@ -3635,6 +3739,43 @@ export type GenerateTextInput = {
 }
 
 export type GenerateTextOutput = GenerateTextResponse["data"]
+
+export type GenerateImageInput = {
+  readonly model: { readonly id: string; readonly providerID: string; readonly variant?: string }
+  readonly prompt: string
+  readonly images?: ReadonlyArray<{ readonly data: string; readonly mime: string; readonly name?: string }> | undefined
+  readonly n?: number | undefined
+  readonly aspect?: `${number}${":"}${number}` | undefined
+  readonly resolution?: ("1K" | "2K" | "4K" | (string & {})) | undefined
+}
+
+export type GenerateImageOutput = GenerateImageResponse["data"]
+
+export type GenerateDecisionsInput = {
+  readonly model: { readonly id: string; readonly providerID: string; readonly variant?: string }
+  readonly input: ReadonlyArray<
+    | { readonly type: "text"; readonly text: string }
+    | { readonly type: "json"; readonly value: JsonValue }
+    | { readonly type: "file"; readonly data: string; readonly mime: string; readonly name?: string }
+  >
+  readonly questions: ReadonlyArray<
+    | { readonly type: "predicate"; readonly name: string; readonly instructions: string }
+    | {
+        readonly type: "choice"
+        readonly name: string
+        readonly instructions: string
+        readonly choices: ReadonlyArray<{ readonly value: string | boolean; readonly description?: string }>
+      }
+    | {
+        readonly type: "score"
+        readonly name: string
+        readonly instructions: string
+        readonly levels: ReadonlyArray<{ readonly label: string; readonly description?: string }>
+      }
+  >
+}
+
+export type GenerateDecisionsOutput = GenerateDecisionsResponse["data"]
 
 export type VoiceModelsOutput = VoiceModelsResponse["data"]
 
