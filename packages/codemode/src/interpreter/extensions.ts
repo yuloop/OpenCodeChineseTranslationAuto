@@ -4,7 +4,7 @@ import { type ExtensionInvocation, hooked } from "../tool-runtime.js"
 import type { Interpreter } from "./interpreter.js"
 import { createErrorValue, isErrorType } from "./intrinsics.js"
 import { MAX_VALUE_DEPTH } from "./limits.js"
-import { PendingThrow, Throw, typeError } from "./model.js"
+import { type AstNode, PendingThrow, Throw, typeError } from "./model.js"
 import type { Host } from "./runner.js"
 import { fn } from "./native.js"
 import {
@@ -32,7 +32,7 @@ import { describeValue, isOpaque } from "./references.js"
 /**
  * The global bindings of one run's extensions. Everything crossing the boundary is converted: plain data and
  * built-in wrappers are copied, a host function becomes a program function whose calls cross the same way, and a
- * host Promise becomes a program promise.
+ * host Promise or Effect becomes a program promise.
  */
 export const extensionGlobals = <R>(
   ctx: Interpreter<R>,
@@ -140,38 +140,55 @@ export const extensionGlobals = <R>(
   const wrap = (value: Function, label: string, describe?: (args: ReadonlyArray<unknown>) => ExtensionInvocation) =>
     fn(builtins, value.name, value.length, (_, values, site) => {
       const args = values.map((item, index) => toHost(item, `Argument ${index + 1} to ${label}`))
+      const call = callHost<R>(value, args)
       const hooks = ctx.tools.hooks
-      const settle = (run: Effect.Effect<unknown, unknown, R>) =>
-        (describe === undefined
-          ? run
-          : hooked(describe(args), hooks["extension.before"], hooks["extension.after"], run)
-        ).pipe(
-          Effect.mapError((reason) => new Throw(fromHost(reason, label))),
-          Effect.map((settled) => fromHost(settled, label)),
-        )
-      let result: unknown
-      try {
-        result = value.apply(undefined, args)
-      } catch (reason) {
-        return blocking(ctx.runner.blocking(settle(Effect.fail(reason))))
-      }
-      if (!(result instanceof Promise)) return blocking(ctx.runner.blocking(settle(Effect.succeed(result))))
-      const runner = ctx.runner
-      const promise = runner.newPromise()
-      const resolving = runner.resolving(promise, site)
-      runner.host(
-        settle(Effect.tryPromise({ try: () => result, catch: (reason) => reason })),
-        (settled) => (settled.ok ? resolving.resolve(settled.value as Value) : resolving.reject(settled.error)),
-        site,
+      const work = (
+        describe === undefined
+          ? call.effect
+          : hooked(describe(args), hooks["extension.before"], hooks["extension.after"], call.effect)
+      ).pipe(
+        Effect.mapBoth({
+          onFailure: (reason) => new Throw(fromHost(reason, label)),
+          onSuccess: (result) => fromHost(result, label),
+        }),
       )
-      return promise
+      return call.async ? pending(work, site) : blocking(ctx.runner.blocking(work))
     })
+
+  // An asynchronous host call: the program holds a promise that settles when the host's work does.
+  const pending = (work: Effect.Effect<Value, Throw, R>, site: AstNode | undefined) => {
+    const promise = ctx.runner.newPromise()
+    const resolving = ctx.runner.resolving(promise, site)
+    ctx.runner.host(
+      work,
+      (settled) => (settled.ok ? resolving.resolve(settled.value as Value) : resolving.reject(settled.error)),
+      site,
+    )
+    return promise
+  }
 
   return extensions.flatMap((extension) =>
     Object.entries(extension.globals).map(
       ([name, value]) => [name, wrap(value, name, (args) => ({ extension: extension.name, name, args }))] as const,
     ),
   )
+}
+
+/**
+ * Calls a host function and describes what the program waits on. A returned Effect or Promise settles later; a
+ * returned value or a throw settles now. An Effect has not started yet, so it runs only once the hooks admit it.
+ */
+const callHost = <R>(value: Function, args: ReadonlyArray<unknown>) => {
+  try {
+    const result: unknown = value.apply(undefined, args)
+    // Extension.Services adds an Effect global's requirements to R.
+    if (Effect.isEffect(result)) return { async: true, effect: result as Effect.Effect<unknown, unknown, R> }
+    if (result instanceof Promise)
+      return { async: true, effect: Effect.tryPromise({ try: () => result, catch: (reason) => reason }) }
+    return { async: false, effect: Effect.succeed(result) }
+  } catch (reason) {
+    return { async: false, effect: Effect.fail(reason) }
+  }
 }
 
 // A synchronous host call: its hooks run before any other job, as the call itself did.

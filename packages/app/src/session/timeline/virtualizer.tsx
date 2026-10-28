@@ -1046,7 +1046,11 @@ export function createTimelineVirtualizer(input: Input) {
     disclosure: {
       patchGroupKeys,
       value: (key: string) => toolOpen[key],
-      set: (key: string, open: boolean) => setToolOpen(key, open),
+      set: (key: string, open: boolean) => {
+        // Following the end would scroll an opened user message's top away; it stays where it was pressed.
+        if (open && key.startsWith("user-expanded:")) input.onUnpin()
+        setToolOpen(key, open)
+      },
     },
     revealPart,
     View,

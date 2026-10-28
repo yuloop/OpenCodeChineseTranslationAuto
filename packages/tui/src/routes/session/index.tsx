@@ -3286,7 +3286,13 @@ function WebSearch(props: ToolProps) {
 function Subagent(props: ToolProps) {
   const { navigate } = useRoute()
   const data = useData()
-  const sessionID = createMemo(() => stringValue(props.metadata.sessionID) ?? stringValue(props.metadata.sessionId))
+  const sessionID = createMemo(
+    () =>
+      stringValue(props.metadata.sessionID) ??
+      stringValue(props.metadata.sessionId) ??
+      // A failed continuation may name an unrelated session, such as the parent itself.
+      (props.part.state.status === "error" ? undefined : stringValue(props.input.sessionID)),
+  )
   const description = createMemo(() => stringValue(props.input.description))
   const continuation = createMemo(() => Boolean(stringValue(props.input.sessionID)))
   const model = createMemo(() => subagentModelLabel(stringValue(props.input.model), data.location.model.list()))
@@ -3297,8 +3303,8 @@ function Subagent(props: ToolProps) {
 
   return (
     <InlineTool
-      icon={continuation() ? "↳" : isRunning() ? "│" : props.part.state.status === "completed" ? "✓" : "│"}
-      spinner={!continuation() && isRunning()}
+      icon={isRunning() ? "│" : continuation() ? "↳" : props.part.state.status === "completed" ? "✓" : "│"}
+      spinner={isRunning()}
       running={isRunning()}
       complete={description()}
       pending="Delegating…"
