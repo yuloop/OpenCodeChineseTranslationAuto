@@ -319,6 +319,20 @@ export type SessionStatus =
 
 export type PersistentPtyHandoff = { directory: string; instanceID: string; ticket: string; expiresAt: number }
 
+export type ScheduleID = string
+
+export type ScheduleDuration = string
+
+export type ScheduleWhenAt = { type: "at"; at: string; tz?: string }
+
+export type ScheduleWhenCron = { type: "cron"; cron: string; tz?: string }
+
+export type ScheduleActionPrompt = { type: "prompt"; prompt: string }
+
+export type ScheduleStatus = "active" | "paused" | "done"
+
+export type ScheduleOutcome = "fired" | "late" | "skipped" | "disabled" | "failed"
+
 export type ReferenceGitSource = { type: "git"; repository: string; branch?: string }
 
 export type VcsBranch = { current?: string; default?: string }
@@ -886,6 +900,12 @@ export type FormMultiselectField1 = {
 }
 
 export type FormAnswer1 = { [x: string]: FormValue1 }
+
+export type ScheduleWhenIn = { type: "in"; in: ScheduleDuration; tz?: string }
+
+export type ScheduleWhenEvery = { type: "every"; every: ScheduleDuration; tz?: string }
+
+export type ScheduleAction = ScheduleActionPrompt
 
 export type VcsInfo = { provider?: string; branch: VcsBranch }
 
@@ -2122,6 +2142,8 @@ export type FormReplied = {
   data: { id: FormID; sessionID: string; answer: FormAnswer1 }
 }
 
+export type ScheduleWhen = ScheduleWhenIn | ScheduleWhenAt | ScheduleWhenEvery | ScheduleWhenCron
+
 export type SessionInboxMove = {
   id: SessionMessageID
   sessionID: SessionID
@@ -2426,6 +2448,7 @@ export type ConfigEntry =
           todo?: boolean
           background_compaction?: boolean
           media_blob?: boolean
+          image_generate?: boolean | { model?: string | { providerID: string; model: string; variant?: string } }
           schedules?: boolean
           subagent_depth?: number
           location_idle_timeout?: string | false
@@ -2508,6 +2531,23 @@ export type CredentialEntry = {
 }
 
 export type FormFields2 = [FormField1, ...Array<FormField1>]
+
+export type ScheduleInfo = {
+  id: ScheduleID
+  sessionID?: SessionID
+  name?: string
+  when: ScheduleWhen
+  tz: string
+  action: ScheduleAction
+  status: ScheduleStatus
+  nextDueAt?: number
+  endsAt?: number
+  remainingRuns?: number
+  runCount: number
+  lastFiredAt?: number
+  lastOutcome?: ScheduleOutcome
+  time: { created: number; updated: number }
+}
 
 export type AgentInfo = {
   id: AgentID
@@ -3058,6 +3098,14 @@ export const isRpcInternalError = (value: unknown): value is RpcInternalError =>
 export type PtyNotFoundError = { readonly _tag: "PtyNotFoundError"; readonly ptyID: string; readonly message: string }
 export const isPtyNotFoundError = (value: unknown): value is PtyNotFoundError =>
   typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "PtyNotFoundError"
+
+export type ScheduleNotFoundError = {
+  readonly _tag: "ScheduleNotFoundError"
+  readonly scheduleID: string
+  readonly message: string
+}
+export const isScheduleNotFoundError = (value: unknown): value is ScheduleNotFoundError =>
+  typeof value === "object" && value !== null && "_tag" in value && value["_tag"] === "ScheduleNotFoundError"
 
 export type ShellNotFoundError = { readonly _tag: "ShellNotFoundError"; readonly id: string; readonly message: string }
 export const isShellNotFoundError = (value: unknown): value is ShellNotFoundError =>
@@ -4350,6 +4398,40 @@ export type ExperimentalPersistentPtyConnectTokenOutput = { data: PtyTicketConne
 export type ExperimentalMediaGetInput = { readonly hash: string }
 
 export type ExperimentalMediaGetOutput = globalThis.Uint8Array
+
+export type ExperimentalScheduleCreateInput = {
+  readonly sessionID: string
+  readonly name?: string | undefined
+  readonly when:
+    | { readonly in: string; readonly at?: never; readonly every?: never; readonly cron?: never; readonly tz?: string }
+    | { readonly at: string; readonly in?: never; readonly every?: never; readonly cron?: never; readonly tz?: string }
+    | { readonly every: string; readonly in?: never; readonly at?: never; readonly cron?: never; readonly tz?: string }
+    | { readonly cron: string; readonly in?: never; readonly at?: never; readonly every?: never; readonly tz?: string }
+  readonly ends?: { readonly after?: string; readonly at?: string; readonly times?: number } | undefined
+  readonly prompt: string
+}
+
+export type ExperimentalScheduleCreateOutput = { data: ScheduleInfo }["data"]
+
+export type ExperimentalScheduleListInput = { readonly sessionID: string }
+
+export type ExperimentalScheduleListOutput = { data: Array<ScheduleInfo> }["data"]
+
+export type ExperimentalScheduleGetInput = { readonly scheduleID: string }
+
+export type ExperimentalScheduleGetOutput = { data: ScheduleInfo }["data"]
+
+export type ExperimentalSchedulePauseInput = { readonly scheduleID: string }
+
+export type ExperimentalSchedulePauseOutput = { data: ScheduleInfo }["data"]
+
+export type ExperimentalScheduleResumeInput = { readonly scheduleID: string }
+
+export type ExperimentalScheduleResumeOutput = { data: ScheduleInfo }["data"]
+
+export type ExperimentalScheduleDeleteInput = { readonly scheduleID: string }
+
+export type ExperimentalScheduleDeleteOutput = void
 
 export type ShellListInput = { readonly location?: { readonly directory?: string | undefined } | undefined }
 
