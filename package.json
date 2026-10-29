@@ -82,7 +82,7 @@
       "effect": "4.0.1",
       "fast-check": "4.9.0",
       "cross-spawn": "7.0.6",
-      "hono": "4.10.7",
+      "hono": "4.13.13",
       "fuzzysort": "3.1.0",
       "get-east-asian-width": "1.6.0",
       "luxon": "3.6.1",
