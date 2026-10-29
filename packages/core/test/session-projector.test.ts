@@ -600,6 +600,37 @@ describe("SessionProjector", () => {
     }),
   )
 
+  it.effect("records each execution's start, including a resume after shutdown", () =>
+    Effect.gen(function* () {
+      const db = yield* seedSession({ time_created: 0, time_updated: 0 })
+      const bus = yield* Bus.Service
+      const times = () =>
+        db
+          .select({ busy: SessionTable.time_busy, idle: SessionTable.time_idle, updated: SessionTable.time_updated })
+          .from(SessionTable)
+          .get()
+          .pipe(Effect.orDie)
+
+      yield* TestClock.setTime(10)
+      yield* bus.publish(SessionEvent.Execution.Started, { sessionID })
+      expect(yield* times()).toEqual({ busy: 10, idle: null, updated: 0 })
+
+      yield* TestClock.setTime(20)
+      yield* bus.publish(SessionEvent.Execution.Interrupted, { sessionID, reason: "shutdown" })
+      yield* TestClock.setTime(30)
+      yield* bus.publish(SessionEvent.Execution.Started, { sessionID })
+      expect(yield* times()).toEqual({ busy: 30, idle: null, updated: 0 })
+
+      yield* TestClock.setTime(40)
+      yield* bus.publish(SessionEvent.Execution.Succeeded, { sessionID })
+      expect(yield* times()).toEqual({ busy: 30, idle: 40, updated: 0 })
+
+      yield* TestClock.setTime(50)
+      yield* bus.publish(SessionEvent.Execution.Started, { sessionID })
+      expect(yield* times()).toEqual({ busy: 50, idle: 40, updated: 0 })
+    }),
+  )
+
   it.effect("updates only the newest incomplete assistant projection", () =>
     Effect.gen(function* () {
       const db = yield* seedSession()

@@ -787,6 +787,14 @@ const layer = Layer.effectDiscard(
         delivery: event.data.delivery,
       }),
     )
+    yield* bus.project(SessionEvent.Execution.Started, (event) =>
+      db
+        .update(SessionTable)
+        .set({ time_busy: event.created, time_updated: sql`${SessionTable.time_updated}` })
+        .where(eq(SessionTable.id, event.data.sessionID))
+        .run()
+        .pipe(Effect.orDie),
+    )
     yield* bus.project(SessionEvent.Execution.Succeeded, (event) => projectIdle(db, event))
     yield* bus.project(SessionEvent.Execution.Failed, (event) => projectIdle(db, event))
     yield* bus.project(SessionEvent.Execution.Interrupted, (event) => projectIdle(db, event))
