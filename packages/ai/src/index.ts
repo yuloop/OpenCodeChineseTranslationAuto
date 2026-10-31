@@ -50,11 +50,9 @@ import { Video, type VideoModel, type VideoRequest, type VideoRequestInput } fro
  * transcription and decision clients over a request executor; every method runs the corresponding Effect API and rethrows
  * `AIError` unchanged. `file` and `write` load `node:fs/promises` on first use, so importing this module does not.
  */
-export interface Options<R = never> {
+export interface Options {
   /** Executor layer; defaults to `RequestExecutor.fetchLayer`. Inject a recorder or `RequestExecutor.middleware(fn)` here. */
   readonly layer?: Layer.Layer<RequestExecutor.Service>
-  /** Replaces default clients, for example with `TestImage.testLayer()`; its other services are available to `run`. */
-  readonly clients?: Layer.Layer<R>
 }
 
 export interface RunOptions {
@@ -95,20 +93,14 @@ const abortEffect = (signal: AbortSignal | undefined) =>
         return Effect.sync(() => signal.removeEventListener("abort", onAbort))
       })
 
-export const make = <R = never>(options: Options<R> = {}) => {
-  const runtime = ManagedRuntime.make(
-    Layer.merge(
-      AIClient.layerWith(options.layer ?? RequestExecutor.fetchLayer),
-      // `R` is only inferred from `clients`, so it is `never` whenever `clients` is omitted.
-      (options.clients ?? Layer.empty) as Layer.Layer<R>,
-    ),
-  )
+export const make = (options: Options = {}) => {
+  const runtime = ManagedRuntime.make(AIClient.layerWith(options.layer ?? RequestExecutor.fetchLayer))
 
   /** Run any package Effect (for example `ai.compact(...)` from `@opencode/ai/effect`) inside this runtime. */
-  const run = <A, E>(effect: Effect.Effect<A, E, Services | R>, options?: RunOptions) =>
+  const run = <A, E>(effect: Effect.Effect<A, E, Services>, options?: RunOptions) =>
     runtime.runPromise(Effect.raceFirst(effect, abortEffect(options?.signal)))
 
-  const iterate = <A, E>(stream: Stream.Stream<A, E, Services | R>, options?: RunOptions): AsyncIterable<A> =>
+  const iterate = <A, E>(stream: Stream.Stream<A, E, Services>, options?: RunOptions): AsyncIterable<A> =>
     Stream.toAsyncIterable(
       Stream.unwrap(
         runtime.contextEffect.pipe(
@@ -128,7 +120,10 @@ export const make = <R = never>(options: Options<R> = {}) => {
     input: RequestInput<Model> | LLMRequest,
     options?: StreamOptions & RunOptions,
   ): Promise<LLMResponse>
-  function generate(input: ObjectInput<OutputSchema> | RequestInput | LLMRequest, options?: StreamOptions & RunOptions) {
+  function generate(
+    input: ObjectInput<OutputSchema> | RequestInput | LLMRequest,
+    options?: StreamOptions & RunOptions,
+  ) {
     return run(LLM.generate(input, options), options)
   }
 
@@ -160,7 +155,10 @@ export const make = <R = never>(options: Options<R> = {}) => {
     request: CheckpointRequest,
     options: TriggerCompactOptions & RunOptions,
   ): Promise<CompactionCheckpointResponse>
-  function compact(request: CompactionRequest, options?: EndpointCompactOptions & RunOptions): Promise<CompactionResponse>
+  function compact(
+    request: CompactionRequest,
+    options?: EndpointCompactOptions & RunOptions,
+  ): Promise<CompactionResponse>
   // The overloads pair each request type with its mechanism; `LLM.compact` checks the route's capability at runtime.
   function compact(
     request: CheckpointRequest | CompactionRequest,
@@ -301,7 +299,7 @@ export const make = <R = never>(options: Options<R> = {}) => {
   }
 }
 
-export type Client<R = never> = ReturnType<typeof make<R>>
+export type Client = ReturnType<typeof make>
 
 const fileError = (message: string, cause: unknown) =>
   new AIError({ reason: new InvalidRequestError({ message, cause }) })
@@ -410,7 +408,6 @@ export {
   InvalidRequestError,
   UnsupportedOperationError,
   ProviderConfigurationError,
-  NoRouteError,
   AuthenticationError,
   RateLimitError,
   QuotaExceededError,
@@ -496,7 +493,6 @@ export type {
   ToolExecuteContext,
   ToolModelOutputInput,
   ToolOptions,
-  Tools,
   ToolSchema,
   ToolToModelOutput,
 } from "./tool.js"
