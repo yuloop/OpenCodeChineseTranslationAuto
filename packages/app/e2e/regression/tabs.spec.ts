@@ -19,6 +19,7 @@ import { mockServers } from "../utils/mock-server"
 import { fixture, mockStressTimeline } from "../utils/session-fixture"
 import { fileNode, mockWorkspace, openSession } from "../utils/workspace"
 import { expectSessionTitle } from "../utils/waits"
+import { openWithDirection } from "../utils/direction"
 
 const a = { id: "ses_tab_a", title: "Tab A session" }
 
@@ -80,6 +81,42 @@ test("recently closed shows ten sessions and searches older closures in close or
   await expect(items).toHaveCount(10)
   await search.press("Escape")
   await expect(menu).toBeHidden()
+})
+
+test("recently closed keeps the keyboard-focused session in view when the menu overflows", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 360 })
+
+  const sessions = Array.from({ length: 11 }, (_, index) => ({
+    id: `ses_overflow_${index}`,
+    title: `Overflow session ${index}`,
+  }))
+
+  await mockWorkspace(page, {
+    name: "ClosedOverflow",
+    sessions,
+    seed: {
+      servers: [SERVER],
+      tabs: [sessions[0]!.id],
+      storage: {
+        "opencode.window.browser.dat:tabs.closed": sessions.slice(1).map((item, index) => ({
+          tab: { type: "session", server: SERVER, sessionId: item.id },
+          index,
+          info: { title: item.title, directory: "C:/OpenCode/ClosedOverflow", prompted: true },
+        })),
+      },
+    },
+  })
+  await page.goto(sessionHref(sessions[0]!.id))
+  await expect(page.locator("[data-titlebar-tab-title]")).toHaveText("Overflow session 0")
+  await page.getByRole("button", { name: "New session", exact: true }).click({ button: "right" })
+  const menu = page.getByRole("menu")
+  const last = menu.getByRole("menuitem", { name: "C Overflow session 1", exact: true })
+
+  await expect(menu.getByRole("menuitem")).toHaveCount(10)
+  await menu.getByRole("searchbox", { name: "Search recently closed" }).press("ArrowDown")
+  await page.keyboard.press("End")
+  await expect(last).toBeFocused()
+  await expect(last).toBeInViewport({ ratio: 1 })
 })
 
 test("recently closed fills remaining slots in Home order without open or duplicate sessions", async ({ page }) => {
@@ -241,6 +278,86 @@ test("the browser title names the open session and resets after leaving it", asy
   await expectPath(page, "/")
   await expect(page).toHaveTitle("OpenCode")
 })
+
+for (const [tabLayout, direction, label] of [
+  ["horizontal", "ltr", "Close tabs to the right"],
+  ["horizontal", "rtl", "Close tabs to the left"],
+  ["vertical", "ltr", "Close tabs below"],
+] as const) {
+  test(`${tabLayout} ${direction} tab menus bulk close in visible order and reopen sessions`, async ({ page }) => {
+    await mockWorkspace(page, {
+      name: "Tabs",
+      sessions: [a, b, c],
+      seed: {
+        tabs: [a.id, { draft: "draft_bulk_close", directory: "C:/OpenCode/Tabs" }, b.id, c.id],
+        settings: { appearance: { tabLayout } },
+      },
+    })
+    await openWithDirection(page, sessionHref(a.id), direction)
+
+    const titles = page.locator("[data-titlebar-tab-slot] [data-titlebar-tab-title]")
+
+    const draft = page.locator(`a[data-titlebar-tab-link][href="${draftHref("draft_bulk_close")}"]`)
+
+    const tabB = page.locator(`a[data-titlebar-tab-link][href="${sessionHref(b.id)}"]`)
+
+    const menu = page.getByRole("menu")
+
+    const active = page.locator('[data-titlebar-tab-slot][data-active="true"] [data-titlebar-tab-title]')
+
+    const modifier = await page.evaluate(() => (/Mac/.test(navigator.platform) ? "Meta" : "Control"))
+
+    await expect(titles).toHaveText([a.title, "Session", b.title, c.title])
+    await draft.click({ button: "right" })
+    await expect(menu.getByRole("menuitem")).toHaveText(["Close tab", "Close other tabs", label])
+    await menu.getByRole("menuitem", { name: label, exact: true }).click()
+    await expect(titles).toHaveText([a.title, "Session"])
+    await expect(active).toHaveText(a.title)
+
+    for (const expected of [
+      [a.title, "Session", b.title],
+      [a.title, "Session", b.title, c.title],
+    ]) {
+      await page.keyboard.press(`${modifier}+Shift+t`)
+      await expect(titles).toHaveText(expected)
+    }
+
+    await page.locator(`a[data-titlebar-tab-link][href="${sessionHref(a.id)}"]`).click()
+    await expect(active).toHaveText(a.title)
+    await tabB.click({ button: "right" })
+    await menu.getByRole("menuitem", { name: label, exact: true }).click()
+    await expect(titles).toHaveText([a.title, "Session", b.title])
+    await expect(active).toHaveText(a.title)
+    await page.keyboard.press(`${modifier}+Shift+t`)
+    await expect(titles).toHaveText([a.title, "Session", b.title, c.title])
+
+    await tabB.click({ button: "right" })
+    await expect(menu.getByRole("menuitem")).toHaveText([
+      "Rename",
+      "Close tab",
+      "Close other tabs",
+      label,
+      "Delete session…",
+    ])
+    await menu.getByRole("menuitem", { name: "Close other tabs", exact: true }).click()
+    await expect(titles).toHaveText([b.title])
+    await expect(active).toHaveText(b.title)
+    await tabB.click({ button: "right" })
+    await expect(menu.getByRole("menuitem", { name: "Close other tabs", exact: true })).toBeDisabled()
+    await expect(menu.getByRole("menuitem", { name: label, exact: true })).toBeDisabled()
+    await page.keyboard.press("Escape")
+
+    for (const expected of [
+      [a.title, b.title],
+      [a.title, b.title, c.title],
+    ]) {
+      await page.keyboard.press(`${modifier}+Shift+t`)
+      await expect(titles).toHaveText(expected)
+    }
+
+    await expect(draft).toHaveCount(0)
+  })
+}
 
 for (const tabLayout of ["horizontal", "vertical"] as const) {
   test(`a ${tabLayout} tab can be renamed again while its previous rename is still saving`, async ({ page }) => {
