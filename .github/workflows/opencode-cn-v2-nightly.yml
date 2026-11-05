@@ -36,7 +36,7 @@ on:
   schedule:
     # 每天 21:23 UTC 一次；V1 是每小时 :37，错开分钟避免两个流水线
     # 在同一时刻抢占 runner（两者 concurrency group 相互独立，不会互相取消）。
-    - cron: "23 21 * * *"
+    - cron: "23 19 * * *"
   workflow_dispatch:
     inputs:
       upstream_tag:
