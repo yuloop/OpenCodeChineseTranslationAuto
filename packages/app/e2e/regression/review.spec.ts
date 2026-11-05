@@ -672,6 +672,64 @@ test("file tree expands Windows paths and scrolls long names in both directions"
   await expect(panel.getByText("contents:frontend/app.ts", { exact: true })).toBeVisible()
 })
 
+test("the file tree follows a folder the review closes and lists a recreated folder's files", async ({ page }) => {
+  const directory = "C:/OpenCode/TreeFollow"
+  const disk = { src: true }
+
+  const workspace = await openSession(page, {
+    name: "TreeFollow",
+    vcsDiff: [fileDiff("src/a.ts")],
+    fileList: (path) => {
+      if (!disk.src) return path ? [] : [fileNode(directory, "README.md")]
+
+      if (path === "src") return [fileNode(directory, "src/a.ts")]
+
+      return path ? [] : [fileNode(directory, "src", "directory"), fileNode(directory, "README.md")]
+    },
+    fileContent: (path) => ({ type: "text", content: `contents:${path}` }),
+    seed: {
+      panes: { ses_treefollow: { review: true } },
+      storage: { "opencode.global.dat:review-panel-v2": { sidebarOpened: true } },
+    },
+  })
+
+  const panel = page.locator("#review-panel")
+  const tab = (name: string) => panel.getByRole("tab", { name, exact: true })
+  // Only the selected tab's tree is visible; the file browser stays mounted, hidden, behind the review.
+  const folder = panel.getByRole("treeitem", { name: "src" })
+  const file = panel.getByRole("treeitem", { name: "a.ts" })
+
+  await openReviewLauncher(panel)
+  await expect(file).toBeVisible()
+  await openFileLauncher(panel)
+  await expect(tab("Open file")).toHaveAttribute("aria-selected", "true")
+  await folder.click()
+  await expect(folder).toHaveAttribute("aria-expanded", "true")
+  await expect(file).toBeVisible()
+
+  // The review shares the workspace's folders: closing one there closes it in the file browser too.
+  await panel.locator("#session-side-panel-review-tab").click()
+  await expect(folder).toHaveAttribute("aria-expanded", "true")
+  await folder.click()
+  await expect(folder).toHaveAttribute("aria-expanded", "false")
+  await tab("Open file").click()
+  await expect(folder).toHaveAttribute("aria-expanded", "false")
+  await expect(file).toHaveCount(0)
+
+  // A deleted folder takes its files with it, so they show again once it is recreated and opened.
+  await folder.click()
+  await expect(file).toBeVisible()
+  disk.src = false
+  await workspace.push([filesystemEvent(directory, "src", "unlink")])
+  await expect(folder).toHaveCount(0)
+  disk.src = true
+  await workspace.push([filesystemEvent(directory, "src", "add")])
+  await expect(folder).toHaveAttribute("aria-expanded", "false")
+  await folder.click()
+  await expect(folder).toHaveAttribute("aria-expanded", "true")
+  await expect(file).toBeVisible()
+})
+
 test("rereads a file each time an artifact link opens it", async ({ page }) => {
   // Enough lines to scroll the code view, ending in the draft's name.
   const draft = (name: string) => [...Array.from({ length: 200 }, (_, index) => `item ${index + 1}`), name].join("\n")
@@ -739,7 +797,7 @@ test("rereads a file each time an artifact link opens it", async ({ page }) => {
   await expect(panel.getByText("second draft", { exact: true })).toHaveCount(0)
 
   // A restored file tab whose file was deleted shows its inline not-found state without a toast; clicking a broken link
-  // when no tab is open for it shows the toast.
+  // when no tab is open for it shows one toast.
   await page.route("**/api/fs/read/shopping.txt*", (route) =>
     route.fulfill({
       status: 404,
@@ -755,11 +813,73 @@ test("rereads a file each time an artifact link opens it", async ({ page }) => {
   await expect(panel.getByText("File not found: shopping.txt", { exact: true })).toBeVisible()
   await expect(page.getByText("Failed to load file", { exact: true })).toHaveCount(0)
 
+  // Behind another tab, the deleted file's tab is what its link selects: the click never does nothing.
+  await page.getByRole("button", { name: "Toggle session context" }).click()
+  await expect(missingTab).toHaveAttribute("aria-selected", "false")
+  await link.click()
+  await expect(missingTab).toHaveAttribute("aria-selected", "true")
+  await expect(page.getByText("Failed to load file", { exact: true })).toHaveCount(0)
+
   await missingTab.locator("..").getByRole("button", { name: "Close tab" }).click()
   await expect(missingTab).toHaveCount(0)
   await link.click()
   await expect(page.getByText("Failed to load file", { exact: true })).toBeVisible()
   await expect(missingTab).toHaveCount(0)
+})
+
+// A change reported while a file's read is in flight used to join that read, so the tab kept the bytes from before the
+// change until the next change.
+test("a file changed during its read shows the change", async ({ page }) => {
+  const reads: string[] = []
+  const arrived = Promise.withResolvers<void>()
+  const held = Promise.withResolvers<void>()
+
+  const messages = [
+    { id: "msg_prompt", type: "user", text: "Update the lists", time: { created: 1 } },
+    {
+      id: "msg_reply",
+      type: "assistant",
+      agent: "build",
+      model: { id: "test", providerID: "opencode" },
+      content: [{ type: "text", text: "Updated [notes.txt](notes.txt) and [shopping.txt](shopping.txt)." }],
+      time: { created: 2, completed: 3 },
+    },
+  ] satisfies SessionMessageInfo[]
+
+  const workspace = await openSession(page, {
+    name: "FileReadRace",
+    fileList: () => [],
+    fileContent: async (path) => {
+      reads.push(path)
+
+      if (path !== "shopping.txt") return `contents:${path}`
+
+      if (reads.filter((item) => item === path).length > 1) return "after change"
+      arrived.resolve()
+      await held.promise
+
+      return "before change"
+    },
+    pageMessages: () => ({ items: messages }),
+  })
+
+  const panel = page.locator("#review-panel")
+  await page.getByRole("link", { name: "notes.txt", exact: true }).click()
+  await expect(panel.getByText("contents:notes.txt", { exact: true })).toBeVisible()
+
+  await page.getByRole("link", { name: "shopping.txt", exact: true }).click()
+  await arrived.promise
+  // Events arrive in order, so the reread of notes.txt shows that the change to shopping.txt was handled before it.
+  await workspace.push([
+    filesystemEvent(workspace.directory, "shopping.txt", "change"),
+    filesystemEvent(workspace.directory, "notes.txt", "change"),
+  ])
+  await expect.poll(() => reads.filter((item) => item === "notes.txt").length).toBe(2)
+  held.resolve()
+
+  await expect(panel.getByRole("tab", { name: "shopping.txt" })).toHaveAttribute("aria-selected", "true")
+  await expect(panel.getByText("after change", { exact: true })).toBeVisible()
+  await expect(panel.getByText("before change", { exact: true })).toHaveCount(0)
 })
 
 test("artifact actions copy and download content, switch source, and follow the selected file's capabilities", async ({
@@ -1045,7 +1165,9 @@ test("Markdown and DOCX sheets stay aligned when switching at wide and narrow pr
     await expect(markdown.getByRole("heading", { name: "Document spacing", exact: true })).toBeVisible()
     await expect.poll(() => edges(markdown)).toEqual(reference)
     await expect.poll(() => toolbar.boundingBox()).toEqual(header)
-    expect(await canvas!.evaluate((element) => element.isConnected && Number(element.getAttribute("width")) > 0)).toBe(true)
+    expect(await canvas!.evaluate((element) => element.isConnected && Number(element.getAttribute("width")) > 0)).toBe(
+      true,
+    )
     await panel.getByRole("tab", { name: "other.docx", exact: true }).click()
     await expect(word).toHaveAttribute("data-e2e-probe", "other-warm")
     await panel.getByRole("tab", { name: "notes.md", exact: true }).click()
@@ -1720,6 +1842,29 @@ test("desktop review waits for the session's stored mode before it loads changes
   await expect(mode("Branch changes")).toBeVisible()
   await expect(file).toHaveText("beta.ts")
   expect(working).toEqual([])
+})
+
+// A failed request used to settle like an empty one, so the review claimed the working tree was clean.
+test("a failed diff request offers a retry instead of a clean working tree", async ({ page }) => {
+  await openSession(page, { name: "ReviewDiffFailure", vcsDiff: [fileDiff("src/alpha.ts")] })
+  const changes = { failing: true }
+  await page.route(/\/api\/vcs\/diff\?/, (route) => {
+    if (!changes.failing || new URL(route.request().url()).searchParams.get("untracked") !== "folders")
+      return route.fallback()
+
+    return route.fulfill({ status: 500, headers: { "access-control-allow-origin": "*" }, json: {} })
+  })
+  const panel = page.locator("#review-panel")
+  const failure = panel.getByRole("alert")
+
+  await page.getByRole("button", { name: "Toggle review", exact: true }).click()
+  await openReviewLauncher(panel)
+  await expect(failure.getByText("Couldn't load changes", { exact: true })).toBeVisible()
+  await expect(panel.locator('[data-slot="session-review-v2-empty-changes"]')).toHaveCount(0)
+  changes.failing = false
+  await failure.getByRole("button", { name: "Try again", exact: true }).click()
+  await expect(panel.locator('[data-slot="session-review-v2-file-name"]')).toHaveText("alpha.ts")
+  await expect(failure).toHaveCount(0)
 })
 
 test("a chosen mode the session stops offering shows as Git, and comes back when it is offered again", async ({

@@ -468,6 +468,42 @@ test("several servers share one selected server across per-server pages", async 
   await expect(settings.getByRole("button", { name: "Edit server", exact: true })).toBeVisible()
 })
 
+for (const server of [
+  { name: "Signed-out box", url: REMOTE_SERVER, password: "secret" },
+  // Nothing answers on this server.
+  { name: "Offline box", url: "http://127.0.0.1:4099" },
+]) {
+  test(`a project route on an unavailable server falls back to its Projects page (${server.name})`, async ({
+    page,
+  }) => {
+    const remote = "/remote/settings-demo"
+    await mockWorkspace(page, {
+      name: "Settings demo",
+      directory,
+      provider: NO_PROVIDER,
+      sessions: [],
+      seed: { tabs: [] },
+    })
+
+    if (server.password)
+      await mockRemoteServer(page, { name: server.name, directory: remote, password: server.password })
+
+    if (!server.password) await seed(page, { servers: [{ url: server.url, name: server.name }] })
+    await page.goto(
+      `/settings?server=${encodeURIComponent(server.url)}&project=${encodeURIComponent(remote)}&tab=general`,
+    )
+    const settings = page.getByTestId("settings-screen")
+    await expect(settings.getByRole("status").filter({ hasText: `Can't reach ${server.name}` })).toBeVisible()
+    await expect(settings.getByRole("heading", { name: "Projects", exact: true })).toBeVisible()
+    await expect(page).toHaveURL(
+      (url) =>
+        url.searchParams.get("server") === server.url &&
+        url.searchParams.get("tab") === "projects" &&
+        !url.searchParams.has("project"),
+    )
+  })
+}
+
 test("project list menus rename, edit, add, and stay inside the scrollport", async ({ page }) => {
   const projects = ["rebase", "dinocms", "opencode", "Playground"].map((name, index) =>
     project({ id: `project-${index}`, directory: `/projects/${name}`, name }),
@@ -1356,9 +1392,7 @@ test("providers: a rejected API key shows the server error and can be sent again
   expect(keys).toEqual([expect.objectContaining({ key: "sk-bad" })])
 })
 
-test("providers: Back during a pending API key request does not report the provider as connected", async ({
-  page,
-}) => {
+test("providers: Back during a pending API key request does not report the provider as connected", async ({ page }) => {
   const keys: string[] = []
 
   const { settings } = await open(page, {
@@ -1577,6 +1611,117 @@ test("providers: adding an account starts a lone method once", async ({ page, co
   await popup
   await expect.poll(() => attempts).toEqual(["github-copilot"])
   expect(attempts).toEqual(["github-copilot"])
+})
+
+test("providers: Back from a pending sign-in cancels it and lets a backdrop click close the list", async ({
+  page,
+  context,
+}) => {
+  await context.route("https://auth.example.test/**", (route) => route.fulfill({ body: "Sign in" }))
+  const cancelled: string[] = []
+
+  const { settings } = await open(page, {
+    integrations: [
+      {
+        id: "github-copilot",
+        name: "GitHub Copilot",
+        methods: [{ id: "device", type: "oauth", label: "GitHub" }],
+        connections: [],
+      },
+    ],
+    onIntegrationOAuth: () => ({ url: "https://auth.example.test/device?user_code=GH12-3456" }),
+    onIntegrationOAuthCancel: (attemptID) => cancelled.push(attemptID),
+  })
+
+  await settings.getByRole("tab", { name: "Providers", exact: true }).click()
+  await settings.getByRole("button", { name: "Show more providers", exact: true }).click()
+  const dialog = page.getByRole("dialog")
+  const popup = page.waitForEvent("popup")
+  await dialog.locator('[data-provider-id="github-copilot"]').click()
+  await popup
+  await expect(dialog.getByText("Waiting for authorization…", { exact: true })).toBeVisible()
+
+  await dialog.getByRole("button", { name: "Navigate back", exact: true }).click()
+  await expect(dialog.locator('[data-provider-id="github-copilot"]')).toBeVisible()
+  await expect.poll(() => cancelled).toEqual(["con_mock_1"])
+
+  // The page corner is outside the dialog, so the click lands on the backdrop.
+  await page.mouse.click(8, 8)
+  await expect(dialog).toHaveCount(0)
+})
+
+test("providers: Back from a Claude Agent check started by Add account returns to its accounts", async ({ page }) => {
+  const { settings } = await open(page, {
+    integrations: [
+      {
+        id: "claude-agent",
+        name: "Claude Agent",
+        methods: [{ id: "claude-login", type: "external", label: "Claude Code login (claude auth login)" }],
+        connections: [{ type: "credential", id: "cred_claude", label: "Claude Code", method: "external" }],
+      },
+    ],
+  })
+
+  const held = await holdRoute(page, /\/api\/integration\/claude-agent\/connect\/external(\?|$)/, { method: "POST" })
+  await settings.getByRole("tab", { name: "Providers", exact: true }).click()
+  await settings.getByRole("button", { name: "Show more providers", exact: true }).click()
+  const dialog = page.getByRole("dialog")
+  await dialog.locator('[data-provider-id="claude-agent"]').click()
+  await dialog.getByRole("button", { name: "Add account", exact: true }).click()
+  await dialog.getByRole("button", { name: "Check again", exact: true }).click()
+  await held.arrived
+  await expect(dialog.getByText("Checking Claude Code…", { exact: true })).toBeVisible()
+
+  await dialog.getByRole("button", { name: "Navigate back", exact: true }).click()
+  await expect(dialog.getByRole("radio", { name: "Claude Code", exact: true })).toBeVisible()
+  held.release()
+})
+
+test("providers: Back from a Console connection without models returns to its sign-in methods", async ({
+  page,
+  context,
+}) => {
+  await context.route("https://auth.example.test/**", (route) => route.fulfill({ body: "Sign in" }))
+  const state = { authorized: false }
+
+  const { settings } = await open(page, {
+    // The workspace has loaded, but it offers no models.
+    provider: () =>
+      state.authorized
+        ? {
+            all: [
+              { id: "opencode", integrationID: "opencode", name: "Anomaly / OpenCode", models: {} },
+              { id: "console-google", integrationID: "opencode", name: "Anomaly / Google", models: {} },
+            ],
+            connected: ["opencode", "console-google"],
+            default: {},
+          }
+        : NO_PROVIDER,
+    integrations: consoleIntegrations,
+    onIntegrationOAuth: () => ({ url: "https://auth.example.test/device?user_code=ABCD-EFGH" }),
+    onIntegrationOAuthStatus: () => {
+      state.authorized = true
+
+      return "complete"
+    },
+  })
+
+  await settings.getByRole("tab", { name: "Providers", exact: true }).click()
+  await settings
+    .locator(".settings-provider-row", { hasText: "OpenCode Console" })
+    .getByRole("button", { name: "Connect", exact: true })
+    .click()
+  const dialog = page.getByRole("dialog", { name: "Connect OpenCode Console", exact: true })
+  const popup = page.waitForEvent("popup")
+  await dialog.getByRole("button", { name: "OpenCode Console account", exact: true }).click()
+  await popup
+  await expect(page.getByRole("dialog").getByText("OpenCode connected", { exact: true })).toBeVisible()
+
+  await page.getByRole("dialog").getByRole("button", { name: "Navigate back", exact: true }).click()
+  await expect(dialog.locator('[data-action="provider-connect-method"]')).toHaveText([
+    "OpenCode Console account",
+    "API key (service account)",
+  ])
 })
 
 test("providers: the account options rename and remove the active account", async ({ page }) => {
@@ -1856,6 +2001,65 @@ test("providers: switching Console accounts keeps the list until the new workspa
   await expect(page.getByText("OpenCode Console account switched")).toBeVisible()
   await expect(trigger).toHaveText("Anomaly")
   await expect(connected).not.toHaveAttribute("data-flashed")
+})
+
+test("models: a Console provider picked on Providers opens its collapsed group, then the search types normally", async ({
+  page,
+}) => {
+  const model = (id: string, name: string) => ({ [id]: { id, name, limit: { context: 200_000 } } })
+
+  const { settings } = await open(page, {
+    provider: {
+      all: [
+        {
+          id: "opencode",
+          integrationID: "opencode",
+          name: "Anomaly / OpenCode",
+          models: model("console-model", "Console Model"),
+        },
+        {
+          id: "console-google",
+          canonical: "google",
+          integrationID: "opencode",
+          name: "Anomaly / Google",
+          models: model("managed-gemini", "Managed Gemini"),
+        },
+      ],
+      connected: ["opencode", "console-google"],
+      default: {},
+    },
+    integrations: [
+      {
+        id: "opencode",
+        name: "OpenCode Console",
+        methods: [{ id: "device", type: "oauth", label: "OpenCode Console account" }],
+        connections: [{ type: "credential", id: "cred_anomaly", label: "Anomaly", method: "oauth" }],
+      },
+    ],
+  })
+
+  const group = settings
+    .locator('[data-component="settings-models-console"]')
+    .getByRole("button", { name: /^OpenCode Console/ })
+
+  await settings.getByRole("tab", { name: "Models", exact: true }).click()
+  await group.click()
+  await expect(group).toHaveAttribute("aria-expanded", "false")
+
+  await settings.getByRole("tab", { name: "Providers", exact: true }).click()
+  const connected = settings.locator('[data-component="connected-providers-section"]')
+  await connected.getByRole("button", { name: "2 providers available", exact: true }).click()
+  await connected.getByRole("button", { name: "Google", exact: true }).click()
+
+  // The nested provider mounts only inside the expanded Console group, so the reveal opens the group first.
+  const google = settings.locator('[data-component="provider-model-group"][data-provider="console-google"]')
+  await expect(group).toHaveAttribute("aria-expanded", "true")
+  await expect(google.locator(".provider-model-group-trigger")).toBeFocused()
+
+  const search = settings.getByRole("searchbox", { name: "Search models", exact: true })
+  await search.pressSequentially("gemini")
+  await expect(search).toHaveValue("gemini")
+  await expect(settings.getByRole("switch", { name: "Managed Gemini", exact: true })).toBeVisible()
 })
 
 test("the add server dialog keeps focus above fullscreen settings", async ({ page }) => {
