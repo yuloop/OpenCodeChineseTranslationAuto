@@ -9,7 +9,7 @@ on:
       - "scripts/**"
       - ".github/workflows/release.yml"
   schedule:
-    - cron: "41 2,8,14,20 * * *"
+    - cron: "41 2,10,18 * * *"
   workflow_dispatch:
     inputs:
       upstream_tag:
