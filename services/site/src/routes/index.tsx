@@ -41,9 +41,9 @@ import { byos } from "~/lib/byos"
 import { localize, useArea } from "~/i18n/content"
 import { announcementsSource } from "~/i18n/content/areas/announcements"
 import "~/component/site/byos.css"
+import { ByosOptionLeads, ByosOptions } from "~/component/site/byos-options"
 import { getStarted } from "~/lib/get-started"
 import "~/component/site/get-started.css"
-import { SignupSection } from "~/component/site/signup"
 import { installs } from "~/component/site/product-data"
 import { isMobile } from "~/lib/platform"
 import { LocaleLinks } from "~/component/locale-links"
@@ -63,7 +63,6 @@ import { useI18n } from "~/context/i18n"
 import { useLanguage } from "~/context/language"
 import { homeContent, linkPhrases } from "~/lib/home-content"
 import { tag } from "~/lib/language"
-import { homeMarkdown } from "~/lib/home-markdown"
 import { repoStats, type RepoStats } from "~/lib/github"
 import { inlineKey } from "~/lib/direction"
 import { copyOnClick } from "~/lib/clipboard"
@@ -77,7 +76,7 @@ const PageSettings = import.meta.env.DEV ? lazy(() => import("~/component/site/p
 export default function Home() {
   const i18n = useI18n()
   const language = useLanguage()
-  const markdown = useMarkdown("/", homeMarkdown)
+  const markdown = useMarkdown("/", (context, pages) => pages.homeMarkdown(context))
   useHomeOrder()
   const [statsVisible, setStatsVisible] = createSignal(false)
   // Live repo numbers (lib/github.ts), streamed in under the config's numbers.
@@ -231,6 +230,7 @@ export default function Home() {
       <Announcement />
       <section
         data-component="hero"
+        data-section="hero"
         data-design="hero heroTitleSize heroText heroInstall homeAnnouncement"
         data-variant={heroVariant()}
         data-title-size={siteSettings.heroTitleSize}
@@ -267,6 +267,9 @@ export default function Home() {
 
       {/* The carousel's frame until the carousel itself has streamed in (products.tsx). */}
       <ProductCarouselSkeleton />
+      {/* Before first paint: where the carousel's cards start on the page, so on phones a card runs
+          down to the bottom of the small viewport (products.css) and never past it. Again on resize. */}
+      <script innerHTML={cardTopScript} />
 
       <Show when={siteSettings.logoWall !== "off"}>
         <Show when={siteSettings.logoLayout === "section"} fallback={logoWall()}>
@@ -448,22 +451,6 @@ export default function Home() {
 
       <section
         data-component="block"
-        data-section="privacy"
-        data-design="privacyColumns spacer spacerLength spacerCount spacerStartDash spacerStartGap spacerCurve ditherHeight ditherOrientation ditherDirection ditherLength ditherPixel ditherPattern ditherDensity ditherOpacity ditherCurve ditherLine"
-        data-columns={siteSettings.privacyColumns.charAt(0)}
-      >
-        <h2 data-slot="label" data-design-copy="home.privacy.title">
-          {designCopy("home.privacy.title", content().privacy.title)}
-        </h2>
-        <div data-slot="body">
-          <p data-slot="lead" data-design-copy="home.privacy.body">
-            <Rich value={richCopy("home.privacy.body", content().privacy.body, content().copyLinks)} />
-          </p>
-        </div>
-      </section>
-
-      <section
-        data-component="block"
         data-section="faq"
         data-design="faqColumns spacer spacerLength spacerCount spacerStartDash spacerStartGap spacerCurve ditherHeight ditherOrientation ditherDirection ditherLength ditherPixel ditherPattern ditherDensity ditherOpacity ditherCurve ditherLine"
         data-columns={siteSettings.faqColumns.charAt(0)}
@@ -492,10 +479,6 @@ export default function Home() {
           </ul>
         </div>
       </section>
-
-      <Show when={import.meta.env.DEV || siteSettings.signupSection === "on"}>
-        <SignupSection />
-      </Show>
 
       <section
         data-component="block"
@@ -1126,7 +1109,7 @@ function GetStarted() {
                       )}
                     </For>
                   </span>
-                  ChatGPT, Copilot, Claude Code
+                  ChatGPT, Copilot
                 </span>
                 <span data-slot="price">{i18n.t("home.getStarted.yourPlan")}</span>
                 <ChevronRight />
@@ -1273,6 +1256,17 @@ function BringYourOwnSubs() {
               )}
             />
           </span>
+          {/* Spelled out so the production build folds it (script/fold-settings.ts). */}
+          <Show
+            when={
+              import.meta.env.DEV ||
+              siteSettings.subsStyle === "A rows" ||
+              siteSettings.subsStyle === "B wall" ||
+              siteSettings.subsStyle === "C names"
+            }
+          >
+            <ByosOptionLeads />
+          </Show>
         </p>
 
         {/* "grid": the providers' grid. */}
@@ -1326,6 +1320,18 @@ function BringYourOwnSubs() {
               {providers()}
             </div>
           </div>
+        </Show>
+
+        {/* A, B and C: showing that OpenCode works with nearly every subscription, provider and model. */}
+        <Show
+          when={
+            import.meta.env.DEV ||
+            siteSettings.subsStyle === "A rows" ||
+            siteSettings.subsStyle === "B wall" ||
+            siteSettings.subsStyle === "C names"
+          }
+        >
+          <ByosOptions />
         </Show>
       </div>
     </section>
@@ -1453,3 +1459,7 @@ function balanceLogo(metrics: { aspect: number; density: number; centerY: number
 function copyColumnsAttribute(copy: "2 columns" | "3 columns", body: "2 columns" | "3 columns") {
   return copy === body ? undefined : copy.charAt(0)
 }
+
+// The top of the first visible carousel card (the skeleton's until the carousel streams in), in
+// page coordinates, as --card-top on the root.
+const cardTopScript = `(()=>{const r=document.documentElement,f=()=>{const m=[...document.querySelectorAll('[data-component="products-skeleton"] [data-slot="media"],[data-component="products"] [data-slot="media"]')].find(e=>e.getClientRects().length&&e.getBoundingClientRect().height);if(m)r.style.setProperty("--card-top",Math.round(m.getBoundingClientRect().top+scrollY)+"px")};f();addEventListener("resize",f)})()`
