@@ -254,8 +254,8 @@ jobs:
           exit 1
 
       - name: Trigger the release pipeline with the healed assets
-        # 只有真的推出了修复提交才 dispatch：否则每小时巡检都会白触发两条发布流水线
-        # （V1 自带每小时 :17、V2 自带每日 21:23 UTC 定时，绿着就没必要催）。
+        # 只有真的推出了修复提交才 dispatch：否则每次巡检都会白触发两条发布流水线
+        # （V1 release 每天 2 次 41 2,14 UTC、V2 每天 1 次 23:23 UTC 定时，绿着就没必要催）。
         if: success() && steps.push.outputs.pushed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
