@@ -12,12 +12,12 @@
 | 维度 | 官方版（anomalyco/opencode） | 本仓库（汉化版） |
 |---|---|---|
 | 界面语言 | 已包含基础 zh-CN.json（19种语言） | 补充约 70 处终端交互翻译词条 |
-| 构建自动化 | 无 | 每小时自动同步上游 Release → 构建+发布 |
+| 构建自动化 | 无 | 自动同步上游 Release → 构建+发布（每天 2 次） |
 | 一键安装 | 无 | install.sh / install.ps1 / install-preview.ps1 |
-| 预览版（Nightly） | 无 | 跟随上游 dev 分支，4次/天自动构建 |
+| 预览版（Nightly） | 无 | 跟随上游 v2.0.x tag，每天 1 次自动构建 |
 | 发布平台 | 源码为主 | Linux x64 + Windows x64 便携二进制 |
 | 翻译门禁 | 无 | 100% 匹配门禁后才允许发布 |
-| upstream 追踪 | — | 每小时检查官方 Release |
+| upstream 追踪 | — | 每天 3 次检查上游、2 次检查官方 Release |
 
 > 非官方项目，与 OpenCode 官方团队没有隶属关系。账号、模型配置和工作目录格式均沿用官方 OpenCode。
 
@@ -77,7 +77,7 @@ curl -fsSL https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAu
 
 ```text
 官方 OpenCode Release
-        ↓ 每小时检查
+        ↓ 定时检查（cron 见下表）
 检出精确 tag 的官方源码
         ↓
 注入汉化翻译词条（100% 匹配门禁）
@@ -86,6 +86,17 @@ curl -fsSL https://raw.githubusercontent.com/yuloop/OpenCodeChineseTranslationAu
         ↓
 发布到 GitHub Releases
 ```
+
+### 定时频率（UTC，括号内为北京时间）
+
+| 流水线 | cron | 频率 |
+|---|---|---|
+| `opencode-cn-sync.yml`（同步上游 dev） | `5 6,14,22 * * *` | 每天 3 次（14:05 / 22:05 / 06:05） |
+| `release.yml`（跟随上游正式 Release） | `41 2,14 * * *` | 每天 2 次（10:41 / 22:41） |
+| `opencode-cn-autoheal.yml`（汉化自愈） | `25 3,15 * * *` | 每天 2 次（11:25 / 23:25） |
+| `opencode-cn-v2-nightly.yml`（v2 预览构建） | `23 23 * * *` | 每天 1 次（07:23） |
+
+同一槽位若已有更早一轮跑过（含人工或本机兜底补跑），后到的定时运行会被 workflow 内的 `slot-guard` 自动取消，避免重复构建。
 
 本地修改文件：`packages/web/src/content/i18n/zh-CN.json`（+ 73 处词条）、`install.sh`、`install.ps1`、`install-preview.ps1`、`.github/workflows/*`
 
