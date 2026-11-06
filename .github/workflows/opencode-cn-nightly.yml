@@ -285,7 +285,7 @@ jobs:
           prerelease: true
       - name: Delete outdated preview releases
         env:
-          GH_TOKEN: ${{ secrets.YU_TOKEN }}
+          GH_TOKEN: ${{ secrets.YU_TOKEN || secrets.GITHUB_TOKEN }}
           CURRENT_TAG: ${{ needs.resolve.outputs.release_tag }}
         run: |
           set -euo pipefail
