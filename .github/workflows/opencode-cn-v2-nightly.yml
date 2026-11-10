@@ -138,11 +138,11 @@ jobs:
             }
             tag="$REQUESTED_TAG"
           else
+            # 只接受 v2.<次版本>.<补丁> 的纯数字 tag（排除 -rc / process-daemon-v*）。
+            # 注意：这里和 UPSTREAM_TAG_GLOB 两处都别写死次版本，否则版本会被钉在 2.0.x。
             tag="$(git ls-remote --tags "https://github.com/${UPSTREAM_REPO}.git" "refs/tags/${UPSTREAM_TAG_GLOB}" \
               | sed -n 's#.*refs/tags/##p' \
               | grep -v '\^{}' \
-              # 只接受 v2.<次版本>.<补丁> 的纯数字 tag（排除 -rc / process-daemon-v*）；
-              # 这里曾写死 v2\.0\.[0-9]+，与 UPSTREAM_TAG_GLOB 一起把版本钉在 2.0.x。
               | grep -E '^v2\.[0-9]+\.[0-9]+$' \
               | sort -V | tail -1)"
           fi
