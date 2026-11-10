@@ -509,8 +509,11 @@ jobs:
           done
           for attempt in 1 2 3; do
             if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
-              echo "release ${RELEASE_TAG} 已存在，补传资产（第 ${attempt} 次）"
+              echo "release ${RELEASE_TAG} 已存在，补传资产并刷新说明（第 ${attempt} 次）"
               if gh release upload "${RELEASE_TAG}" "${files[@]}" --clobber; then
+                # 资产补传成功不代表说明是新的：同 tag 重跑时正文会停留在首跑那份
+                # （曾出现首跑 3/4 命中、重跑已 4/4 但页面仍显示 3/4）。
+                gh release edit "${RELEASE_TAG}" --notes-file release_notes.md >/dev/null 2>&1 || true
                 echo "资产已就绪：${RELEASE_TAG}"; exit 0
               fi
             else
