@@ -23,7 +23,7 @@ name: OpenCode V2 Nightly (inject + build + release)
 #      SHA256SUMS；正文写清基于的上游 tag/commit 与注入的资产 commit。
 #
 # 【触发】每天 21:23 UTC 一次（V1 是每小时 :37，错开分钟避免抢占 runner）+
-#   手动 workflow_dispatch（可指定上游 tag，留空自动取最新 v2.0.x 稳定版）。
+#   手动 workflow_dispatch（可指定上游 tag，留空自动取最新 v2.x 稳定版）。
 #   定时触发时若该上游版本的 Release 已存在则跳过（tag 按上游版本唯一，不随
 #   资产更新重复发）；workflow_dispatch 一律构建，同名 Release 覆盖更新
 #   （便于汉化资产更新后重发同一上游版本）。
@@ -40,7 +40,7 @@ on:
   workflow_dispatch:
     inputs:
       upstream_tag:
-        description: "上游 V2 tag（留空 = 自动取最新 v2.0.x 稳定版）"
+        description: "上游 V2 tag（留空 = 自动取最新 v2.x 稳定版）"
         required: false
         type: string
 
@@ -54,7 +54,9 @@ permissions:
 
 env:
   UPSTREAM_REPO: anomalyco/opencode
-  UPSTREAM_TAG_GLOB: "v2.0.*"
+  UPSTREAM_TAG_GLOB: "v2.*"
+  # 上游已从 2.0.x 走到 2.2.x，glob 必须保持在次版本之上；
+  # 写死 v2.0.* 会让预览版永久卡在 2.0.32（2026-11-10 实测）。
   BUN_VERSION: "1.4.2"
   # V2 汉化门禁阈值：与 V1 同为 1（100%）。main 39caaa58e 实测 v2.0.13/v2.0.14
   # 均 1669/1669 = 100.0%；上游漂移会让构建失败而不是发布未过门禁的产物。
@@ -127,7 +129,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          # 上游 tag：dispatch 显式指定 > 自动取最新 v2.0.x 稳定版
+          # 上游 tag：dispatch 显式指定 > 自动取最新 v2.x 稳定版
           # （V2 无 GitHub Release，轮询 tag；过滤 peel 行与 -rc 等预发布后缀）
           if [[ -n "$REQUESTED_TAG" ]]; then
             [[ "$REQUESTED_TAG" =~ ^v[0-9A-Za-z][0-9A-Za-z._-]*$ ]] || {
