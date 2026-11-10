@@ -518,8 +518,11 @@ jobs:
               fi
             else
               echo "创建 release ${RELEASE_TAG}（第 ${attempt} 次）"
+              # --latest：不加的话 GitHub 按 tag 名猜主版本，v2-cn-x.y.z 不是它能
+              # 解析的 semver，会把 Latest 留在旧的 v1.19.5 上（2026-11-10 实测）。
               if gh release create "${RELEASE_TAG}" \
                    --target "${GITHUB_SHA}" \
+                   --latest \
                    --title "OpenCode v${RELEASE_VERSION} 简体中文汉化版（V2 线）" \
                    --notes-file release_notes.md \
                    "${files[@]}"; then
