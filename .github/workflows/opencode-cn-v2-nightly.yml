@@ -141,7 +141,9 @@ jobs:
             tag="$(git ls-remote --tags "https://github.com/${UPSTREAM_REPO}.git" "refs/tags/${UPSTREAM_TAG_GLOB}" \
               | sed -n 's#.*refs/tags/##p' \
               | grep -v '\^{}' \
-              | grep -E '^v2\.0\.[0-9]+$' \
+              # 只接受 v2.<次版本>.<补丁> 的纯数字 tag（排除 -rc / process-daemon-v*）；
+              # 这里曾写死 v2\.0\.[0-9]+，与 UPSTREAM_TAG_GLOB 一起把版本钉在 2.0.x。
+              | grep -E '^v2\.[0-9]+\.[0-9]+$' \
               | sort -V | tail -1)"
           fi
           [[ -n "$tag" ]] || { echo "未解析到上游 ${UPSTREAM_TAG_GLOB} tag" >&2; exit 1; }
