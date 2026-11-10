@@ -3790,7 +3790,7 @@
             }
           }
         },
-        "description": "Generate transient text from the current session context without mutating session history.",
+        "description": "Generate transient text from the current session context without mutating session history. Its tokens and cost count toward the session's totals.",
         "summary": "Generate text from session context",
         "requestBody": {
           "content": {
@@ -16664,6 +16664,9 @@
                 "type": "boolean"
               },
               "codemode_vm": {
+                "type": "boolean"
+              },
+              "console_watches": {
                 "type": "boolean"
               },
               "part_rows": {
@@ -30132,7 +30135,7 @@
               },
               "source": {
                 "type": "string",
-                "enum": ["title", "compaction"]
+                "enum": ["title", "compaction", "generate"]
               },
               "cost": {
                 "$ref": "#/components/schemas/Money.USD"
