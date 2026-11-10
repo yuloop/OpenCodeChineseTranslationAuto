@@ -82,9 +82,14 @@ func detectLayout(opencodeDir string) Layout {
 
 	v2BuildTS := filepath.Join(opencodeDir, "packages", "cli", "script", "build.ts")
 	if Exists(v2BuildTS) {
-		// 二次确认：V2 build.ts 已内建 --target= 能力
+		// 二次确认：V2 build.ts 具备指定单目标构建的能力。
+		// 老版 V2（≤ v2.0.x）用 `--target=<t>` 命令行参数；上游 v2.1 起改成
+		// 环境变量 OPENCODE_TARGET（v2.2.7 packages/cli/script/build.ts:32
+		// `const requestedTarget = process.env.OPENCODE_TARGET`）。只认前者会让
+		// 新版上游被判成 V1 布局，进而拿 V1 词表去套 V2 源码，门禁直接掉到三成。
 		if data, err := os.ReadFile(v2BuildTS); err == nil {
-			if strings.Contains(string(data), "--target=") {
+			text := string(data)
+			if strings.Contains(text, "--target=") || strings.Contains(text, "OPENCODE_TARGET") {
 				return LayoutV2
 			}
 		}

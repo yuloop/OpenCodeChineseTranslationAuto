@@ -1,17 +1,17 @@
 {
-  "file": "packages/tui/src/ui/dialog-export-options.tsx",
-  "replacements": {
-    "Include thinking": "包含思考过程",
-    "title: \"Next export option\"": "title: \"下一个导出选项\"",
-    "title: \"Select export option\"": "title: \"选择导出选项\"",
-    "Export session": "导出会话",
-    "Export as:": "导出为:",
-    "Include tools": "包含工具",
-    "Sanitize sensitive data": "脱敏敏感数据",
-    "<text fg={overlayTheme.text.base}>Copy</text>": "<text fg={overlayTheme.text.base}>复制</text>",
-    "group: \"Dialog\"": "group: \"对话框\"",
-    "              Export": "              导出",
-    "{ title: \"copy\", key: \"c\", onTrigger: () => confirm(\"copy\") }": "{ title: \"复制\", key: \"c\", onTrigger: () => confirm(\"copy\") }",
-    "{ title: \"save to file\", key: \"enter\", onTrigger: () => confirm(\"export\") }": "{ title: \"保存到文件\", key: \"enter\", onTrigger: () => confirm(\"export\") }"
-  }
+ "file": "packages/tui/src/ui/dialog-export-options.tsx",
+ "replacements": {
+  "Include thinking": "包含思考过程",
+  "title: \"Next export option\"": "title: \"下一个导出选项\"",
+  "title: \"Select export option\"": "title: \"选择导出选项\"",
+  "Export session": "导出会话",
+  "Export as:": "导出为:",
+  "Include tools": "包含工具",
+  "Sanitize sensitive data": "脱敏敏感数据",
+  "group: \"Dialog\"": "group: \"对话框\"",
+  "              Export": "              导出",
+  "Copy\n            </text>": "复制\n            </text>",
+  "title: \"copy\"": "title: \"复制\"",
+  "title: \"save to file\"": "title: \"保存到文件\""
+ }
 }

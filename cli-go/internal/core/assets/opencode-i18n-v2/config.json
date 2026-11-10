@@ -5,8 +5,8 @@
   "generatedBy": "tools/v2_anchor_migrate.py",
   "upstream": {
     "repo": "anomalyco/opencode",
-    "tag": "v2.0.12",
-    "commit": "2670273ff17da96f85c5826ced57aa1b368754fa"
+    "tag": "v2.2.7",
+    "commit": "fedc6f208aa2"
   },
   "v1AssetsVersion": "6.2",
   "totals": {
@@ -5061,5 +5061,11 @@
       "batch-component|dialog-workspace-file-changes.tsx|plus 2": "changeCountWidth 里的注释 The \"plus 2\" is for spaces 是代码注释,不翻。"
     }
   },
-  "note": "2026-10-26：按上游 v2.0.32 复核并修正 V2 锚点（继续外科式修正，不跑全量重生成——tools/v2_anchor_migrate.py 只产出 517 锚点/66 文件，重生成会毁掉现行 2060 条覆盖）。根因：v2.0.30–32 把对话框 footer/header 提示从 JSX 文本节点改成结构化 props（DialogFooter actions 的 { title, key }、DialogHeader 的 closeLabel、DialogSelect 的 footerHints），所有含缩进/换行的旧提示锚点（含 --keep 身份锚点里的 \"\\n  esc\\n\"）与旧多行 JSX 块集体失配，占 2058 条中的 76 条：其中 12 条让 10 个锚点文件整体 0 命中，门禁掉到 1982/2058 = 96.3%。本次：52 条按上游新形态重锚（15 条身份锚点改锚 closeLabel=\"…\"/key: \"…\"，8 条多行 JSX 块改锚整行，29 条译文键换新字面量且译文值同时按新形态重写），30 条上游已删文案撤条（会话分享 Share/Unshare 与 routes/session 的分享/未实现提示、dialog-select 的 Next/Previous dialog action、worktree-name 的 submit/group、Export 按钮与 shell-output 等旧块），26 条补齐新设计下新出现的可见标签译文（ok/confirm/cancel/copy path/save to file/scroll/follow/copy code|output/investigate/view error/change/favorite/remove account/隐藏·显示内部插件 等），另删 1 个失效 --keep 文件（component/dialog-worktree-name，两个提示条目随窗口委托 DialogPrompt 而失效）。门禁：v2.0.32 实测 2060/2060 = 100.0%，226 文件成功 0 跳过 0 失败，apply 退出码 0；verify 2060/2060 可匹配；真实 apply 后 122 个改动文件用 bun Transpiler 逐文件语法校验全部通过。"
+  "note": "2026-10-26：按上游 v2.0.32 复核并修正 V2 锚点（继续外科式修正，不跑全量重生成——tools/v2_anchor_migrate.py 只产出 517 锚点/66 文件，重生成会毁掉现行 2060 条覆盖）。根因：v2.0.30–32 把对话框 footer/header 提示从 JSX 文本节点改成结构化 props（DialogFooter actions 的 { title, key }、DialogHeader 的 closeLabel、DialogSelect 的 footerHints），所有含缩进/换行的旧提示锚点（含 --keep 身份锚点里的 \"\\n  esc\\n\"）与旧多行 JSX 块集体失配，占 2058 条中的 76 条：其中 12 条让 10 个锚点文件整体 0 命中，门禁掉到 1982/2058 = 96.3%。本次：52 条按上游新形态重锚（15 条身份锚点改锚 closeLabel=\"…\"/key: \"…\"，8 条多行 JSX 块改锚整行，29 条译文键换新字面量且译文值同时按新形态重写），30 条上游已删文案撤条（会话分享 Share/Unshare 与 routes/session 的分享/未实现提示、dialog-select 的 Next/Previous dialog action、worktree-name 的 submit/group、Export 按钮与 shell-output 等旧块），26 条补齐新设计下新出现的可见标签译文（ok/confirm/cancel/copy path/save to file/scroll/follow/copy code|output/investigate/view error/change/favorite/remove account/隐藏·显示内部插件 等），另删 1 个失效 --keep 文件（component/dialog-worktree-name，两个提示条目随窗口委托 DialogPrompt 而失效）。门禁：v2.0.32 实测 2060/2060 = 100.0%，226 文件成功 0 跳过 0 失败，apply 退出码 0；verify 2060/2060 可匹配；真实 apply 后 122 个改动文件用 bun Transpiler 逐文件语法校验全部通过。",
+  "currentTotals": {
+    "anchorFiles": 226,
+    "replacements": 2058,
+    "verifiedOn": "v2.2.7"
+  },
+  "note_v2_2_7": "2026-11-10：跟随上游 v2.2.7 做外科式修正（不跑全量重生成，理由同 note）。① 根因不在词表而在 Go 侧：cli-go/internal/core/build.go 的 detectLayout 只认 build.ts 里的 `--target=`，而上游 v2.1 起改成环境变量 OPENCODE_TARGET（v2.2.7 packages/cli/script/build.ts:32），导致 v2.2.x 被误判为 V1 布局、拿 V1 词表去套 V2 源码，门禁骤降到 31.2%（159/509）。改为同时认 `--target=` 与 `OPENCODE_TARGET` 后立即回到 99.2%，可证词表本身没有大面积失效。② 余下 6 个锚点文件按 v2.2.7 源码重锚：noninteractive.ts 删 2 个上游已移除的串（`<file name=…>` 移到 packages/cli/src/run/run.ts、`The provider response ended unexpectedly.` 只剩测试文件）；dialog-model.tsx 的 favorite 键从 `? \"favorite\" : \"Favorite\"` 改锚 `? \"unfavorite\" : \"favorite\"`；dialog-update.tsx 的合并键拆成 4 个 bind 前缀键，更新成功文案换成 \"Restart closes OpenCode, then run opencode…\"；plugin/render.tsx 的 Plugin 崩溃提示搬到 plugin/api.tsx（PluginBoundary 所在处）；dialog-export-options.tsx 的 Copy 按钮与两个 footer 提示改成结构化 props（`title: \"copy\"` / `title: \"save to file\"`）；dialog-export-result.tsx 的 `✓ copied` 改成 `title: \"copied\"`，并补 `title: \"copy path\"`。③ dialog-confirm.tsx 的 4 个死键清理；其 --keep 身份锚点原本唯一键 `key: \"esc\"` 已变成 `bind: \"escape\"`，换新键避免整个文件被判 0 命中。门禁：v2.2.7 实测 2058/2058 = 100.0%，226 文件成功 0 跳过 0 失败；apply 实跑后抽样人工核对译文落位正确，8 个改动文件用 bun build --no-bundle 逐文件语法校验通过。"
 }

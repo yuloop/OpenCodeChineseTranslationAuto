@@ -1,15 +1,15 @@
 {
-  "file": "packages/tui/src/component/dialog-model.tsx",
-  "replacements": {
-    "\"Favorites\"": "\"收藏\"",
-    "\"Free\"": "\"免费\"",
-    "\"Recent\"": "\"最近\"",
-    "(Favorite)": "(收藏)",
-    "return \"Select model\"": "return \"选择模型\"",
-    "? \"favorite\" : \"Favorite\"": "? \"收藏\" : \"收藏\"",
-    "? \"Connect an integration\"": "? \"连接集成\"",
-    ": \"View all integrations\"": ": \"查看所有集成\"",
-    "? \"connect integration\"": "? \"连接集成\"",
-    ": \"view all integrations\"": ": \"查看所有集成\""
-  }
+ "file": "packages/tui/src/component/dialog-model.tsx",
+ "replacements": {
+  "\"Favorites\"": "\"收藏\"",
+  "\"Free\"": "\"免费\"",
+  "\"Recent\"": "\"最近\"",
+  "(Favorite)": "(收藏)",
+  "return \"Select model\"": "return \"选择模型\"",
+  "? \"Connect an integration\"": "? \"连接集成\"",
+  ": \"View all integrations\"": ": \"查看所有集成\"",
+  "? \"connect integration\"": "? \"连接集成\"",
+  ": \"view all integrations\"": ": \"查看所有集成\"",
+  "? \"unfavorite\" : \"favorite\"": "? \"取消收藏\" : \"收藏\""
+ }
 }

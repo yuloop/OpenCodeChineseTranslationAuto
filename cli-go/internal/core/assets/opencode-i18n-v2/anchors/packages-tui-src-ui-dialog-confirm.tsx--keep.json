@@ -1,6 +1,6 @@
 {
-  "file": "packages/tui/src/ui/dialog-confirm.tsx",
-  "replacements": {
-    "key: \"esc\"": "key: \"esc\""
-  }
+ "file": "packages/tui/src/ui/dialog-confirm.tsx",
+ "replacements": {
+  "bind: \"escape\", title: \"Cancel\"": "bind: \"escape\", title: \"Cancel\""
+ }
 }
