@@ -351,7 +351,7 @@ jobs:
           targets = [
               "列出所有智能体",                    # packages/cli/src/commands/commands.ts (agents)
               "OpenCode 登录",                    # packages/cli/src/acp/service.ts (terminal-auth)
-              "卸载 OpenCode 并删除所有相关文件",  # packages/cli/src/commands/commands.ts (uninstall)
+              "卸载 OpenCode，保留会话数据、配置和状态",  # packages/cli/src/commands/commands.ts (uninstall)
               "调试与故障排查工具",                # packages/cli/src/commands/commands.ts (debug)
           ]
           for t in targets:
