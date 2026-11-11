@@ -9,6 +9,8 @@ on:
       - "scripts/**"
       - ".github/workflows/release.yml"
   schedule:
+# 上游 v1 线自 2026-10-28 起停更（releases/latest 恒为 v1.19.5），没有新版本时本 workflow 会直接跳过构建；
+# 因此从每天 2 次降到每天 1 次，减少空跑。
     - cron: "41 2 * * *"
   workflow_dispatch:
     inputs:
