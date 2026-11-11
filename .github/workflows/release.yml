@@ -9,7 +9,7 @@ on:
       - "scripts/**"
       - ".github/workflows/release.yml"
   schedule:
-    - cron: "41 2,14 * * *"
+    - cron: "41 2 * * *"
   workflow_dispatch:
     inputs:
       upstream_tag:
@@ -45,7 +45,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WF_FILE: release.yml
           SLOT_MIN: "41"
-          SLOT_HOURS: "2 14"
+          SLOT_HOURS: "2"
           RUN_ID: ${{ github.run_id }}
           EVENT_NAME: ${{ github.event_name }}
         run: |
