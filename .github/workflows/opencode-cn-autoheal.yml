@@ -48,7 +48,9 @@ permissions:
 
 env:
   UPSTREAM_REPO: anomalyco/opencode
-  UPSTREAM_TAG_GLOB: "v2.0.*"
+  # 不能写死 v2.0.*：上游 2026-11 已到 v2.2.x，写死会让自愈一直对着 2.0.32 跑，
+  # 与已升级到 v2.2.7 的 V2 词表对不上，每轮都判失败（2026-11-11 实测）。
+  UPSTREAM_TAG_GLOB: "v2.*"
   I18N_TRANSLATE_CACHE: ${{ github.workspace }}/.i18n-cache
 
 jobs:
@@ -172,7 +174,7 @@ jobs:
         run: |
           set -euo pipefail
           tag="$(git ls-remote --tags "https://github.com/${UPSTREAM_REPO}.git" "refs/tags/${UPSTREAM_TAG_GLOB}" \
-            | sed -n 's#.*refs/tags/##p' | grep -v '\^{}' | grep -E '^v2\.0\.[0-9]+$' | sort -V | tail -1)"
+            | sed -n 's#.*refs/tags/##p' | grep -v '\^{}' | grep -E '^v2\.[0-9]+\.[0-9]+$' | sort -V | tail -1)"
           [[ -n "$tag" ]] || { echo "未解析到上游 V2 tag" >&2; exit 1; }
           echo "tag=$tag" >>"$GITHUB_OUTPUT"
 
