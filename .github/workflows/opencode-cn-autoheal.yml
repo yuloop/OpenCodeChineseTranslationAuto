@@ -306,6 +306,18 @@ jobs:
             gh issue create --title "汉化自愈未能全绿（需人工确认）" --label i18n-autoheal --body "$body"
           fi
 
+      - name: Close the tracking issue when both lines are green
+        if: always() && success() && steps.v1.outputs.rc != '1' && steps.v2.outputs.rc != '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -uo pipefail
+          # 之前只在失败时开 issue、从没关过，修好之后 issue 会一直挂着（2026-11-11 的 #22 就是这样）。
+          existing="$(gh issue list --label i18n-autoheal --state open --limit 1 --json number --jq '.[0].number // empty')"
+          if [[ -n "$existing" ]]; then
+            gh issue close "$existing" --comment "自愈已恢复全绿（运行 #${GITHUB_RUN_ID}），自动关闭。"
+          fi
+
       - name: Fail loudly when a line is still red
         if: always()
         run: |
