@@ -40,7 +40,6 @@
     "description: \"Show or hide model reasoning by default\"": "description: \"默认显示或隐藏模型推理\"",
     "description: \"Group related transcript items automatically or render each item separately\"": "description: \"自动合并相关记录项或逐项单独渲染\"",
     "description: \"Show user attachment and tool-result images in the session transcript\"": "description: \"在会话记录中显示用户附件与工具结果图片\"",
-    "description: \"Show average tokens per second\"": "description: \"显示平均每秒 tokens 数\"",
     "description: \"Show Markdown syntax markers or conceal them in rendered transcript content\"": "description: \"在渲染后的记录内容中显示 Markdown 语法标记或将其隐藏\"",
     "description: \"Start new sessions in the TUI launch directory or inherit the active session location\"": "description: \"在 TUI 启动目录新建会话或沿用当前会话位置\"",
     "description: \"Prompt for permission requests or accept them automatically\"": "description: \"提示权限请求或自动接受\"",
@@ -68,6 +67,7 @@
     "description: \"Debugging settings\"": "description: \"调试设置\"",
     "description: \"Experimental features that may change or be removed at any time\"": "description: \"随时可能变更或移除的实验性功能\"",
     "description: \"Enable interface animations\"": "description: \"启用界面动画\"",
-    "description: \"Enable terminal mouse capture\"": "description: \"启用终端鼠标捕获\""
+    "description: \"Enable terminal mouse capture\"": "description: \"启用终端鼠标捕获\"",
+    "description: \"Show output tokens per second while the model streams\"": "description: \"模型流式输出时显示每秒输出 tokens 数\""
   }
 }

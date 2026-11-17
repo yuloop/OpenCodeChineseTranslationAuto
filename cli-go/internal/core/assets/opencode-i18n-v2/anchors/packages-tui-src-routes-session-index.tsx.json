@@ -107,7 +107,6 @@
     "+{images().length - visible().length} more": "+{images().length - visible().length} 更多",
     "output:{\" \"}": "输出:{\" \"}",
     "<StatusBadge raised>Background</StatusBadge>": "<StatusBadge raised>后台</StatusBadge>",
-    "<StatusBadge>Background</StatusBadge>": "<StatusBadge>后台</StatusBadge>",
     "Write {pathFormatter.format(stringValue(props.input.path))}": "写入 {pathFormatter.format(stringValue(props.input.path))}",
     "Read {pathFormatter.format(stringValue(props.input.path))}": "读取 {pathFormatter.format(stringValue(props.input.path))}",
     "↳ Loaded {pathFormatter.format(filepath)}": "↳ 已加载 {pathFormatter.format(filepath)}",
