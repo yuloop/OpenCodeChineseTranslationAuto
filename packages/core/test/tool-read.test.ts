@@ -15,6 +15,7 @@ import { Skill } from "@opencode/core/skill"
 import { AbsolutePath } from "@opencode/core/schema"
 import { Global } from "@opencode/util/global"
 import { FileAccess } from "@opencode/core/file-access"
+import { Flag } from "@opencode/core/flag"
 import { hostEnvironmentLayer } from "./fixture/environment"
 import { location } from "./fixture/location"
 import { withTempDir } from "./fixture/tmpdir"
@@ -42,6 +43,8 @@ const readToolNode = makeLocationNode({
     FSUtil.node,
     Environment.node,
     Location.node,
+    Config.node,
+    Flag.node,
   ],
 })
 
