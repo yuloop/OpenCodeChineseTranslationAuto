@@ -121,6 +121,7 @@ export const dict = {
   "command.session.export.description": "Export the full session transcript as JSON",
   "command.session.import": "Import session",
   "command.session.copyID": "Copy Session ID",
+  "command.session.archive": "Archive session",
   "command.session.rename": "Rename session",
   "command.session.delete": "Delete session",
 
@@ -188,7 +189,7 @@ export const dict = {
   "provider.connect.breadcrumb.root": "Connect",
   "provider.connect.breadcrumb.label": "Connect steps",
   "provider.connect.methods.description": "Choose how to connect {{provider}}.",
-  "provider.connect.opencode.name": "OpenCode Console",
+  "provider.connect.opencode.name": "OpenCode",
   "provider.connect.opencode.freeName": "OpenCode Free",
   "provider.connect.console.retry": "Try again",
   "provider.connect.console.serviceKeyDescription": "Connect using a service-account API key from OpenCode Console.",
