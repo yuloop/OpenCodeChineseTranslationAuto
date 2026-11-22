@@ -76,6 +76,7 @@ const toolPlugins = makeLocationNode({
     ),
   ),
   deps: [
+    Agent.node,
     Config.node,
     Environment.node,
     FileAccess.node,
