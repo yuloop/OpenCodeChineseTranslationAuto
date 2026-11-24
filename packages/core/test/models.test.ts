@@ -1,17 +1,24 @@
-import { describe, expect, test } from "bun:test"
+import { describe, expect, setSystemTime, test } from "bun:test"
 import { Money } from "@opencode/schema/money"
-import { Effect, Exit, Fiber, Layer, Ref, Scope, Stream, Tracer } from "effect"
+import { DateTime, Effect, Exit, Fiber, Layer, Ref, Scope, Stream, Tracer } from "effect"
 import { HttpClient, HttpClientResponse } from "effect/http"
 import { AppNodeBuilder } from "@opencode/core/effect/app-node-builder"
 import { LayerNodePlatform } from "@opencode/util/effect/app-node-platform"
 import { LayerNode } from "@opencode/util/effect/layer-node"
 import { Bus } from "@opencode/core/bus"
+import { Agent } from "@opencode/core/agent"
 import { KV } from "@opencode/core/kv"
 import { Location } from "@opencode/core/location"
 import { Model } from "@opencode/core/model"
+import { ModelResolver } from "@opencode/core/model-resolver"
 import { bodyDigest, ModelsDev } from "@opencode/core/models-dev"
+import { PluginHooks } from "@opencode/core/plugin/hooks"
+import { Project } from "@opencode/core/project"
 import { Provider } from "@opencode/core/provider"
 import { AbsolutePath } from "@opencode/core/schema"
+import { Session } from "@opencode/schema/session"
+import { SessionRunnerModel } from "@opencode/core/session/runner/model"
+import { SessionUsage } from "@opencode/core/session/usage"
 import { location } from "./fixture/location"
 import { it } from "./lib/effect"
 
@@ -561,6 +568,7 @@ describe("ModelsDev Service", () => {
                       overrides: [
                         { when: { context: { gt: 272000 } }, price: 22.5 },
                         { when: flex, price: 7.5 },
+                        { when: { ...flex, context: { gt: 272000 } }, price: 11.25 },
                       ],
                     },
                   },
@@ -573,16 +581,52 @@ describe("ModelsDev Service", () => {
         true,
       )
       const price = Money.USDPerMillionTokens.make
-      const context = {
-        tier: { type: "context" as const, size: 272000 },
-        input: price(5),
-        output: price(22.5),
-        cache: { read: price(0.5), write: price(0) },
-      }
-      expect(acme?.models.find((item) => item.id === "acme-1-flex")?.cost).toEqual([
+      const cost = acme?.models.find((item) => item.id === "acme-1-flex")?.cost ?? []
+      // Above 272k tokens the tier's long-context prices apply, not the standard tier's.
+      expect(
+        SessionUsage.calculateCost(cost, { input: 300_000, output: 1_000, reasoning: 0, cache: { read: 0, write: 0 } }),
+      ).toBe(Money.USD.make(0.76125))
+      expect(cost).toEqual([
         { input: price(1.25), output: price(7.5), cache: { read: price(0.13), write: price(0) } },
-        context,
+        {
+          tier: { type: "context" as const, size: 272000 },
+          input: price(2.5),
+          output: price(11.25),
+          cache: { read: price(0.25), write: price(0) },
+        },
       ])
+    }),
+  )
+
+  it.effect("does not price a speed from its tier's prices when the text prices are not per token", () =>
+    Effect.gen(function* () {
+      const [acme] = yield* ModelsDev.decodeSnapshot(
+        JSON.stringify({
+          acme: {
+            ...fixture.acme,
+            models: {
+              "acme-1": sourceModel("acme-1", {
+                capabilities: { tools: { supported: true }, reasoning: { supported: false }, service_tier: ["flex"] },
+                cost: {
+                  text: {
+                    input: {
+                      unit: "character",
+                      price: 2,
+                      overrides: [{ when: { service_tier: { equals: "flex" } }, price: 5 }],
+                    },
+                    output: { unit: "character", price: 10 },
+                  },
+                },
+              }),
+            },
+          },
+        }),
+        false,
+        true,
+      )
+      const model = (id: string) => acme?.models.find((item) => item.id === id)
+      expect(model("acme-1")?.cost).toEqual(zeroCost)
+      expect(model("acme-1-flex")?.cost).toEqual(zeroCost)
     }),
   )
 
@@ -695,6 +739,117 @@ describe("ModelsDev Service", () => {
         headers: { "x-old": "1" },
       })
     }),
+  )
+
+  it.effect("keeps a mode's ID on the tier the mode asks for", () =>
+    Effect.gen(function* () {
+      const [acme] = yield* ModelsDev.decodeSnapshot(
+        JSON.stringify({
+          acme: {
+            ...fixture.acme,
+            models: {
+              "acme-1": sourceModel("acme-1", {
+                capabilities: {
+                  tools: { supported: true },
+                  reasoning: { supported: false },
+                  service_tier: ["priority", "fast"],
+                },
+                // Saved sessions hold "acme-1-fast", which has always asked for the priority tier. The "fast" tier
+                // would take that ID, so it isn't offered as a second choice next to it.
+                experimental: { modes: { fast: { service_tier: "priority", body: { service_tier: "priority" } } } },
+              }),
+            },
+          },
+        }),
+        false,
+        true,
+      )
+      expect(acme?.models.map((item) => [item.id, item.settings?.serviceTier])).toEqual([
+        ["acme-1", undefined],
+        ["acme-1-fast", "priority"],
+      ])
+    }),
+  )
+
+  it.effect("names a mode's tier after the tier when another model already has the mode's ID", () =>
+    Effect.gen(function* () {
+      const [acme] = yield* ModelsDev.decodeSnapshot(
+        JSON.stringify({
+          acme: {
+            ...fixture.acme,
+            models: {
+              "acme-1": sourceModel("acme-1", {
+                capabilities: {
+                  tools: { supported: true },
+                  reasoning: { supported: false },
+                  service_tier: ["priority", "fast"],
+                },
+                experimental: { modes: { fast: { service_tier: "priority", body: { service_tier: "priority" } } } },
+              }),
+              // A separate model already holds "acme-1-fast", so the priority tier keeps its own name.
+              "acme-1-fast": sourceModel("acme-1-fast"),
+            },
+          },
+        }),
+        false,
+        true,
+      )
+      expect(acme?.models.map((item) => [item.id, item.settings?.serviceTier])).toEqual([
+        ["acme-1", undefined],
+        ["acme-1-priority", "priority"],
+        ["acme-1-fast", undefined],
+      ])
+    }),
+  )
+
+  it.effect("resumes Superbot Fast sessions saved with the Priority speed", () =>
+    Effect.gen(function* () {
+      const [superbot] = yield* ModelsDev.decodeSnapshot(
+        JSON.stringify({
+          "superbot-gg": {
+            id: "superbot-gg",
+            name: "Superbot",
+            env: [],
+            models: {
+              "superbot-fast": sourceModel("superbot-fast", {
+                capabilities: {
+                  tools: { supported: true },
+                  reasoning: { supported: false },
+                  service_tier: ["priority", "fast"],
+                },
+                experimental: { modes: { fast: { service_tier: "priority", body: { service_tier: "priority" } } } },
+              }),
+            },
+          },
+        }),
+        false,
+        true,
+      )
+      const runner = yield* SessionRunnerModel.Service
+      const session = Session.Info.make({
+        id: Session.ID.make("ses_superbot"),
+        projectID: Project.ID.global,
+        cost: Money.USD.zero,
+        tokens: { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+        time: { created: DateTime.makeUnsafe(0), updated: DateTime.makeUnsafe(0) },
+        location: Location.Ref.make({ directory: AbsolutePath.make("/project") }),
+        model: Model.Ref.parse("superbot-gg/superbot-fast-priority"),
+      })
+      const models = superbot?.models ?? []
+      const selected = yield* runner.select(session, () => Effect.succeed(models))
+      expect(selected.info).toMatchObject({ id: "superbot-fast-fast", settings: { serviceTier: "priority" } })
+      expect(models.map((model) => model.id)).toEqual(
+        ["superbot-fast", "superbot-fast-fast"].map((id) => Model.ID.make(id)),
+      )
+    }).pipe(
+      Effect.provide(
+        AppNodeBuilder.build(SessionRunnerModel.node, [
+          ModelResolver.node.replace(Layer.mock(ModelResolver.Service)({})),
+          Agent.node.replace(Layer.mock(Agent.Service)({})),
+          PluginHooks.node.replace(Layer.mock(PluginHooks.Service)({})),
+        ]),
+      ),
+    ),
   )
 
   it.effect("skips non-chat models whose only opencode package serves another type", () =>
@@ -1292,6 +1447,60 @@ describe("ModelsDev Service", () => {
         expect(Exit.isFailure(unrequested304.status.exit)).toBe(true)
       }
     }),
+  )
+
+  it.live("refresh(false) re-prices an introductory price that ends while the catalog stays the same", () =>
+    Effect.gen(function* () {
+      setSystemTime(new Date("2027-02-28T23:59:00Z"))
+      const catalog = {
+        acme: {
+          ...fixture.acme,
+          models: {
+            "acme-1": sourceModel("acme-1", {
+              cost: {
+                text: { input: { price: 2 }, output: { price: 10 } },
+                multipliers: [
+                  { when: { service_tier: { equals: "ultrafast" }, date: { lt: "2027-03-01" } }, factor: 3 },
+                  { when: { service_tier: { equals: "ultrafast" }, date: { gte: "2027-03-01" } }, factor: 6 },
+                ],
+              },
+              experimental: { modes: { ultrafast: { body: { service_tier: "ultrafast" } } } },
+            }),
+          },
+        },
+      }
+      const cache = makeCache()
+      writeCache(cache, catalog, Date.now() - 10 * 60 * 1000)
+      // The poll after midnight gets the same body back.
+      const state = yield* Ref.make({ ...initialState, body: JSON.stringify(catalog) })
+      const price = (snapshots: readonly ModelsDev.Snapshot[]) =>
+        snapshots[0]?.models.find((model) => model.id === "acme-1-ultrafast")?.cost[0]?.input
+      yield* provided(
+        state,
+        cache,
+        Effect.gen(function* () {
+          const svc = yield* ModelsDev.Service
+          const bus = yield* Bus.Service
+          expect(price(yield* svc.get())).toBe(Money.USDPerMillionTokens.make(6))
+          setSystemTime(new Date("2027-03-01T00:01:00Z"))
+          const event = yield* bus.subscribe(ModelsDev.Event.Refreshed).pipe(
+            Stream.take(1),
+            Stream.runCollect,
+            Effect.forkScoped,
+            Effect.flatMap((fiber) =>
+              Effect.gen(function* () {
+                yield* Effect.yieldNow
+                yield* svc.refresh(false)
+                return yield* Fiber.join(fiber).pipe(Effect.timeoutOption("1 second"))
+              }),
+            ),
+          )
+          expect(event._tag).toBe("Some")
+          expect(price(yield* svc.get())).toBe(Money.USDPerMillionTokens.make(12))
+        }),
+      )
+      expect((yield* Ref.get(state)).calls.length).toBe(1)
+    }).pipe(Effect.ensuring(Effect.sync(() => setSystemTime()))),
   )
 
   it.live("frees and ignores catalogs cached under earlier keys", () =>

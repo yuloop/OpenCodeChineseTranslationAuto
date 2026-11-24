@@ -145,6 +145,148 @@ test("Promise instances are lazy, share by key and Location, and stay isolated b
   expect(cleanups.toSorted()).toEqual(setups.toSorted())
 }, 20_000)
 
+test("a cold instance plugin can create a shell automation for its Session during setup", async () => {
+  await using directory = await tmpdir("opencode-instance-shell-automation-")
+  const sessionID = Session.ID.create()
+  const created: string[] = []
+  await using opencode = await OpenCode.create({
+    ...hostOptions(directory.path),
+    instances: {
+      key: () => "one",
+      configure: () => ({
+        plugins: [
+          {
+            id: "shell-automation",
+            async setup(ctx) {
+              const automation = await ctx.experimental.automation.create({
+                sessionID,
+                name: "hourly",
+                trigger: { type: "every", every: "1 hour" },
+                action: { type: "shell", command: "echo ok" },
+              })
+              created.push(automation.name)
+            },
+          },
+        ],
+      }),
+    },
+  })
+  await opencode.sessions.create({ id: sessionID, location: { directory: directory.path } })
+  expect(await opencode.permission.list({ sessionID })).toEqual([])
+  expect(created).toEqual(["hourly"])
+})
+
+test("an instance plugin's code automation waits for the host's tool registry in the same Location", async () => {
+  await using directory = await tmpdir("opencode-instance-code-automation-")
+  const sessionID = Session.ID.create()
+  const hostStarted = Promise.withResolvers<void>()
+  const releaseHost = Promise.withResolvers<void>()
+  const created: unknown[] = []
+  const options = hostOptions(directory.path)
+  let firstSetup = true
+  await using opencode = await OpenCode.create({
+    ...options,
+    config: {
+      ...options.config,
+      content: JSON.stringify({ permissions: [{ action: "fixture_ping", resource: "*", effect: "allow" }] }),
+    },
+    plugins: [
+      {
+        id: "host-tool",
+        async setup(ctx) {
+          // The host plugin is also loaded in the instance, but the fixture belongs only to the host registry.
+          if (!firstSetup) return
+          firstSetup = false
+          hostStarted.resolve()
+          await releaseHost.promise
+          await ctx.tool.transform((editor) => {
+            editor.add({
+              name: "fixture_ping",
+              description: "Return a fixed string",
+              input: Schema.Struct({}),
+              output: Schema.String,
+              execute: async () => ({ output: "pong" }),
+            })
+          })
+        },
+      },
+    ],
+    instances: {
+      key: () => "one",
+      configure: () => ({
+        plugins: [
+          {
+            id: "code-automation",
+            async setup(ctx) {
+              const creating = ctx.experimental.automation.create({
+                sessionID,
+                name: "hourly",
+                trigger: { type: "every", every: "1 hour" },
+                action: { type: "code", code: "await tools.fixture_ping({})" },
+              })
+              void creating.then(
+                (automation) => created.push(automation.name),
+                (error: unknown) => created.push(error),
+              )
+              // The host Location is warm; let the create run until it waits for activation (or fails).
+              await new Promise<void>((resolve) => setImmediate(resolve))
+              releaseHost.resolve()
+              await creating
+            },
+          },
+        ],
+      }),
+    },
+  })
+  try {
+    await opencode.sessions.create({ id: sessionID, location: { directory: directory.path } })
+    await opencode.plugin.list({ location: { directory: directory.path } })
+    await hostStarted.promise
+    const boot = await opencode.permission.list({ sessionID }).catch((error: unknown) => error)
+    expect(created).toEqual(["hourly"])
+    expect(boot).toEqual([])
+  } finally {
+    releaseHost.resolve()
+  }
+})
+
+test("a cold instance plugin can create a subagent prompt automation for its Session during setup", async () => {
+  await using directory = await tmpdir("opencode-instance-subagent-automation-")
+  const sessionID = Session.ID.create()
+  const created: string[] = []
+  const options = hostOptions(directory.path)
+  await using opencode = await OpenCode.create({
+    ...options,
+    // Allowed up front: a plugin's create settles asks unattended, and an unanswered subagent ask is denied.
+    config: {
+      ...options.config,
+      content: JSON.stringify({ permissions: [{ action: "subagent", resource: "general", effect: "allow" }] }),
+    },
+    instances: {
+      key: () => "one",
+      configure: () => ({
+        plugins: [
+          {
+            id: "subagent-automation",
+            async setup(ctx) {
+              const automation = await ctx.experimental.automation.create({
+                sessionID,
+                name: "triage",
+                trigger: { type: "every", every: "1 hour" },
+                action: { type: "prompt", prompt: "Triage the inbox.", to: { subagent: "general" } },
+              })
+              created.push(automation.name)
+            },
+          },
+        ],
+      }),
+    },
+  })
+  await opencode.sessions.create({ id: sessionID, location: { directory: directory.path } })
+  expect(await opencode.permission.list({ sessionID })).toEqual([])
+  expect(created).toEqual(["triage"])
+})
+
 test("a throwing fork hook still returns the saved fork", async () => {
   await using directory = await tmpdir("opencode-fork-hook-")
   const seen: string[] = []
