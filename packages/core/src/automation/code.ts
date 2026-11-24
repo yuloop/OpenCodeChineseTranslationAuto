@@ -2,7 +2,7 @@ export * as AutomationCode from "./code.js"
 
 import { CodeMode } from "@opencode/codemode"
 import { Automation } from "@opencode/schema/automation"
-import { Array, Context, Effect, Option, Result, Schema } from "effect"
+import { Array, Effect, Option, Result, Schema } from "effect"
 import { Agent } from "../agent.js"
 import { CodeModeTool } from "../codemode/tool.js"
 import { Permission } from "../permission.js"
@@ -83,17 +83,6 @@ function scanProgram(code: string): Result.Result<ProgramScan, string> {
   return Result.succeed({ tools: scanned.success.tools, actions: extensionActions(scanned.success) })
 }
 
-/** The calling plugin's registry. SDK instances and the host can have separate registries at the same Location. */
-export const FromPlugin = Context.Reference<Plugin.Interface | undefined>("@opencode/AutomationCode/FromPlugin", {
-  defaultValue: () => undefined,
-})
-
-/** Wait unless this registry's activation could be waiting on the calling plugin's setup. */
-export const awaitPlugins = Effect.gen(function* () {
-  const plugins = yield* Plugin.Service
-  if ((yield* FromPlugin) !== plugins) yield* plugins.awaitActivation
-})
-
 /**
  * Runs in the creating Session's Location while the user is present: asks once for tool and extension permissions (and for
  * `execute` if none of those needed approval), without saving, so every run can be allowed unattended.
@@ -106,7 +95,7 @@ export const authorize = Effect.fnUntraced(function* (
   invocation?: Invocation,
 ) {
   const scanned = yield* Effect.fromResult(scan(action.code))
-  yield* awaitPlugins
+  yield* Plugin.awaitActivation
   const permission = yield* Permission.Service
   const agents = yield* Agent.Service
   const agent = yield* agents.select(session.agent)
