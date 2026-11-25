@@ -110,7 +110,7 @@
   "Argument.withDescription(\"Environment variable name\")": "Argument.withDescription(\"环境变量名称\")",
   "Argument.withDescription(\"Setting value or environment variable name\")": "Argument.withDescription(\"设置值或环境变量名称\")",
   "Argument.withDescription(\"Environment variable value\")": "Argument.withDescription(\"环境变量值\")",
-  "Flag.withDescription(\"Use an external HTTP(S) server URL in pairing links\")": "Flag.withDescription(\"在配对链接中使用外部 HTTP(S) 服务器 URL\")",
+  "serverURLFlag(\"Use an external HTTP(S) server URL in pairing links\")": "serverURLFlag(\"在配对链接中使用外部 HTTP(S) 服务器 URL\")",
   "Flag.withDescription(\"Additional allowed CORS origin (repeat for multiple origins)\")": "Flag.withDescription(\"额外允许的 CORS 来源(多个来源重复使用)\")",
   "\"Print only one path: db, home, data, config, cache, state, tmp, bin, log, repos\"": "\"仅打印一个路径:db、home、data、config、cache、state、tmp、bin、log、repos\""
  }

@@ -5,8 +5,8 @@
   "generatedBy": "tools/v2_anchor_migrate.py",
   "upstream": {
     "repo": "anomalyco/opencode",
-    "tag": "v2.3.0",
-    "commit": "a6b15d33daf6ab7d35569f6d711fdb630b9f04e7"
+    "tag": "v2.4.1",
+    "commit": "6f0514052a3c859894ad01bb14cc14dda1e44b96"
   },
   "v1AssetsVersion": "6.2",
   "totals": {
@@ -5065,8 +5065,9 @@
   "currentTotals": {
     "anchorFiles": 226,
     "replacements": 2056,
-    "verifiedOn": "v2.3.0"
+    "verifiedOn": "v2.4.1"
   },
   "note_v2_2_7": "2026-11-10：跟随上游 v2.2.7 做外科式修正（不跑全量重生成，理由同 note）。① 根因不在词表而在 Go 侧：cli-go/internal/core/build.go 的 detectLayout 只认 build.ts 里的 `--target=`，而上游 v2.1 起改成环境变量 OPENCODE_TARGET（v2.2.7 packages/cli/script/build.ts:32），导致 v2.2.x 被误判为 V1 布局、拿 V1 词表去套 V2 源码，门禁骤降到 31.2%（159/509）。改为同时认 `--target=` 与 `OPENCODE_TARGET` 后立即回到 99.2%，可证词表本身没有大面积失效。② 余下 6 个锚点文件按 v2.2.7 源码重锚：noninteractive.ts 删 2 个上游已移除的串（`<file name=…>` 移到 packages/cli/src/run/run.ts、`The provider response ended unexpectedly.` 只剩测试文件）；dialog-model.tsx 的 favorite 键从 `? \"favorite\" : \"Favorite\"` 改锚 `? \"unfavorite\" : \"favorite\"`；dialog-update.tsx 的合并键拆成 4 个 bind 前缀键，更新成功文案换成 \"Restart closes OpenCode, then run opencode…\"；plugin/render.tsx 的 Plugin 崩溃提示搬到 plugin/api.tsx（PluginBoundary 所在处）；dialog-export-options.tsx 的 Copy 按钮与两个 footer 提示改成结构化 props（`title: \"copy\"` / `title: \"save to file\"`）；dialog-export-result.tsx 的 `✓ copied` 改成 `title: \"copied\"`，并补 `title: \"copy path\"`。③ dialog-confirm.tsx 的 4 个死键清理；其 --keep 身份锚点原本唯一键 `key: \"esc\"` 已变成 `bind: \"escape\"`，换新键避免整个文件被判 0 命中。门禁：v2.2.7 实测 2058/2058 = 100.0%，226 文件成功 0 跳过 0 失败；apply 实跑后抽样人工核对译文落位正确，8 个改动文件用 bun build --no-bundle 逐文件语法校验通过。④ 补一条漏锚：上游 v2.2.7 的 uninstall 命令描述已改写为 \"Uninstall OpenCode, keeping session data, configuration, and state\"，V2 资产里没有对应条目，导致夜间构建的「已知译文命中」探针只有 3/4。已补该条译文并同步更新 opencode-cn-v2-nightly.yml 里的探针字符串。",
-  "note_v2_3_0": "2026-11-17：按上游 v2.3.0 复核 V2 锚点，修 4 条死键（门禁 99.8% → 100%，2056/2056）：① config/index.tsx 'Show average tokens per second' → 上游改成 'Show output tokens per second while the model streams'（重锚，译文改为「模型流式输出时显示每秒输出 tokens 数」）；② footer.view.tsx 'Background subagents' 与 ③ 'label: \"bg\"' → v2.3.0 删掉了 session.background 命令，这两条永久失效，删除；④ routes/session/index.tsx '<StatusBadge>Background</StatusBadge>' → 上游只保留 <StatusBadge raised>Background</StatusBadge>（已有独立锚点），删除。"
+  "note_v2_3_0": "2026-11-17：按上游 v2.3.0 复核 V2 锚点，修 4 条死键（门禁 99.8% → 100%，2056/2056）：① config/index.tsx 'Show average tokens per second' → 上游改成 'Show output tokens per second while the model streams'（重锚，译文改为「模型流式输出时显示每秒输出 tokens 数」）；② footer.view.tsx 'Background subagents' 与 ③ 'label: \"bg\"' → v2.3.0 删掉了 session.background 命令，这两条永久失效，删除；④ routes/session/index.tsx '<StatusBadge>Background</StatusBadge>' → 上游只保留 <StatusBadge raised>Background</StatusBadge>（已有独立锚点），删除。",
+  "note_v2_4_1": "2026-11-26：按上游 v2.4.1 复核 V2 锚点，修 3 条死键（门禁 99.9% → 100%，2056/2056）：① packages/cli/src/commands/commands.ts 的 pairing 链接提示被上游包成 serverURLFlag(...)，锚点由 Flag.withDescription(\"Use an external HTTP(S) server URL in pairing links\") 重锚为 serverURLFlag(\"Use an external HTTP(S) server URL in pairing links\")；②/③ packages/tui/src/routes/session/index.tsx 上游把 Shell/Subagent 判定重构进 actor() 并新增 codemode → Script，旧单行锚点 source() === \"shell\" ? \"Shell\" : ... 重锚为整个 actor() 块（命令行 / 脚本 / 子智能体）；旧锚点 -{file.deletions} line{...} 已被上游拆开，复数文案迁到 changeCounts() 的 unit: additions + deletions === 1 ? \" line\" : \" lines\", 重锚到该行（译「 行」）。"
 }
