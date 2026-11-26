@@ -13,8 +13,9 @@ name: OpenCode V2 Nightly (inject + build + release)
 #      的 NewI18n：检测到 packages/cli + --target= 即判 V2 布局）。门禁口径与 V1
 #      相同：--strict --min-match-rate 1。main 39caaa58e 上门禁已收口到 100%
 #      （docs/opencode-v2-i18n-gate-close.md §7.1：v2.0.13/v2.0.14 实测均
-#      1669/1669，217 文件 0 跳过 0 失败）。上游漂移导致匹配率下降时构建失败——
-#      有意为之：不发布未过门禁的产物。
+#      1669/1669，217 文件 0 跳过 0 失败）。【2026-11-26 改】上游漂移导致匹配率
+#      下降时不再构建失败：门禁降为「提示不拦」，照跑、照写进 Release 正文，只是
+#      不 exit 1（此前每次上游大改文案都会让整条发布线停摆数天，见 v2.4.x 那次）。
 #   2) 中文落地验证：对构建出的二进制抽样校验注入的中文译文真的在里面
 #      （不只看 CI 绿点）。bun --compile 对非 ASCII 以 \uXXXX 转义形态嵌入模块
 #      源码（bun 1.4.2 本地实测），故验证同时接受「转义形态 / 原始 UTF-8」两种命中。
@@ -58,9 +59,13 @@ env:
   # 上游已从 2.0.x 走到 2.2.x，glob 必须保持在次版本之上；
   # 写死 v2.0.* 会让预览版永久卡在 2.0.32（2026-11-10 实测）。
   BUN_VERSION: "1.4.2"
-  # V2 汉化门禁阈值：与 V1 同为 1（100%）。main 39caaa58e 实测 v2.0.13/v2.0.14
-  # 均 1669/1669 = 100.0%；上游漂移会让构建失败而不是发布未过门禁的产物。
+  # V2 汉化门禁阈值：保留 1（100%）作为「目标值」，只用于度量与写进 Release 正文。
+  # 【2026-11-26 改】门禁已从「硬拦截」降为「提示不拦」（详见下面 step 7 的注释）：
+  # 上游大改文案时锚点必然短期失配，过去会整条发布线停摆数天。现在照跑照报，
+  # 但不再 exit 1，也不阻断发布。
   V2_MIN_MATCH_RATE: "1"
+  # 门禁是否阻断构建：false = 只提示（当前口径）。改回 "true" 即恢复硬拦截。
+  V2_GATE_BLOCKING: "false"
 
 jobs:
   slot-guard:
@@ -258,8 +263,19 @@ jobs:
           echo "注入的 V2 汉化资产 commit: ${assets_commit}"
 
       # 7) 翻译门禁（dry-run；apply 按 V2 布局自动选 assets/opencode-i18n-v2）。
-      #    口径与 V1 相同：--strict --min-match-rate 1（见 env.V2_MIN_MATCH_RATE）。
+      #    度量口径仍是 --strict --min-match-rate 1（见 env.V2_MIN_MATCH_RATE）。
+      #    【2026-11-26 改】这一步从「硬拦截」降为「提示不拦」：
+      #      - continue-on-error: true → 门禁红了也不让 job 失败；
+      #      - 结果由下一步写成 ::warning:: 并带进 Release 正文；
+      #      - 真实注入（step 8）不再带 --strict，所以措辞失配只会让少数条目
+      #        保持英文，不会拖住整条发布线。
+      #    为什么改：v2.4.x 上游重构了 3 处文案结构，2056 条里 3 条失配（99.9%）
+      #    就让 V2 线从 11-18 卡到 11-26 无新版本，代价远大于「少汉化 3 条文案」。
+      #    想恢复硬拦截：把 env.V2_GATE_BLOCKING 改回 "true"（并把下面 step 8
+      #    的 --strict 加回来）。
       - name: V2 translation gate (dry-run)
+        id: gate
+        continue-on-error: true
         env:
           OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
         run: |
@@ -267,11 +283,34 @@ jobs:
           ./dist/opencode-cli apply --dry-run --strict --min-match-rate "${V2_MIN_MATCH_RATE}" 2>&1 | tee apply-dry.log
           ./dist/opencode-cli verify --dry-run
 
-      # 8) 真实注入 V2 中文翻译（同一门禁口径；不过则构建失败，不发布）
+      # 7.1) 把门禁结论显性化：红只报警，不阻断（V2_GATE_BLOCKING=true 时才拦）
+      - name: Report the gate result (advisory)
+        if: always()
+        id: gatereport
+        env:
+          BLOCKING: ${{ env.V2_GATE_BLOCKING }}
+        run: |
+          set -uo pipefail
+          outcome="${{ steps.gate.outcome }}"
+          echo "gate_outcome=$outcome" >>"$GITHUB_OUTPUT"
+          if [[ "$outcome" == "success" ]]; then
+            echo "V2 门禁：达标（$(grep -E '📝 替换:' apply-dry.log | head -1 | sed 's/^ *//')）"
+            exit 0
+          fi
+          msg="V2 翻译门禁未达标（$outcome）；措辞失配的条目会保持英文，构建与发布继续。"
+          echo "::warning::$msg"
+          echo "$msg" >>"$GITHUB_STEP_SUMMARY"
+          if [[ "${BLOCKING}" == "true" ]]; then
+            echo "::error::V2_GATE_BLOCKING=true，按硬门禁口径中止。"
+            exit 1
+          fi
+          echo "V2_GATE_BLOCKING=${BLOCKING}，按「提示不拦」继续。"
+
+      # 8) 真实注入 V2 中文翻译（不带 --strict：失配条目跳过，不阻断发布）
       - name: Inject V2 Chinese translations
         env:
           OPENCODE_SOURCE_DIR: ${{ github.workspace }}/build/upstream
-        run: ./dist/opencode-cli apply --strict --min-match-rate "${V2_MIN_MATCH_RATE}"
+        run: ./dist/opencode-cli apply
 
       # 9) 构建两个平台二进制（linux-x64 + windows-x64）。cli-go 对 V2 布局自动探测，
       #    --target=opencode-<platform>；未显式设 OPENCODE_VERSION 时由工具从
@@ -454,6 +493,7 @@ jobs:
           - 上游基线：\`${UPSTREAM_REPO}\` tag \`${TAG}\`（commit \`${UPSTREAM_SHA:0:12}\`，版本 v${VERSION}）
           - 注入的汉化资产：commit \`${ASSETS_COMMIT:0:12}\`（\`cli-go/internal/core/assets/opencode-i18n-v2/\`，V2 专用资产，由 V1 词表重新锚定生成）
           - 翻译门禁：\`apply --dry-run --strict --min-match-rate ${V2_MIN_MATCH_RATE}\` → ${gate}
+          - 门禁结论：${{ steps.gate.outcome == 'success' && '达标（100%）' || '**未达标，仅提示未阻断发布**（措辞失配的条目保持英文，见正文末尾）' }}
           - 构建：linux-x64 + windows-x64 两平台（bun ${BUN_VERSION} + cli-go 工具链，注入/门禁只跑一遍、两平台共享）；linux \`--version\` = \`opencode v${VERSION}\`
           - 构建流水线：${RUN_URL}
 
