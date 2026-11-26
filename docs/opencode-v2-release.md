@@ -339,3 +339,33 @@ Linux 主机无法运行 `.exe`,故**不对 windows 产物做「运行/`--versio
 - V1 铁律:`.github/workflows/opencode-cn-nightly.yml`、`release.yml`、`scripts/patch-build-ts.py`、V1 词表、cli-go Go 代码零改动;门禁逻辑与 `V2_MIN_MATCH_RATE=1` 阈值未改。
 - 未推 upstream(`upstream` remote 保持 DISABLED);未新增凭据;未做范围外目录改动;未动 `/root/xiangmudata_sync/opencode-v2-cn/`。
 - 文中 run 链接、sha256、体积、门禁数字、PE/CJK 核验输出均为真实运行结果;windows「未运行」已如实声明,未美化。
+
+---
+
+## ⑥ 2026-11-26 变更:100% 硬门禁降为「提示不拦」
+
+### 背景
+
+上游 `v2.4.x` 重构了 3 处文案结构(见 `cli-go/internal/core/assets/opencode-i18n-v2/config.json` 的 `note_v2_4_1`),2056 条锚点里 3 条失配 → 门禁 `99.9% < 100%` → V2 发布线从 2026-11-18 的 `v2-cn-2.3.2` 起连续失败,直到 11-26 才由人工重锚恢复。代价是**九天没有 V2 新版本**,远大于「少汉化 3 条文案」。
+
+### 改法(只动 `.github/workflows/opencode-cn-v2-nightly.yml`)
+
+| 位置 | 改前 | 改后 |
+|---|---|---|
+| step 7 `V2 translation gate (dry-run)` | 失败即 job 失败 | 加 `continue-on-error: true`,只记录 `steps.gate.outcome` |
+| 新增 step 7.1 `Report the gate result (advisory)` | — | 红了打 `::warning::` + 写 job summary;**只有** `env.V2_GATE_BLOCKING == "true"` 时才 `exit 1` |
+| step 8 `Inject V2 Chinese translations` | `apply --strict --min-match-rate 1` | `apply`(不带 `--strict`),失配条目跳过、保持英文 |
+| Release 正文 | 只写门禁数字 | 新增「门禁结论」一行,明示是否 100% 达标 |
+| `env.V2_MIN_MATCH_RATE` | `"1"`(硬阈值) | `"1"`(**仅度量目标值**,写进正文),另加 `env.V2_GATE_BLOCKING: "false"` |
+
+**恢复硬门禁**:`env.V2_GATE_BLOCKING` 改回 `"true"`,并把注入 step 的命令改回带 `--strict --min-match-rate` 的形式。
+
+### 验证
+
+- 逻辑三态本地实测:`success` → 打印达标并 `rc=0`;`failure + V2_GATE_BLOCKING=false` → `::warning::` 后 `rc=0`(继续发版);`failure + V2_GATE_BLOCKING=true` → `::error::` 后 `rc=1`(中止)。
+- 真跑一次 `workflow_dispatch`(run `45736014777`,head `47b9a6c8`):三个 job 全 success,门禁 step `success`(本次资产仍 2056/2056)、advisory step `success`、注入 step `success`;新 Release `v2-cn-2.4.2` 正文出现「门禁结论:达标(100%)」一行,证明本次改动生效且不影响正常发布路径。
+- 未验证:门禁**真的失败**时 CI 的放行路径(本地三态脚本已覆盖同一段 bash,但未在 GitHub 上故意造一次红门禁)。下次上游再改文案时会自然覆盖到,届时看该 run 的门禁 step 是否记为失败而 job 仍绿。
+
+### V1 线
+
+零改动。`release.yml`、`opencode-cn-nightly.yml`、`scripts/i18n_assets.py`、`scripts/autoheal_line.py` 里的 `--min-match-rate 1` 全部保持原样 —— 本次只放宽 V2 发布线的**拦截**行为,autoheal 仍按 100% 目标去修词表。
