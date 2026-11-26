@@ -12587,6 +12587,59 @@
         "summary": "Read a blob"
       }
     },
+    "/api/experimental/browser/tunnel": {
+      "get": {
+        "tags": ["experimental"],
+        "operationId": "experimental.browser.tunnel",
+        "parameters": [],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "InvalidRequestError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidRequestErrorEncoded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UnauthorizedError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedErrorEncoded"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ForbiddenError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenErrorEncoded"
+                }
+              }
+            }
+          }
+        },
+        "description": "Upgrade to a binary WebSocket carrying multiplexed TCP streams for one live desktop browser attachment. Requires a short-lived, single-use attachment-bound ticket in the x-opencode-browser-ticket header minted through authenticated browser RPC. Never accepts a session ID or browser cookie alone. Experimental: may change without compatibility guarantees.",
+        "summary": "Open a browser attachment binary stream tunnel",
+        "x-websocket": true
+      }
+    },
     "/api/experimental/automation": {
       "post": {
         "tags": ["experimental"],
@@ -17049,6 +17102,97 @@
         "summary": "Get usage limits"
       }
     },
+    "/api/experimental/flag": {
+      "get": {
+        "tags": ["flag"],
+        "operationId": "experimental.flag.get",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "query",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "directory": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Absolute path of the directory."
+                }
+              },
+              "additionalProperties": false
+            },
+            "required": false,
+            "style": "deepObject",
+            "explode": true,
+            "description": "Location to run the request in, sent as location[directory]. Omit to use the server's default location."
+          }
+        ],
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "location": {
+                      "$ref": "#/components/schemas/Location.PublicRef"
+                    },
+                    "data": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "required": ["location", "data"],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "InvalidRequestError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvalidRequestErrorEncoded"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UnauthorizedError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedErrorEncoded"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "LocationNotFoundError",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocationNotFoundErrorEncoded"
+                }
+              }
+            }
+          }
+        },
+        "description": "Experimental. Return the resolved feature flags the location's clients may act on, keyed by flag name. Flags not listed are off.",
+        "summary": "Get feature flags"
+      }
+    },
     "/api/config": {
       "get": {
         "tags": ["config"],
@@ -18552,6 +18696,9 @@
               "full_codemode": {
                 "type": "boolean"
               },
+              "codemode_agents": {
+                "type": "boolean"
+              },
               "machines": {
                 "type": "boolean"
               },
@@ -18571,6 +18718,9 @@
                 "type": "boolean"
               },
               "sqlite_fts": {
+                "type": "boolean"
+              },
+              "browser_stream_tunnel": {
                 "type": "boolean"
               },
               "video_generate": {
@@ -33213,6 +33363,10 @@
     {
       "name": "usage",
       "description": "Experimental usage limit routes."
+    },
+    {
+      "name": "flag",
+      "description": "Experimental feature flag routes."
     },
     {
       "name": "config",
