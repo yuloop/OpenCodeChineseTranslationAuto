@@ -337,6 +337,11 @@ export const dict = {
   "site.contents": "المحتويات",
   "docs.section.overview": "نظرة عامة",
   "docs.section.build": "التطوير",
+  "docs.nav.configure": "الإعداد",
+  "docs.nav.plugins": "الإضافات",
+  "docs.nav.client": "العميل",
+  "docs.nav.workspace": "مساحة العمل",
+  "docs.nav.console": "Console",
   "docs.lockup.sectionDocs": "وثائق {{section}}",
   "docs.lockup.switchLabel": "{{name}}، تبديل الوثائق",
   "docs.lockup.home": "الصفحة الرئيسية لـ {{name}}",
@@ -374,6 +379,7 @@ export const dict = {
   "docs.v1.markdownNote":
     "هذه وثائق OpenCode V1. أحدث الوثائق، الخاصة بـ OpenCode V2، موجودة على https://opencode.ai/docs/llms.txt.",
   "site.companions": "أدوات تعمل بكفاءة مع OpenCode",
+  "docs.translation.missing": "لم تُترجم هذه الصفحة بعد. تُعرض النسخة الإنجليزية.",
   "site.notFound.title": "الصفحة غير موجودة",
   "site.arcade.alt":
     "صالة ألعاب مهجورة ليلًا. لا تزال شاشة إحدى الآلات مضيئة وعليها 404، وأمامها على الأرض قطعة نقدية للعب.",

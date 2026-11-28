@@ -334,6 +334,11 @@ export const dict = {
   "site.contents": "Содержание",
   "docs.section.overview": "Обзор",
   "docs.section.build": "Разработка",
+  "docs.nav.configure": "Настройка",
+  "docs.nav.plugins": "Плагины",
+  "docs.nav.client": "Клиент",
+  "docs.nav.workspace": "Рабочее пространство",
+  "docs.nav.console": "Console",
   "docs.lockup.sectionDocs": "Документация {{section}}",
   "docs.lockup.switchLabel": "{{name}}, сменить документацию",
   "docs.lockup.home": "{{name}}, главная",
@@ -370,6 +375,7 @@ export const dict = {
   "docs.callout.danger": "Опасно",
   "docs.v1.markdownNote":
     "Это документация OpenCode V1. Актуальная документация для OpenCode V2 находится по адресу https://opencode.ai/docs/llms.txt.",
+  "docs.translation.missing": "Эта страница ещё не переведена. Показана английская версия.",
   "site.companions": "Отлично работает с OpenCode",
   "site.notFound.title": "Страница не найдена",
   "site.arcade.alt":
